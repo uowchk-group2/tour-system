@@ -13,9 +13,9 @@ public class tourist {
     public String demopage(Model model){
         return "./tourist/welcome";
     }
-    @GetMapping("account")
-    public String account(Model model){
-        return"./tourist/account";
+    @GetMapping("signup")
+    public String signup(Model model){
+        return "./tourist/signup";
     }
     @GetMapping("apply")
     public String apply(Model model){
