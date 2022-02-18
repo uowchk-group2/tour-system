@@ -3,12 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <title>Booking System </title>
-
+    <style>
+        table{
+            border: 3px solid white;
+        }
+        th, td {
+            background-color: #96D4D4;
+        }
+    </style>
 
 </head>
 <body>
 <header th:insert="header.html :: header"></header>
 <h1>Booking System</h1>
-
+<table>
+    <tr>
+        <th>Tour code</th>
+        <th>Tour name</th>
+        <th>Start day</th>
+        <th>End day</th>
+        <th></th>
+    </tr>
+    <tr>
+        <td>HK031</td>
+        <td>Tian Tan Buddha one day trip</td>
+        <td>2022/08/13</td>
+        <td>2022/08/13</td>
+        <td><button class="btn btn-long">Edit</button><button class="btn btn-long">Withdraw</button></td>
+    </tr>
+</table>
 </body>
 </html>
