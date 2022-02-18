@@ -1,12 +1,24 @@
-.center {
+.center, .center>tr {
     margin-left: auto;
     margin-right: auto;
+    text-align: center;
 }
 
 body{
     background-color: #F0FAEF;
     margin-left: 10%;
     margin-right: 10%;
+}
+
+.horizontalTrim{
+    width: 60%;
+    margin-left: 20%;
+    margin-right: 20%;
+}
+
+.morePadding{
+    border-collapse: separate;
+    border-spacing: 40px;
 }
 
 .btn-primary{
