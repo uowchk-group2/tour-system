@@ -5,7 +5,64 @@
 <header th:insert="header.html :: header"></header>
 <h1>Sign up as Host</h1>
 
-
+<form>
+    <table class="horizontalTrim center morePadding" border="1">
+        <tr>
+            <td>Username</td>
+            <td><input type="text"></td>
+        </tr>
+        <tr>
+            <td>Password</td>
+            <td><input type="text"></td>
+        </tr>
+        <tr>
+            <td>Full Name</td>
+            <td><input type="text"></td>
+        </tr>
+        <tr>
+            <td>Nationality</td>
+            <td><input type="text"></td>
+        </tr>
+        <tr>
+            <td>Home Address</td>
+            <td><input type="text"></td>
+        </tr>
+        <tr>
+            <td>
+                Bank Account Number<br>
+                <span style="font-size: small">For receive payment</span>
+            </td>
+            <td><input type="text"></td>
+        </tr>
+        <tr>
+            <td>Email</td>
+            <td><input type="text"></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <h3>Document Proof Upload</h3>
+            </td>
+        </tr>
+        <tr>
+            <td>Identity Card/Passport</td>
+            <td><input type="file" multiple></td>
+        </tr>
+        <tr>
+            <td>Home Address Proof</td>
+            <td><input type="file" multiple></td>
+        </tr>
+        <tr>
+            <td>Bank Account Proof</td>
+            <td><input type="file" multiple></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <button type="button">Clear</button>
+                <button type="button">Submit</button>
+            </td>
+        </tr>
+    </table>
+</form>
 
 </body>
 
