@@ -2,8 +2,27 @@
 <body>
 
 <header th:insert="header.html :: header"></header>
-<h1>Homepage 123</h1>
+<h1>Homepage</h1>
 
+<div class="center">
+    <h3>Welcome! Please Login or Sign Up.</h3>
+
+    <table class="table center horizontalTrim" border="1">
+        <tr>
+            <td>
+                <h4>Login</h4><br>
+                Username: <input type="text" name="username"/><br><br>
+                Password: <input type="password" name="password"/><br><br>
+                <button type="submit" name="submit" class="btn btn-long ">Submit</button>
+            </td>
+            <td>
+                <h4>Sign Up</h4><br>
+                <button type="button" name="signup_tourist" class="btn-long btn">Sign Up as Tourist</button><br><br>
+                <button type="button" name="signup_host" class="btn-long btn">Sign Up as Host</button><br><br>
+            </td>
+        </tr>
+    </table>
+</div>
 
 </body>
 
