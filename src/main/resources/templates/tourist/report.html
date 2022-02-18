@@ -4,9 +4,26 @@
     <meta charset="UTF-8">
     <title>Report System</title>
 </head>
+<style>
+    table, th, td {
+        border: 1px solid black;
+    }
+</style>
 <body>
+<form id="fs-frm" name="complaint-form" accept-charset="utf-8"ethod="post">
 <header th:insert="header.html :: header"></header>
 <h1>Report System</h1>
-
+<h1>Please Fill in the Form</h1>
+<label for="full-name">Full Name:</label>
+<input type="text" name="name" id="full-name" placeholder="First and Last" required=""><br/>
+<label for="email-address">Email Address:</label>
+<input type="email" name="_replyto" id="email-address" placeholder="email@domain.tld" required=""><br/>
+<label for="telephone">Telephone Number:</label>
+<input type="telephone" name="telephone" id="telephone" placeholder="+852 XXXX-XXXX"><br/>
+<label for="Description">Description:</label><br/>
+<textarea rows="6" name="Description" id="Description" placeholder="...." required=""></textarea><br/>
+<input type="hidden" name="_subject" id="email-subject" value="Complaint Form Submission"><br/>
+<input type="submit" value="Submit The Form">
+</form>
 </body>
 </html>
