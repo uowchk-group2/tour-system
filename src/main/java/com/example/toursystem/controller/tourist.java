@@ -13,5 +13,32 @@ public class tourist {
     public String demopage(Model model){
         return "./tourist/welcome";
     }
-
+    @GetMapping("account")
+    public String account(Model model){
+        return"./tourist/account";
+    }
+    @GetMapping("apply")
+    public String apply(Model model){
+        return "./tourist/apply";
+    }
+    @GetMapping("booking")
+    public String booking(Model model){
+        return "./tourist/booking";
+    }
+    @GetMapping("chat")
+    public String chat(Model model){
+        return "./tourist/chat";
+    }
+    @GetMapping("payment")
+    public String payment(Model model){
+        return"./tourist/payment";
+    }
+    @GetMapping("report")
+    public String report(Model model){
+        return "./tourist/report";
+    }
+    @GetMapping("review")
+    public String review(Model model){
+        return "./tourist/review";
+    }
 }
