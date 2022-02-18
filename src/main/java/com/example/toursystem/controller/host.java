@@ -14,4 +14,40 @@ public class host {
         return "./host/welcome";
     }
 
+    @GetMapping("applyHost")
+    public String applyHost(Model model){
+        return "./host/applyHost";
+    }
+
+    @GetMapping("create")
+    public String create(Model model){
+        return "./host/create";
+    }
+
+    @GetMapping("manage")
+    public String manage(Model model){
+        return "./host/manage";
+    }
+
+    @GetMapping("review")
+    public String review(Model model){
+        return "./host/review";
+    }
+
+    @GetMapping("hostChat")
+    public String hostChat(Model model){
+        return "./host/hostChat";
+    }
+
+    @GetMapping("hostReport")
+    public String hostReport(Model model){
+        return "./host/hostReport";
+    }
+
+    @GetMapping("receive")
+    public String receive(Model model){
+        return "./host/receive";
+    }
+
+
 }
