@@ -9,6 +9,7 @@ public class home {
 
     @GetMapping("/")
     public String homepage(Model model){
+
         return "home";
     }
 }
