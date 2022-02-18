@@ -3,10 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <title>Apply System</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js" charset="UTF-8"></script>
+    <style>
+        body {
+            font-size: 10pt;
+            font-family: arial;
+            background-color: #fff8e8;
+            text-align: center;
+            margin-top: 20pt;
+        }
+        iframe {
+            width: 200px;
+            height: 200px;
+        }
+        image {
+            width: 400px;
+            height: auto;
+        }
+    </style>
 </head>
 <body>
 <header th:insert="header.html :: header"></header>
 <h1>Apply Tour</h1>
-
+<table>
+    <tr>
+        <td>
+            <img src= "../../static/img/buddha.jpg">
+        </td>
+        <td>
+            <img src= "../../static/img/ocean-park.jpg">
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <p>Tian Tan Buddha one day trip</p>
+        </td>
+        <td>
+            <p>Ocean Park two day trip</p>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <img th:src="@{img/peak.jpg}">
+        </td>
+        <td>
+            <img src= "../../static/img/TaiO.jpg">
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <p>The Peak one day trip</p>
+        </td>
+        <td>
+            <p>Tai-O one day trip</p>
+        </td>
+    </tr>
+</table>
+<nav id="pagination" >
+</nav>
 </body>
 </html>
