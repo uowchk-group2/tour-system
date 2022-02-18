@@ -11,7 +11,7 @@ public class tourist {
 
     @GetMapping("")
     public String demopage(Model model){
-        return "tourist/welcome";
+        return "./tourist/welcome";
     }
 
 }

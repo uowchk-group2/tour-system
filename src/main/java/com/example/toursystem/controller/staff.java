@@ -11,7 +11,7 @@ public class staff {
 
     @GetMapping("")
     public String demopage(Model model){
-        return "staff/welcome";
+        return "./staff/welcome";
     }
 
 }

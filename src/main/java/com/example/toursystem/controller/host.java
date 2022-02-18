@@ -11,7 +11,7 @@ public class host {
 
     @GetMapping("")
     public String demopage(Model model){
-        return "host/welcome";
+        return "./host/welcome";
     }
 
 }
