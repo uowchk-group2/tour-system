@@ -29,5 +29,15 @@ body{
     background-color: #D4F2D2;
     margin: 0px;
     border: 1px solid ;
+}
+.btn-small{
+    background-color: #D4F2D2;
+    padding: 3px;
+    margin: 0px;
+    border: 1px solid ;
+}
 
+image {
+    width: 400px;
+    height: auto;
 }

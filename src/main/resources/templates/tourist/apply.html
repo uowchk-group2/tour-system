@@ -3,10 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <title>Apply System</title>
+    <style>
+        body {
+            font-size: 10pt;
+            font-family: arial;
+            background-color: #fff8e8;
+            text-align: center;
+            margin-top: 20pt;
+        }
+        iframe {
+            width: 200px;
+            height: 200px;
+        }
+        image {
+            width: 400px;
+            height: auto;
+        }
+    </style>
 </head>
 <body>
 <header th:insert="header.html :: header"></header>
 <h1>Apply Tour</h1>
+<table class="table center horizontalTrim" >
+    <tr>
+        <td>
+            <img src= "../../static/img/buddha.jpg">
+        </td>
+        <td>
+            <img src= "../../static/img/ocean-park.jpg">
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <p>Tian Tan Buddha one day trip</p>
+        </td>
+        <td>
+            <p>Ocean Park two day trip</p>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <img th:src="@{img/peak.jpg}">
+        </td>
+        <td>
+            <img src= "../../static/img/TaiO.jpg">
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <p>The Peak one day trip</p>
+        </td>
+        <td>
+            <p>Tai-O one day trip</p>
+        </td>
+    </tr>
+</table>
+<nav id="pagination" >
 
+</nav>
 </body>
 </html>
