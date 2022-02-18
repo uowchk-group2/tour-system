@@ -5,6 +5,48 @@
 <header th:insert="header.html :: header"></header>
 <h1>User Management</h1>
 
+<div class="table center horizontalTrim">
+            <select>
+                <option>User id</option>
+                <option>username</option>
+                <option>name</option>
+            </select>
+            <input type="text" name="keyword" placeholder="keyword"/>
+            <button type="button" class="btn btn-long" name="search">Search</button>
+</div>
+
+<h2 class="center">Search result</h2>
+<table class="table center" valign="center">
+    <tr>
+        <th>User id</th>
+        <th>Role</th>
+        <th>Username</th>
+        <th>Name</th>
+        <th>Action</th>
+    </tr>
+    <tr>
+        <td>1</td>
+        <td>Host</td>
+        <td>johnny</td>
+        <td>Johnny IP</td>
+        <td>
+            <button type="button" class="btn btn-small">Remove</button>
+            <button type="button" class="btn btn-small">Chat</button>
+            <button type="button" class="btn btn-small">View created tours</button>
+        </td>
+    </tr>
+    <tr>
+        <td>2</td>
+        <td>Tourist</td>
+        <td>oscar</td>
+        <td>Oscar</td>
+        <td>
+            <button type="button" class="btn btn-small">Remove</button>
+            <button type="button" class="btn btn-small">Chat</button>
+            <button type="button" class="btn btn-small">View joined tours</button>
+        </td>
+    </tr>
+</table>
 
 
 </body>

@@ -6,16 +6,16 @@
 <h1>Host homepage</h1>
 <table class="center horizontalTrim morePadding">
     <tr>
-        <td><button class="btn btn-long" onclick="window.location='host/create'">x Create Tour</button></td>
-        <td><button class="btn btn-long" onclick="window.location='host/manage'">x Manage Tours</button></td>
+        <td><a class="btn btn-long" th:href="@{/host/create}">Create Tour</a></td>
+        <td><a class="btn btn-long" th:href="@{/host/manage}">x Manage Tours</a></td>
     </tr>
     <tr>
-        <td><button class="btn btn-long" onclick="window.location='host/review'">x Review Tourists</button></td>
-        <td><button class="btn btn-long" onclick="window.location='host/hostChat'">x Chat System</button></td>
+        <td><a class="btn btn-long" th:href="@{/host/review}">x Review Tourists</a></td>
+        <td><a class="btn btn-long" th:href="@{/host/hostChat}">x Chat System</a></td>
     </tr>
     <tr>
-        <td><button class="btn btn-long" onclick="window.location='host/hostReport'">x Report System</button></td>
-        <td><button class="btn btn-long" onclick="window.location='host/receive'">x Receive Payment</button></td>
+        <td><a class="btn btn-long" th:href="@{/host/hostReport}">x Report System</a></td>
+        <td><a class="btn btn-long" th:href="@{/host/receive}">x Receive Payment</a></td>
     </tr>
 
 </table>
