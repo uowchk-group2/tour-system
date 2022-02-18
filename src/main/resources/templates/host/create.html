@@ -5,7 +5,27 @@
 <header th:insert="header.html :: header"></header>
 <h1>Create a new tour</h1>
 
+<form >
+    <table>
+        <tr>
+            <td>Name of tour:</td>
+            <td><input type="text" ></td>
+        </tr>
+        <tr>
+            <td>Tour's day(s) :</td>
+            <td><input type="number" min="1" value="1"></td>
+        </tr>
+        <tr>
+            <td>Description:</td>
+            <td> <textarea></textarea></td>
+        </tr>
 
+        <tr>
+            <td>Upload photo(optional):</td>
+            <td><input type="file"></td>
+        </tr>
+    </table>
+</form>
 
 </body>
 
