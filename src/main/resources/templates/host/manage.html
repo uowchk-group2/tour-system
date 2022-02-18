@@ -5,6 +5,33 @@
 <header th:insert="header.html :: header"></header>
 <h1>Manage tours</h1>
 
+<table class="table center" valign="center">
+    <tr>
+        <th>Tour id</th>
+        <th>Tour name</th>
+        <th>Action</th>
+    </tr>
+    <tr>
+        <td>1</td>
+        <td>Tian Tan Buddha one day trip</td>
+        <td>
+            <a th:href="@{/tourist/tour}">
+                <button type="button" class="btn btn-small">View Detail</button>
+            </a>
+            <button type="button" class="btn btn-small">Remove</button>
+        </td>
+    </tr>
+    <tr>
+        <td>2</td>
+        <td>Ocean Park two day trip</td>
+        <td>
+            <a th:href="@{/tourist/tour}">
+                <button type="button" class="btn btn-small">View Detail</button>
+            </a>
+            <button type="button" class="btn btn-small">Remove</button>
+        </td>
+    </tr>
+</table>
 
 
 </body>

@@ -5,7 +5,82 @@
 <header th:insert="header.html :: header"></header>
 <h1>Receive Payment</h1>
 
+<table class="table center horizontalTrim borderedWithColor" >
+    <tr>
+        <th>Amount Paid</th>
+        <th></th>
+        <th>Amout Not Yet Received</th>
+        <th></th>
+        <th>Total</th>
+    </tr>
+    <tr>
+        <td>$2500</td>
+        <td>+</td>
+        <td>$3100</td>
+        <td>=</td>
+        <td>$5600</td>
+    </tr>
+</table>
 
+<h3 class="center borderedWithColor">Payment Not Yet Received</h3>
+<table class="table center" valign="center">
+    <tr>
+        <th>Tour id</th>
+        <th>Tour name</th>
+        <th>Number of tourists</th>
+        <th>Fee per tourist</th>
+        <th>Total Amount</th>
+    </tr>
+    <tr>
+        <td>1</td>
+        <td>Tian Tan Buddha one day trip</td>
+        <td>2</td>
+        <td>$300</td>
+        <td>$600</td>
+    </tr>
+    <tr>
+        <td>2</td>
+        <td>Ocean Park two day trip</td>
+        <td>5</td>
+        <td>$500</td>
+        <td>$2500</td>
+    </tr>
+    <tr>
+        <td colspan="3"></td>
+        <th>Total Amount</th>
+        <th>$3100</th>
+    </tr>
+    <tr>
+        <td colspan="5" style="text-align: end">
+            <button type="button" class="btn btn-primary">Transfer all to Bank Account</button>
+        </td>
+    </tr>
+</table>
+
+
+<h3 class="center borderedWithColor">Payment History</h3>
+<table class="table center " valign="center">
+    <tr>
+        <th>Tour id</th>
+        <th>Tour name</th>
+        <th>Number of tourists</th>
+        <th>Fee per tourist</th>
+        <th>Total Amount</th>
+    </tr>
+    <tr>
+        <td>2</td>
+        <td>Ocean Park two day trip</td>
+        <td>5</td>
+        <td>$500</td>
+        <td>$2500</td>
+    </tr>
+    <tr>
+        <td colspan="3"></td>
+        <th>Total Amount</th>
+        <th>$2500</th>
+    </tr>
+
+</table>
 
 </body>
 
