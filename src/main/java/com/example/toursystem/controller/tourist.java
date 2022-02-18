@@ -21,6 +21,10 @@ public class tourist {
     public String apply(Model model){
         return "./tourist/apply";
     }
+    @GetMapping("tour")
+    public String tour(Model model){
+        return "./tourist/tour";
+    }
     @GetMapping("booking")
     public String booking(Model model){
         return "./tourist/booking";
