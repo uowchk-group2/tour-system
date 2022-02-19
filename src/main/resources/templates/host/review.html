@@ -1,25 +1,117 @@
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Review System</title>
+</head>
+<script>
+    // alert("Please select a rating");
+</script>
 <body>
-
 <header th:insert="header.html :: header"></header>
-<h1>Review tourists</h1>
-<span class="heading"><h2>Tourists Rating</h2></span>
-<span class="fa fa-star checked"></span>
-<span class="fa fa-star checked"></span>
-<span class="fa fa-star checked"></span>
-<span class="fa fa-star checked"></span>
-<span class="fa fa-star"></span>
-<p>0 average out of 0 review </p>
-<hr style="border:3px solid #f1f1f1">
-    <label for="trips">Choose a trip:</label>
-    <select name="trips" id="trips">
-        <option value="trip1">Tian Tan Buddha one day trip</option>
-        <option value="trip2">Ocean Park two day trip</option>
-    </select>
-    <br><br>
-    <hr>
-    <input type="submit" value="Submit">
-</body>
+<h1>Review System</h1>
+<p>Give a rating and a review for your tourists.</p>
 
+<table class="table center horizontalTrim">
+    <tr>
+        <td colspan="2">
+            <h2 class="borderedWithColor">Review You Have Written (Can be folded in production)</h2>
+        </td>
+    </tr>
+    <tr>
+        <th>Tour</th>
+        <td>
+            <select>
+                <option>Tian Tan Buddha one day trip (08-13-2022)</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <th>Tourist</th>
+        <td>
+            <select>
+                <option>Johnny</option>
+                <option>Oscar</option>
+                <option>James</option>
+                <option>Ivan</option>
+                <option>Jacky</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <h4>Review for the tourist</h4>
+        </td>
+    </tr>
+    <tr>
+        <th>Rating</th>
+        <td>
+            &#9733;&#9733;&#9733;&#9733;&#9733;
+        </td>
+    </tr>
+    <tr>
+        <th>Comment</th>
+        <td>
+            Nice chat.
+        </td>
+    </tr>
+
+</table>
+
+<table class="table center horizontalTrim">
+    <tr>
+        <td colspan="2">
+            <h2 class="borderedWithColor">Write A Review</h2>
+        </td>
+    </tr>
+    <tr>
+        <th>Choose a tour</th>
+        <td>
+            <select>
+                <option>Tian Tan Buddha one day trip (08-13-2022)</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <th>Choose a tourist</th>
+        <td>
+            <select>
+                <option>Johnny</option>
+                <option>Oscar</option>
+                <option>James</option>
+                <option>Ivan</option>
+                <option>Jacky</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <h4>Review for the tourist</h4>
+        </td>
+    </tr>
+    <tr>
+        <th>Rating</th>
+        <td>
+            <button type="button" class="btn rating">&#9733;</button>
+            <button type="button" class="btn rating">&#9734;</button>
+            <button type="button" class="btn rating">&#9734;</button>
+            <button type="button" class="btn rating">&#9734;</button>
+            <button type="button" class="btn rating">&#9734;</button>
+        </td>
+    </tr>
+    <tr>
+        <th>Comment</th>
+        <td>
+            <textarea></textarea>
+        </td>
+    </tr>
+
+    <tr>
+        <td colspan="2">
+            <button type="button" class="btn btn-long">Submit</button>
+        </td>
+    </tr>
+</table>
+
+</body>
 </html>
