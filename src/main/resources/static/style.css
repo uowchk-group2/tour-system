@@ -65,3 +65,6 @@ image {
     font-size: large;
 }
 
+.alignLeft{
+    text-align: left;
+}
