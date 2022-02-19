@@ -2,28 +2,88 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Report System</title>
+    <title>Review System</title>
 </head>
-<style>
-    table, th, td {
-        border: 1px solid black;
-    }
-</style>
 <body>
-<form id="fs-frm" name="complaint-form" accept-charset="utf-8"ethod="post">
 <header th:insert="header.html :: header"></header>
 <h1>Report System</h1>
-<h1>Please Fill in the Form</h1>
-<label for="full-name">Full Name:</label>
-<input type="text" name="name" id="full-name" placeholder="First and Last" required=""><br/>
-<label for="email-address">Email Address:</label>
-<input type="email" name="_replyto" id="email-address" placeholder="email@domain.tld" required=""><br/>
-<label for="telephone">Telephone Number:</label>
-<input type="telephone" name="telephone" id="telephone" placeholder="+852 XXXX-XXXX"><br/>
-<label for="Description">Description:</label><br/>
-<textarea rows="6" name="Description" id="Description" placeholder="...." required=""></textarea><br/>
-<input type="hidden" name="_subject" id="email-subject" value="Complaint Form Submission"><br/>
-<input type="submit" value="Submit The Form">
-</form>
+<p>Report problems you have faced.</p>
+
+<table class="table center ">
+    <tr>
+        <td colspan="6">
+            <h2 class="borderedWithColor horizontalTrim">Report History (Can be folded in production)</h2>
+        </td>
+    </tr>
+    <tr>
+        <th>Report Date</th>
+        <th>Report Nature</th>
+        <th>Related Tour</th>
+        <th>Submitted By</th>
+        <th>Report Status</th>
+        <th>Actions</th>
+    </tr>
+    <tr>
+        <td>02-22-2022</td>
+        <td>Booking problem</td>
+        <td>Tian Tan Buddha one day trip (08-13-2022)</td>
+        <td>Tourist(You)</td>
+        <td>Under Investigation</td>
+        <td>
+            <button type="button" class="btn btn-long">Details</button>
+        </td>
+    </tr>
+    <tr>
+        <td>01-11-2022</td>
+        <td>Others</td>
+        <td>Tian Tan Buddha one day trip (08-13-2022)</td>
+        <td>Host</td>
+        <td>Solved</td>
+        <td>
+            <button type="button" class="btn btn-long">Details</button>
+        </td>
+    </tr>
+</table>
+
+<table class="table center horizontalTrim">
+    <tr>
+        <td colspan="2">
+            <h2 class="borderedWithColor">Report A New Problem</h2>
+        </td>
+    </tr>
+    <tr>
+        <th>Nature of the report</th>
+        <td>
+            <select>
+                <option>Content of the tour is not the same as stated.</option>
+                <option>Booking problem</option>
+                <option>Others</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <th>Related Tour</th>
+        <td style="text-align: left">
+            <input type="radio" name="relatedTour" value="yes">
+            <select>
+                <option>Tian Tan Buddha one day trip (08-13-2022)</option>
+                <option>The problem is not related to </option>
+            </select><br>
+            <input type="radio" name="relatedTour" value="no">The problem is not related to a tour
+        </td>
+    </tr>
+    <tr>
+        <th>Describe your problem as detail as possible</th>
+        <td>
+            <textarea></textarea>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <button type="button" class="btn btn-long">Submit</button>
+        </td>
+    </tr>
+</table>
+
 </body>
 </html>
