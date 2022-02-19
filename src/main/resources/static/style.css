@@ -16,6 +16,10 @@ body{
     margin-right: 20%;
 }
 
+.addPadding{
+    padding: 30px;
+}
+
 .morePadding{
     border-collapse: separate;
     border-spacing: 40px;

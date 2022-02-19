@@ -11,38 +11,46 @@ public class tourist {
 
     @GetMapping("")
     public String demopage(Model model){
-        return "./tourist/welcome";
+        return "tourist/welcome";
     }
     @GetMapping("signup")
     public String signup(Model model){
-        return "./tourist/signup";
+        return "tourist/signup";
     }
-    @GetMapping("apply")
-    public String apply(Model model){
-        return "./tourist/apply";
+    @GetMapping("search")
+    public String search(Model model){
+        return "tourist/search";
     }
-    @GetMapping("tour")
-    public String tour(Model model){
-        return "./tourist/tour";
+    @GetMapping("tourDetail")
+    public String tourDetail(Model model){
+        return "tourist/tourDetail";
     }
     @GetMapping("booking")
     public String booking(Model model){
-        return "./tourist/booking";
+        return "tourist/booking";
+    }
+    @GetMapping("bookingDetail")
+    public String bookingDetail(Model model){
+        return "tourist/bookingDetail";
     }
     @GetMapping("chat")
     public String chat(Model model){
-        return "./tourist/chat";
+        return "tourist/chat";
     }
     @GetMapping("payment")
     public String payment(Model model){
-        return"./tourist/payment";
+        return"tourist/payment";
+    }
+    @GetMapping("paid")
+    public String paid(Model model){
+        return"tourist/paid";
     }
     @GetMapping("report")
     public String report(Model model){
-        return "./tourist/report";
+        return "tourist/report";
     }
     @GetMapping("review")
     public String review(Model model){
-        return "./tourist/review";
+        return "tourist/review";
     }
 }

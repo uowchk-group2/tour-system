@@ -11,39 +11,39 @@ public class host {
 
     @GetMapping("")
     public String demopage(Model model){
-        return "./host/welcome";
+        return "host/welcome";
     }
     @GetMapping("signup")
     public String signup(Model model){
-        return "./host/signup";
+        return "host/signup";
     }
     @GetMapping("create")
     public String create(Model model){
-        return "./host/create";
+        return "host/create";
     }
     @GetMapping("manage")
     public String manage(Model model){
-        return "./host/manage";
+        return "host/manage";
     }
     @GetMapping("tourDetailEdit")
     public String tourDetailEdit(Model model){
-        return "./host/tourDetailEdit";
+        return "host/tourDetailEdit";
     }
     @GetMapping("review")
     public String review(Model model){
-        return "./host/review";
+        return "host/review";
     }
     @GetMapping("hostChat")
     public String hostChat(Model model){
-        return "./host/hostChat";
+        return "host/hostChat";
     }
     @GetMapping("hostReport")
     public String hostReport(Model model){
-        return "./host/hostReport";
+        return "host/hostReport";
     }
     @GetMapping("receive")
     public String receive(Model model){
-        return "./host/receive";
+        return "host/receive";
     }
 
 

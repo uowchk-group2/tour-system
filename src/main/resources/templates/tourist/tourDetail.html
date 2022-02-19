@@ -56,22 +56,36 @@
         <td><p>1</p></td>
     </tr>
     <tr>
+        <th>Cost per person:</th>
+        <td>$100</td>
+    </tr>
+    <tr>
         <th>Description:</th>
         <td><p>The Big Buddha and Po Lin Monastery are a major draw for Buddhist pilgrims. And these majestic religious
             monuments, set against beautiful mountain and coastal scenery, are just as popular with a wide range of
             visitors in Hong Kong.</p></td>
     </tr>
+    <tr>
+        <th>Schedule of the tour</th>
+        <td>
+            <pre>
+                1500 Gather at MTR
+                1600 Dismiss at MTR
+            </pre>
+        </td>
+    </tr>
 
     <tr>
         <td colspan="2">
-            <h2 class="center">Reserve seats</h2>
+            <h2 class="center">Booking Options</h2>
         </td>
     </tr>
     <tr>
         <th>Date</th>
         <td>
             <select>
-
+                <option selected>02-17-2022 3/10 remaining</option>
+                <option>02-19-2022 10/10 remaining</option>
             </select>
         </td>
     </tr>
@@ -87,7 +101,7 @@
     </tr>
     <tr>
         <td colspan="2">
-            <button class="btn btn-long">Apply</button>
+            <a class="btn btn-long" th:href="@{/tourist/payment}">Book Now</a>
         </td>
     </tr>
 </table>

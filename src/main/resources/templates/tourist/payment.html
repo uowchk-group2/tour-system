@@ -7,61 +7,87 @@
 <body>
 <header th:insert="header.html :: header"></header>
 <h1>Payment Method</h1>
-<div class="container">
+<div class="container center">
     <h1>Confirm Your Payment</h1>
-    <div class="first-row">
-        <div class="owner">
-            <h3>Owner</h3>
-            <div class="input-field">
-                <input type="text">
-            </div>
-        </div>
-        <div class="cvv">
-            <h3>CVV</h3>
-            <div class="input-field">
-                <input type="password">
-            </div>
-        </div>
-    </div>
-    <div class="second-row">
-        <div class="card-number">
-            <h3>Card Number</h3>
-            <div class="input-field">
-                <input type="text">
-            </div>
-        </div>
-    </div>
-    <div class="third-row">
-        <h3>Valid Date</h3>
-        <div class="selection">
-            <div class="date">
-                <select name="months" id="months">
-                    <option value="Jan">Jan</option>
-                    <option value="Feb">Feb</option>
-                    <option value="Mar">Mar</option>
-                    <option value="Apr">Apr</option>
-                    <option value="May">May</option>
-                    <option value="Jun">Jun</option>
-                    <option value="Jul">Jul</option>
-                    <option value="Aug">Aug</option>
-                    <option value="Sep">Sep</option>
-                    <option value="Oct">Oct</option>
-                    <option value="Nov">Nov</option>
-                    <option value="Dec">Dec</option>
-                </select>
-                <select name="years" id="years">
-                    <option value="2020">2027</option>
-                    <option value="2019">2026</option>
-                    <option value="2018">2025</option>
-                    <option value="2017">2024</option>
-                    <option value="2016">2023</option>
-                    <option value="2015">2022</option>
-                </select>
-            </div>
+    <table class="table center horizontalTrim">
+        <tr>
+            <th>Tour Name</th>
+            <td>Tian Tan Buddha one day trip</td>
+        </tr>
+        <tr>
+            <th>Tour start date</th>
+            <td>02-17-2022</td>
+        </tr>
+        <tr>
+            <th>Number of people</th>
+            <td>2</td>
+        </tr>
+        <tr>
+            <th>Cost per person</th>
+            <td>$100</td>
+        </tr>
+        <tr>
+            <th>Total Amount</th>
+            <td>$200</td>
+        </tr>
+    </table>
 
-        </div>
-    </div>
-    <a href="">Confirm</a>
+    <h2>Payment Detail</h2>
+    <table class="table center horizontalTrim">
+        <tr>
+            <th>Card Number</th>
+            <td>
+                <input type="text" value="1234 1234 1234 1234">
+            </td>
+        </tr>
+        <tr>
+            <th>Name On Card</th>
+            <td>
+                <input type="text" value="Johnny">
+            </td>
+        </tr>
+        <tr>
+            <th>CVV</th>
+            <td>
+                <input type="password" value="123">
+            </td>
+        </tr>
+        <tr>
+            <th>Valid Date</th>
+            <td>
+                <div class="date">
+                    <select name="months" id="months">
+                        <option value="Jan">Jan</option>
+                        <option value="Feb">Feb</option>
+                        <option value="Mar">Mar</option>
+                        <option value="Apr">Apr</option>
+                        <option value="May">May</option>
+                        <option value="Jun">Jun</option>
+                        <option value="Jul">Jul</option>
+                        <option value="Aug">Aug</option>
+                        <option value="Sep">Sep</option>
+                        <option value="Oct">Oct</option>
+                        <option value="Nov">Nov</option>
+                        <option value="Dec">Dec</option>
+                    </select>
+                    <select name="years" id="years">
+                        <option value="2020">2027</option>
+                        <option value="2019">2026</option>
+                        <option value="2018">2025</option>
+                        <option value="2017">2024</option>
+                        <option value="2016">2023</option>
+                        <option value="2015">2022</option>
+                    </select>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <a class="btn btn-long" th:href="@{/tourist/paid}">Confirm</a>
+            </td>
+        </tr>
+    </table>
+
 </div>
 </body>
 </html>
