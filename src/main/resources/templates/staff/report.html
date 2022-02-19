@@ -1,12 +1,41 @@
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Review System</title>
+</head>
 <body>
-
 <header th:insert="header.html :: header"></header>
 <h1>Report System</h1>
 
+<table class="table center ">
+    <tr>
+        <th>Report Date</th>
+        <th>Report Nature</th>
+        <th>Username</th>
+        <th>Report Status</th>
+        <th>Actions</th>
+    </tr>
+    <tr>
+        <td>02-22-2022</td>
+        <td>Booking problem</td>
+        <td>johnny</td>
+        <td>Under Investigation</td>
+        <td>
+            <button type="button" class="btn btn-long">Details</button>
+        </td>
+    </tr>
+    <tr>
+        <td>01-11-2022</td>
+        <td>Others</td>
+        <td>oscar</td>
+        <td>Solved</td>
+        <td>
+            <button type="button" class="btn btn-long">Details</button>
+        </td>
+    </tr>
+</table>
 
 
 </body>
-
 </html>

@@ -5,6 +5,36 @@
 <header th:insert="header.html :: header"></header>
 <h1>Host User Application</h1>
 
+<div class="btn-group center">
+    <button type="button" class="btn btn-primary">All</button>
+    <button type="button" class="btn btn-secondary">Approved</button>
+    <button type="button" class="btn btn-secondary">Not Approved</button>
+</div>
+
+<table class="table center ">
+    <tr>
+        <th>User id</th>
+        <th>Username</th>
+        <th>Status</th>
+        <th>Actions</th>
+    </tr>
+    <tr>
+        <td>14</td>
+        <td>johnny</td>
+        <td>Approved</td>
+        <td>
+            <button type="button" class="btn btn-long">Details</button>
+        </td>
+    </tr>
+    <tr>
+        <td>24</td>
+        <td>oscar</td>
+        <td>Need more documents</td>
+        <td>
+            <button type="button" class="btn btn-long">Details</button>
+        </td>
+    </tr>
+</table>
 
 
 </body>
