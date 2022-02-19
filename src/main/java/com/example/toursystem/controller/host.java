@@ -25,6 +25,10 @@ public class host {
     public String manage(Model model){
         return "./host/manage";
     }
+    @GetMapping("tourDetailEdit")
+    public String tourDetailEdit(Model model){
+        return "./host/tourDetailEdit";
+    }
     @GetMapping("review")
     public String review(Model model){
         return "./host/review";

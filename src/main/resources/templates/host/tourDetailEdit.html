@@ -3,7 +3,7 @@
 <body>
 
 <header th:insert="header.html :: header"></header>
-<h1>Create a new tour</h1>
+<h1>Edit tour detail</h1>
 
 <form>
     <table class="horizontalTrim center morePadding" border="1">
@@ -11,13 +11,13 @@
 
         <tr>
             <td width="20%">Name of tour:</td>
-            <td><input type="text"></td>
+            <td><input type="text" value="Tian Tan Buddha one day trip"></td>
         </tr>
         <tr>
             <td>Country of tour:</td>
             <td>
                 <select>
-                    <option>Hong Kong</option>
+                    <option selected>Hong Kong</option>
                     <option>China</option>
                     <option>Australia</option>
                 </select>
@@ -29,7 +29,11 @@
         </tr>
         <tr>
             <td>Description:</td>
-            <td><textarea></textarea></td>
+            <td>
+                <textarea>
+            The Big Buddha and Po Lin Monastery are a major draw for Buddhist pilgrims. And these majestic religiousmonuments, set against beautiful mountain and coastal scenery, are just as popular with a wide range ofvisitors in Hong Kong.
+                </textarea>
+            </td>
         </tr>
 
         <tr>
@@ -42,13 +46,14 @@
             </td>
         </tr>
         <tr>
-            <td >Dates of tour</td>
+            <td>Dates of tour</td>
             <td>
-                <input type="text" id="datepicker" class="form-control datepicker" placeholder="Choose a date to participate" name="date"
-                       maxlength="25" size="25" onchange="dateOnChange()">
+                <input type="text" id="datepicker" class="form-control datepicker"
+                       placeholder="Choose a date to participate" name="date"
+                       maxlength="25" size="25" onchange="dateOnChange()" value="02-17-2022">
                 <script type="text/javascript">
 
-                    function dateOnChange(){
+                    function dateOnChange() {
                         console.log(document.getElementById("datepicker").value)
                     }
 
@@ -65,7 +70,7 @@
         <tr>
             <td>Limit of participants</td>
             <td>
-                <input type="number">
+                <input type="number" value="10">
             </td>
         </tr>
         <tr>

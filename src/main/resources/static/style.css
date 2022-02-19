@@ -38,12 +38,21 @@ body{
 }
 
 image {
-    width: 400px;
-    height: auto;
+    height: 400px;
 }
 
 .borderedWithColor{
     background-color: #D4F2D2;
     border: 1px solid ;
     border-radius: 10px;
+}
+
+.card{
+    border-radius: 20px;
+    padding:5px;
+}
+
+.datepicker-dropdown{
+    margin-left: 10%;
+    margin-right: 10%;
 }

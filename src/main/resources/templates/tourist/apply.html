@@ -10,34 +10,38 @@
 <table class="table center">
     <tr>
         <td>
-            <a th:href="@{/tourist/tour}"><img width="400" th:src="@{/img/buddha.jpg}"></a>
+            <div class="card horizontalTrim">
+                <a th:href="@{/tourist/tour}">
+                    <img width="400" th:src="@{/img/buddha.jpg}"><br>
+                    <p>Tian Tan Buddha one day trip</p>
+                </a>
+            </div>
         </td>
         <td>
-            <img width="400" th:src="@{/img/ocean-park.jpg}">
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <a th:href="@{/tourist/tour}"><p>Tian Tan Buddha one day trip</p></a>
-        </td>
-        <td>
-            <p>Ocean Park two day trip</p>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <img width="400" th:src="@{/img/peak.jpg}"/>
-        </td>
-        <td>
-            <img width="400" th:src="@{/img/TaiO.jpg}">
+            <div class="card horizontalTrim">
+                <a th:href="@{/tourist/tour}">
+                    <img width="400" th:src="@{/img/ocean-park.jpg}"><br>
+                    <p>Ocean Park two day trip</p>
+                </a>
+            </div>
         </td>
     </tr>
     <tr>
         <td>
-            <p>The Peak one day trip</p>
+            <div class="card horizontalTrim">
+                <a th:href="@{/tourist/tour}">
+                    <img width="400" th:src="@{/img/peak.jpg}"/><br>
+                    <p>The Peak one day trip</p>
+                </a>
+            </div>
         </td>
         <td>
-            <p>Tai-O one day trip</p>
+            <div class="card horizontalTrim">
+                <a th:href="@{/tourist/tour}">
+                    <img width="400" th:src="@{/img/TaiO.jpg}"><br>
+                    <p>Tai-O one day trip</p>
+                </a>
+            </div>
         </td>
     </tr>
 </table>
