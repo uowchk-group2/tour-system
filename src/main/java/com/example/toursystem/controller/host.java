@@ -45,6 +45,10 @@ public class host {
     public String receive(Model model){
         return "host/receive";
     }
+    @GetMapping("stats")
+    public String stats(Model model){
+        return "host/stats";
+    }
 
 
 }
