@@ -6,19 +6,30 @@
 <h1>Host homepage</h1>
 <table class="center horizontalTrim morePadding">
     <tr>
+        <td colspan="2">
+            <h2 class="center borderedWithColor">Tours</h2>
+        </td>
+    </tr>
+
+    <tr>
         <td><a class="btn btn-long" th:href="@{/host/create}">Create Tour</a></td>
         <td><a class="btn btn-long" th:href="@{/host/manage}">Manage Tours</a></td>
     </tr>
     <tr>
         <td><a class="btn btn-long" th:href="@{/host/review}"> Review Tourists</a></td>
-        <td><a class="btn btn-long" th:href="@{/host/hostChat}">Chat System</a></td>
+        <td><a class="btn btn-long" th:href="@{/host/stats}">Statistics</a></td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <h2 class="center borderedWithColor">Tours</h2>
+        </td>
     </tr>
     <tr>
         <td><a class="btn btn-long" th:href="@{/host/hostReport}">Report System</a></td>
         <td><a class="btn btn-long" th:href="@{/host/receive}">Receive Payment</a></td>
     </tr>
     <tr>
-        <td><a class="btn btn-long" th:href="@{/host/stats}">Statistics</a></td>
+        <td><a class="btn btn-long" th:href="@{/host/hostChat}">Chat System</a></td>
     </tr>
 
 </table>

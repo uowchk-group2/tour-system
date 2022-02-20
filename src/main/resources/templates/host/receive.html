@@ -9,7 +9,9 @@
     <tr>
         <th>Amount Paid</th>
         <th></th>
-        <th>Amout Not Yet Received</th>
+        <th>Amount Earned But Not Yet Received</th>
+        <th></th>
+        <th>Amount Not Yet Earned</th>
         <th></th>
         <th>Total</th>
     </tr>
@@ -17,12 +19,16 @@
         <td>$2500</td>
         <td>+</td>
         <td>$3100</td>
+        <td>+</td>
+        <td>$4700</td>
         <td>=</td>
-        <td>$5600</td>
+        <td>$10300</td>
     </tr>
 </table>
 
-<h3 class="center borderedWithColor">Payment Not Yet Received</h3>
+<h3 class="center borderedWithColor">Tour Fee Earned But Not Yet Received<br>
+    <span style="font-size: medium">Your earnings will be temporary saved on our platform, until you click "transfer all to bank account".</span>
+</h3>
 <table class="table center" valign="center">
     <tr>
         <th>Tour id</th>
@@ -57,10 +63,52 @@
     </tr>
 </table>
 
+<h3 class="center borderedWithColor">Tour Fee Not Yet Earned<br>
+    <span style="font-size: medium">
+        Earnings that will be given to you until the tour is finished.<br>
+        If the tour does not receive any complaints, the amount will be given to you 1 day after the tour is finished. Otherwise, it will be given to you until we settle the complaints related to that tour.
+    </span>
+</h3>
+<table class="table center" valign="center">
+    <tr>
+        <th>Tour id</th>
+        <th>Tour name</th>
+        <th>Tour status</th>
+        <th>Expected Finish Date</th>
+        <th>Number of tourists</th>
+        <th>Fee per tourist</th>
+        <th>Total Amount</th>
+    </tr>
+    <tr>
+        <td>3</td>
+        <td>Ocean Park two day trip</td>
+        <td>Not Completed</td>
+        <td>02-20-2022</td>
+        <td>7</td>
+        <td>$500</td>
+        <td>$3500</td>
+    </tr>
+    <tr>
+        <td>4</td>
+        <td>Tian Tan Buddha one day trip</td>
+        <td>Dispute investigating</td>
+        <td>-</td>
+        <td>4</td>
+        <td>$300</td>
+        <td>$1200</td>
+    </tr>
+    <tr>
+        <td colspan="5"></td>
+        <th>Total Amount</th>
+        <th>$4700</th>
+    </tr>
+</table>
+
 
 <h3 class="center borderedWithColor">Payment History</h3>
 <table class="table center " valign="center">
     <tr>
+        <th>Date of Transfer</th>
         <th>Tour id</th>
         <th>Tour name</th>
         <th>Number of tourists</th>
@@ -68,14 +116,15 @@
         <th>Total Amount</th>
     </tr>
     <tr>
-        <td>2</td>
+        <td>02-11-2022</td>
+        <td>5</td>
         <td>Ocean Park two day trip</td>
         <td>5</td>
         <td>$500</td>
         <td>$2500</td>
     </tr>
     <tr>
-        <td colspan="3"></td>
+        <td colspan="4"></td>
         <th>Total Amount</th>
         <th>$2500</th>
     </tr>
