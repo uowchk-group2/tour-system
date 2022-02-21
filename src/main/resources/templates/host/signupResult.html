@@ -1,0 +1,75 @@
+<html>
+
+<body>
+
+<header th:insert="header.html :: header"></header>
+<h1>Signup Result</h1>
+
+<div class="center ">
+    <h1 class="addPadding">We are reviewing your application.</h1>
+    <p class="addPadding">
+        You will be notified by email if your account is ready.<br>
+        We may also require you to have a resubmission on your proof documents.
+    </p>
+</div>
+
+<hr>
+<table class="center">
+    <tr>
+        <td colspan="2">(Show below if we need more documents.)</td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <h1 class="addPadding">You are required to resubmit your proof documents</h1>
+            <p class="addPadding">
+                Unfortunately, we cannot verify your identity with documents you have provided.<br>
+                You are required to upload another documents as stated below.
+            </p>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <h3>Document Proof Upload</h3>
+        </td>
+    </tr>
+    <tr>
+        <td>Identity Card/Passport</td>
+        <td><input type="file" multiple></td>
+    </tr>
+    <tr>
+        <td>Home Address Proof</td>
+        <td><input type="file" multiple></td>
+    </tr>
+    <tr>
+        <td>Bank Account Proof</td>
+        <td><input type="file" multiple></td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <br>
+            <a class="btn btn-long morePadding" th:href="@{/host/signupResult}">Submit</a>
+        </td>
+    </tr>
+
+</table>
+
+<hr>
+<table class="center">
+    <tr>
+        <td colspan="2">(Show below if his application is rejected.)</td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <h1 class="addPadding">You are required to resubmit your proof documents</h1>
+            <p class="addPadding">
+                Unfortunately, after we reviewing your application, we have decided to reject your application.<br>
+                Thank you for interested in our platform.
+            </p>
+        </td>
+    </tr>
+</table>
+
+
+</body>
+
+</html>

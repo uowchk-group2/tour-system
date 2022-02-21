@@ -5,33 +5,58 @@
 <header th:insert="header.html :: header"></header>
 <h1>Host User Application</h1>
 
-<div class="btn-group center">
-    <button type="button" class="btn btn-primary">All</button>
-    <button type="button" class="btn btn-secondary">Approved</button>
-    <button type="button" class="btn btn-secondary">Not Approved</button>
+<div class="btn-group center ">
 </div>
 
 <table class="table center ">
     <tr>
+        <td colspan="6">
+            <select>
+                <option>Host id</option>
+                <option>username</option>
+                <option>fullname</option>
+            </select>
+            <input type="text" name="keyword" placeholder="keyword"/>
+            <button type="button" class="btn btn-long" name="search">Search</button>
+<br><br>
+            <button type="button" class="btn btn-primary">All</button>
+            <button type="button" class="btn btn-secondary">Approved</button>
+            <button type="button" class="btn btn-secondary">Ask For Resubmission</button>
+            <button type="button" class="btn btn-secondary">Rejected</button>
+        </td>
+    </tr>
+    <tr>
         <th>User id</th>
         <th>Username</th>
+        <th>Full Name</th>
         <th>Status</th>
+        <th>Resubmission Status</th>
         <th>Actions</th>
     </tr>
     <tr>
         <td>14</td>
         <td>johnny</td>
+        <td>Johnny IP</td>
         <td>Approved</td>
+        <td>-</td>
         <td>
-            <button type="button" class="btn btn-long">Details</button>
+            <button type="button" class="btn btn-long">View documents</button>
+            <button type="button" class="btn btn-success">Approve</button>
+            <button type="button" class="btn btn-warning">Ask For Resubmission</button>
+            <button type="button" class="btn btn-danger">Reject</button>
         </td>
     </tr>
     <tr>
         <td>24</td>
         <td>oscar</td>
-        <td>Need more documents</td>
+        <td>Oscar</td>
+        <td>Ask For Resubmission</td>
+        <td>Not submitted</td>
         <td>
-            <button type="button" class="btn btn-long">Details</button>
+            <button type="button" class="btn btn-long">View documents</button>
+            <button type="button" class="btn btn-success">Approve</button>
+            <button type="button" class="btn btn-warning">Ask For Resubmission</button>
+            <button type="button" class="btn btn-danger">Reject</button>
         </td>
     </tr>
 </table>

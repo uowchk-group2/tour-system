@@ -17,6 +17,10 @@ public class tourist {
     public String signup(Model model){
         return "tourist/signup";
     }
+    @GetMapping("signupResult")
+    public String signupResult(Model model){
+        return "tourist/signupResult";
+    }
     @GetMapping("search")
     public String search(Model model){
         return "tourist/search";
