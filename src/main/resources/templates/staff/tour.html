@@ -32,9 +32,54 @@
         <td>1</td>
         <td>johnny</td>
         <td>
-            <button type="button" class="btn btn-small">Edit</button>
+            <a class="btn btn-small" th:href="@{/host/tourDetailEdit}">Edit Detail</a>
+            <button type="button" class="btn btn-small">Tour History</button>
             <button type="button" class="btn btn-small">Remove</button>
             <button type="button" class="btn btn-small">Chat</button>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="5" style="background-color: #e4e1de">
+            <table class="table center alignLeft" width="100%">
+                <tr>
+                    <td colspan="5" class="alignRight">
+                            <button type="button" class="btn-long">close</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="center">
+                        Date:
+                        <select>
+                            <option>02-11-2022</option>
+                            <option>02-13-2022</option>
+                        </select>
+                        &emsp;Tour status: <b>Completed/Not Completed</b>
+                        <br>Fee per tourist: <b>$100</b>
+
+                    </td>
+                </tr>
+                <tr>
+                    <th>User id</th>
+                    <th>User name</th>
+                    <th>Date of booking</th>
+                    <th>Status</th>
+                    <th>Status date</th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>johnny</td>
+                    <td>02-09-2022 12:00</td>
+                    <td>Withdrawn</td>
+                    <td>02-09-2022 13:00</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Ivan</td>
+                    <td>02-10-2022 18:00</td>
+                    <td>Normal</td>
+                    <td>-</td>
+                </tr>
+            </table>
         </td>
     </tr>
     <tr>
@@ -43,7 +88,8 @@
         <td>1</td>
         <td>johnny</td>
         <td>
-            <button type="button" class="btn btn-small">Edit</button>
+            <a class="btn btn-small" th:href="@{/host/tourDetailEdit}">Edit Detail</a>
+            <button type="button" class="btn btn-small">Tour History</button>
             <button type="button" class="btn btn-small">Remove</button>
             <button type="button" class="btn btn-small">Chat</button>
         </td>
@@ -54,7 +100,8 @@
         <td>2</td>
         <td>oscar</td>
         <td>
-            <button type="button" class="btn btn-small">Edit</button>
+            <a class="btn btn-small" th:href="@{/host/tourDetailEdit}">Edit Detail</a>
+            <button type="button" class="btn btn-small">Tour History</button>
             <button type="button" class="btn btn-small">Remove</button>
             <button type="button" class="btn btn-small">Chat</button>
         </td>
@@ -65,7 +112,8 @@
         <td>2</td>
         <td>oscar</td>
         <td>
-            <button type="button" class="btn btn-small">Edit</button>
+            <a class="btn btn-small" th:href="@{/host/tourDetailEdit}">Edit Detail</a>
+            <button type="button" class="btn btn-small">Tour History</button>
             <button type="button" class="btn btn-small">Remove</button>
             <button type="button" class="btn btn-small">Chat</button>
         </td>
