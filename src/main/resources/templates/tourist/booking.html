@@ -7,7 +7,7 @@
 <body>
 <header th:insert="header.html :: header"></header>
 <h1>Booking Record</h1>
-<table class="table center " border="1" >
+<table class="table center " border="1">
     <tr>
         <th>Tour code</th>
         <th>Tour name</th>
@@ -21,9 +21,65 @@
         <td>08-13-2022</td>
         <td>08-13-2022</td>
         <td>
-            <a class="btn btn-long" th:href="@{/tourist/bookingDetail}">Detail</a>
+            <button class="btn btn-long">Show Detail</button>
             <button class="btn btn-long">Chat with Host</button>
             <button class="btn btn-long">Withdraw</button>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="5" style="background-color: #e4e1de">
+
+            <table class="table center" width="100%">
+                <tr>
+                    <td colspan="2" class="alignRight">
+                        <button type="button" class="btn-long">close</button>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Tour Name</th>
+                    <td>Tian Tan Buddha one day trip</td>
+                </tr>
+                <tr>
+                    <th>Tour start date</th>
+                    <td>02-17-2022</td>
+                </tr>
+                <tr>
+                    <th>Number of people</th>
+                    <td>2</td>
+                </tr>
+                <tr>
+                    <th>Cost per person</th>
+                    <td>$100</td>
+                </tr>
+                <tr>
+                    <th>Total Amount</th>
+                    <td>$200</td>
+                </tr>
+
+                <tr>
+                    <td colspan="2">
+                        <h3>Payment Detail</h3>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Card Number</th>
+                    <td>
+                        **** **** **** 1234
+                    </td>
+                </tr>
+                <tr>
+                    <th>Name On Card</th>
+                    <td>
+                        Johnny
+                    </td>
+                </tr>
+                <tr>
+                    <th>Transaction Time</th>
+                    <td>02-20-2022 15:00:00</td>
+                </tr>
+
+            </table>
+
         </td>
     </tr>
 </table>
