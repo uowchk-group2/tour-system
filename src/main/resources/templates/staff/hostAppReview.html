@@ -18,7 +18,7 @@
             </select>
             <input type="text" name="keyword" placeholder="keyword"/>
             <button type="button" class="btn btn-long" name="search">Search</button>
-<br><br>
+            <br><br>
             <button type="button" class="btn btn-primary">All</button>
             <button type="button" class="btn btn-secondary">Approved</button>
             <button type="button" class="btn btn-secondary">Ask For Resubmission</button>
@@ -44,6 +44,31 @@
             <button type="button" class="btn btn-success">Approve</button>
             <button type="button" class="btn btn-warning">Ask For Resubmission</button>
             <button type="button" class="btn btn-danger">Reject</button>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="6" style="background-color: #e4e1de">
+            <table class="table center" width="100%">
+                <tr>
+                    <td class="alignRight">
+                        <button type="button" class="btn-long">close</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <select>
+                            <option>Identity Card/Passport</option>
+                            <option>Home Address Proof</option>
+                            <option>Bank Account Proof</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="center">
+                        <embed th:src="@{/img/sample.png}" >
+                    </td>
+                </tr>
+            </table>
         </td>
     </tr>
     <tr>
