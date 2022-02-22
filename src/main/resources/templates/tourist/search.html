@@ -6,14 +6,29 @@
 </head>
 <body>
 <header th:insert="header.html :: header"></header>
-<h1>Apply Tour</h1>
+<h1>Search Tour</h1>
+<div class="table center horizontalTrim">
+    <select>
+        <option>Tour id</option>
+        <option>Tour name</option>
+        <option>Host id</option>
+        <option>Host Username</option>
+    </select>
+    <input type="text" name="keyword" placeholder="keyword"/>
+    <button type="button" class="btn btn-long" name="search">Search</button>
+</div>
+
 <table class="table center">
     <tr>
         <td>
             <div class="card ">
                 <a th:href="@{/tourist/tourDetail}">
                     <img width="400" th:src="@{/img/buddha.jpg}"><br>
-                    <p>Tian Tan Buddha one day trip</p>
+                    <p>
+                        Tian Tan Buddha one day trip<br>
+                        Fee per tourist: $100<br>
+                        Country: Hong Kong
+                    </p>
                 </a>
             </div>
         </td>
@@ -21,7 +36,11 @@
             <div class="card">
                 <a th:href="@{/tourist/tourDetail}">
                     <img width="400" th:src="@{/img/ocean-park.jpg}"><br>
-                    <p>Ocean Park two day trip</p>
+                    <p>
+                        Ocean Park two day trip<br>
+                        Fee per tourist: $100<br>
+                        Country: Hong Kong
+                    </p>
                 </a>
             </div>
         </td>
@@ -31,7 +50,11 @@
             <div class="card">
                 <a th:href="@{/tourist/tourDetail}">
                     <img width="400" th:src="@{/img/peak.jpg}"/><br>
-                    <p>The Peak one day trip</p>
+                    <p>
+                        The Peak one day trip<br>
+                        Fee per tourist: $100<br>
+                        Country: Hong Kong
+                    </p>
                 </a>
             </div>
         </td>
@@ -39,7 +62,11 @@
             <div class="card">
                 <a th:href="@{/tourist/tourDetail}">
                     <img width="400" th:src="@{/img/TaiO.jpg}"><br>
-                    <p>Tai-O one day trip</p>
+                    <p>
+                        Tai-O one day trip<br>
+                        Fee per tourist: $100<br>
+                        Country: Hong Kong
+                    </p>
                 </a>
             </div>
         </td>

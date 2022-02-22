@@ -5,25 +5,36 @@
     <title>Review System</title>
 </head>
 <script>
-    // alert("Please select a rating");
+    function toggleEdit(editing){
+        if (editing){
+            document.getElementById("editing_no").hidden = true;
+            document.getElementById("editing_yes").hidden = false;
+        }else{
+            document.getElementById("editing_no").hidden = false;
+            document.getElementById("editing_yes").hidden = true;
+        }
+    }
 </script>
 <body>
 <header th:insert="header.html :: header"></header>
 <h1>Review System</h1>
 <p>Give a rating and a review for your finished tours.</p>
 
-<table class="table center horizontalTrim">
+<div class="center horizontalTrim">
+    <h2 class="borderedWithColor">Review You Have Written (Can be folded in production)</h2>
+    <p>
+        Tour
+        <select>
+            <option>Tian Tan Buddha one day trip (08-13-2022)</option>
+        </select>
+    </p>
+</div>
+
+<table class="table center horizontalTrim"  id="editing_no" >
     <tr>
-        <td colspan="2">
-            <h2 class="borderedWithColor">Review You Have Written (Can be folded in production)</h2>
-        </td>
-    </tr>
-    <tr>
-        <th>Tour</th>
-        <td>
-            <select>
-                <option>Tian Tan Buddha one day trip (08-13-2022)</option>
-            </select>
+        <td colspan="2" class="alignRight">
+            <button type="button" class="btn-long btn">Remove</button>
+            <button type="button" class="btn-long btn" onclick="toggleEdit(true)">Edit</button>
         </td>
     </tr>
     <tr>
@@ -34,7 +45,7 @@
     <tr>
         <th>Rating</th>
         <td>
-            &#9733;&#9733;&#9733;&#9733;&#9733;
+            &#9733;&#9734;&#9734;&#9734;&#9734;
         </td>
     </tr>
     <tr>
@@ -62,6 +73,59 @@
         </td>
     </tr>
 </table>
+
+<table class="table center horizontalTrim" hidden="true" id="editing_yes">
+    <tr>
+        <td colspan="2" class="alignRight">
+            <button type="button" class="btn-long btn" onclick="toggleEdit(false)">Cancel</button>
+            <button type="button" class="btn-long btn" onclick="toggleEdit(false)">Save</button>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <h4>Review for the tour</h4>
+        </td>
+    </tr>
+    <tr>
+        <th>Rating</th>
+        <td>
+            <button type="button" class="btn rating">&#9733;</button>
+            <button type="button" class="btn rating">&#9734;</button>
+            <button type="button" class="btn rating">&#9734;</button>
+            <button type="button" class="btn rating">&#9734;</button>
+            <button type="button" class="btn rating">&#9734;</button>
+        </td>
+    </tr>
+    <tr>
+        <th>Comment</th>
+        <td>
+            <textarea>Boring tour. Don't join!</textarea>
+        </td>
+    </tr>
+
+    <tr>
+        <td colspan="2">
+            <h4>Review for the host</h4>
+        </td>
+    </tr>
+    <tr>
+        <th>Rating</th>
+        <td>
+            <button type="button" class="btn rating">&#9733;</button>
+            <button type="button" class="btn rating">&#9733;</button>
+            <button type="button" class="btn rating">&#9733;</button>
+            <button type="button" class="btn rating">&#9733;</button>
+            <button type="button" class="btn rating">&#9733;</button>
+        </td>
+    </tr>
+    <tr>
+        <th>Comment</th>
+        <td>
+            <textarea>Nice host, have patient.</textarea>
+        </td>
+    </tr>
+</table>
+
 
 <table class="table center horizontalTrim">
     <tr>

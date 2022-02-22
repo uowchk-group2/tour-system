@@ -3,6 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Booking Record</title>
+    <script>
+        function confirmWithdraw(){
+            if (confirm("Are you sure to withdraw from this tour?") == true){
+                alert("You have successfully withdrawn from this tour!")
+            }
+        }
+    </script>
 </head>
 <body>
 <header th:insert="header.html :: header"></header>
@@ -23,7 +30,7 @@
         <td>
             <button class="btn btn-long">Show Detail</button>
             <button class="btn btn-long">Chat with Host</button>
-            <button class="btn btn-long">Withdraw</button>
+            <button class="btn btn-long" onclick="confirmWithdraw()">Withdraw</button>
         </td>
     </tr>
     <tr>

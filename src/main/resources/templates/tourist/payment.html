@@ -6,7 +6,7 @@
 </head>
 <body>
 <header th:insert="header.html :: header"></header>
-<h1>Payment Method</h1>
+<h1>Booking Summary</h1>
 <div class="container center">
     <h1>Confirm Your Payment</h1>
     <table class="table center horizontalTrim">
@@ -23,7 +23,7 @@
             <td>2</td>
         </tr>
         <tr>
-            <th>Cost per person</th>
+            <th>Cost per tourist</th>
             <td>$100</td>
         </tr>
         <tr>
@@ -34,6 +34,13 @@
 
     <h2>Payment Detail</h2>
     <table class="table center horizontalTrim">
+        <tr>
+            <td colspan="2">
+                <div class="alert alert-danger" role="alert">
+                    The payment detail is invalid.
+                </div>
+            </td>
+        </tr>
         <tr>
             <th>Card Number</th>
             <td>
@@ -81,6 +88,7 @@
                 </div>
             </td>
         </tr>
+
         <tr>
             <td colspan="2">
                 <a class="btn btn-long" th:href="@{/tourist/paid}">Confirm</a>
