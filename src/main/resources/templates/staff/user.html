@@ -1,18 +1,35 @@
 <html>
 
+<head>
+    <script>
+        function toggleEdit(editing){
+            if (editing){
+                document.getElementById("editing_no").hidden = true;
+                document.getElementById("editing_yes").hidden = false;
+                document.getElementById("editing_no1").hidden = true;
+                document.getElementById("editing_yes1").hidden = false;
+            }else{
+                document.getElementById("editing_no").hidden = false;
+                document.getElementById("editing_yes").hidden = true;
+                document.getElementById("editing_no1").hidden = false;
+                document.getElementById("editing_yes1").hidden = true;
+            }
+        }
+    </script>
+</head>
 <body>
 
 <header th:insert="header.html :: header"></header>
 <h1>User Management</h1>
 
 <div class="table center horizontalTrim">
-            <select>
-                <option>User id</option>
-                <option>username</option>
-                <option>name</option>
-            </select>
-            <input type="text" name="keyword" placeholder="keyword"/>
-            <button type="button" class="btn btn-long" name="search">Search</button>
+    <select>
+        <option>User id</option>
+        <option>username</option>
+        <option>name</option>
+    </select>
+    <input type="text" name="keyword" placeholder="keyword"/>
+    <button type="button" class="btn btn-long" name="search">Search</button>
 </div>
 
 <h2 class="center">Search result</h2>
@@ -33,6 +50,7 @@
             <button type="button" class="btn btn-small">Edit</button>
             <button type="button" class="btn btn-small">Chat</button>
             <button type="button" class="btn btn-small">View Created Tours</button>
+            <button type="button" class="btn btn-small">View Written Reviews</button>
             <button type="button" class="btn btn-danger">Remove</button>
         </td>
     </tr>
@@ -41,8 +59,12 @@
 
             <table class="table center" width="100%">
                 <tr>
-                    <td colspan="3" class="alignRight">
-                        <button type="button" class="btn-long">close</button>
+                    <td colspan="3">
+                        <div class="alignRight">
+                            <button type="button" class="btn-long">close</button>
+                        </div>
+                        <h3>Created Tours</h3>
+
                     </td>
                 </tr>
                 <tr>
@@ -70,6 +92,113 @@
         </td>
     </tr>
 
+    <tr><td></td></tr>
+    <tr>
+        <td colspan="5" style="background-color: #e4e1de">
+
+            <table class="table center" width="100%">
+                <tr>
+                    <td colspan="3">
+                        <div class="alignRight">
+                            <button type="button" class="btn-long">close</button>
+                        </div>
+                        <h3>Written Reviews</h3>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+
+                <table class="table center horizontalTrim" id="editing_no">
+                    <tr>
+                        <td colspan="2">
+                            Tour
+                            <select>
+                                <option>Tian Tan Buddha one day trip (08-13-2022)</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="alignRight">
+                            <button type="button" class="btn-long btn">Remove</button>
+                            <button type="button" class="btn-long btn" onclick="toggleEdit(true)">Edit</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Tourist</th>
+                        <td>
+                            <select>
+                                <option>Johnny</option>
+                                <option>Oscar</option>
+                                <option>James</option>
+                                <option>Ivan</option>
+                                <option>Jacky</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <h4>Review for the tourist</h4>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Rating</th>
+                        <td>
+                            &#9733;&#9733;&#9733;&#9733;&#9733;
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Comment</th>
+                        <td>
+                            Nice chat.
+                        </td>
+                    </tr>
+
+                </table>
+
+                <table class="table center horizontalTrim" hidden="true" id="editing_yes">
+                    <tr>
+                        <td colspan="2" class="alignRight">
+                            <button type="button" class="btn-long btn" onclick="toggleEdit(false)">Cancel</button>
+                            <button type="button" class="btn-long btn" onclick="toggleEdit(false)">Save</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Tourist</th>
+                        <td>
+                            Johnny
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <h4>Review for the tourist</h4>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Rating</th>
+                        <td>
+                            <button type="button" class="btn rating">&#9733;</button>
+                            <button type="button" class="btn rating">&#9733;</button>
+                            <button type="button" class="btn rating">&#9733;</button>
+                            <button type="button" class="btn rating">&#9733;</button>
+                            <button type="button" class="btn rating">&#9733;</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Comment</th>
+                        <td>
+                            <textarea>Nice chat.</textarea>
+                        </td>
+                    </tr>
+
+                </table>
+
+                    </td>
+                </tr>
+            </table>
+
+        </td>
+    </tr>
+
     <tr>
         <td>2</td>
         <td>Tourist</td>
@@ -87,8 +216,12 @@
 
             <table class="table center" width="100%">
                 <tr>
-                    <td colspan="2" class="alignRight">
-                        <button type="button" class="btn-long">close</button>
+                    <td colspan="3">
+                        <div class="alignRight">
+                            <button type="button" class="btn-long">close</button>
+                        </div>
+                        <h3>Joined Tours</h3>
+
                     </td>
                 </tr>
                 <tr>
@@ -141,6 +274,124 @@
                     <td>02-20-2022 15:00:00</td>
                 </tr>
 
+            </table>
+
+        </td>
+    </tr>
+    <tr><td></td></tr>
+    <tr>
+        <td colspan="5" style="background-color: #e4e1de">
+            <div class="alignRight">
+                <button type="button" class="btn-long">close</button>
+            </div>
+            <h3>Written Reviews</h3>
+
+            <table class="table center horizontalTrim"  id="editing_no1" >
+                <tr>
+                    <td colspan="2">
+                        <div class="center horizontalTrim">
+                            <p>
+                                Tour
+                                <select>
+                                    <option>Tian Tan Buddha one day trip (08-13-2022)</option>
+                                </select>
+                            </p>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="alignRight">
+                        <button type="button" class="btn-long btn">Remove</button>
+                        <button type="button" class="btn-long btn" onclick="toggleEdit(true)">Edit</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <h4>Review for the tour</h4>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Rating</th>
+                    <td>
+                        &#9733;&#9734;&#9734;&#9734;&#9734;
+                    </td>
+                </tr>
+                <tr>
+                    <th>Comment</th>
+                    <td>
+                        Boring tour. Don't join!
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="2">
+                        <h4>Review for the host</h4>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Rating</th>
+                    <td>
+                        &#9733;&#9733;&#9733;&#9733;&#9733;
+                    </td>
+                </tr>
+                <tr>
+                    <th>Comment</th>
+                    <td>
+                        Nice host, have patient.
+                    </td>
+                </tr>
+            </table>
+
+            <table class="table center horizontalTrim" hidden="true" id="editing_yes1">
+                <tr>
+                    <td colspan="2" class="alignRight">
+                        <button type="button" class="btn-long btn" onclick="toggleEdit(false)">Cancel</button>
+                        <button type="button" class="btn-long btn" onclick="toggleEdit(false)">Save</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <h4>Review for the tour</h4>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Rating</th>
+                    <td>
+                        <button type="button" class="btn rating">&#9733;</button>
+                        <button type="button" class="btn rating">&#9734;</button>
+                        <button type="button" class="btn rating">&#9734;</button>
+                        <button type="button" class="btn rating">&#9734;</button>
+                        <button type="button" class="btn rating">&#9734;</button>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Comment</th>
+                    <td>
+                        <textarea>Boring tour. Don't join!</textarea>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="2">
+                        <h4>Review for the host</h4>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Rating</th>
+                    <td>
+                        <button type="button" class="btn rating">&#9733;</button>
+                        <button type="button" class="btn rating">&#9733;</button>
+                        <button type="button" class="btn rating">&#9733;</button>
+                        <button type="button" class="btn rating">&#9733;</button>
+                        <button type="button" class="btn rating">&#9733;</button>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Comment</th>
+                    <td>
+                        <textarea>Nice host, have patient.</textarea>
+                    </td>
+                </tr>
             </table>
 
         </td>
