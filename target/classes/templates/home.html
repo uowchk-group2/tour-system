@@ -12,6 +12,9 @@
         <tr>
             <td>
                 <h4>Login</h4><br>
+                <div class="alert alert-danger" role="alert">
+                    The username or password is wrong!
+                </div>
                 Username: <input type="text" name="username"/><br><br>
                 Password: <input type="password" name="password"/><br><br>
                 <a class="btn btn-long" th:href="@{user/passwordReset}">Forget Password</a>
