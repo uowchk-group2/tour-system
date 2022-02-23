@@ -16,8 +16,50 @@
         <td>Tian Tan Buddha one day trip</td>
         <td>
             <a class="btn btn-small" th:href="@{/host/tourDetailEdit}">Edit Detail</a>
+            <button type="button" class="btn btn-small">Joined Users</button>
             <button type="button" class="btn btn-small">Ratings</button>
             <button type="button" class="btn btn-small">Remove</button>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="3" style="background-color: #e4e1de">
+
+            <table class="table center" width="100%">
+                <tr>
+                    <td colspan="3">
+                        <div class="alignRight">
+                            <button type="button" class="btn-long">close</button>
+                        </div>
+                        <h3>Joined Users</h3>
+                        <select>
+                            <option>Tian Tan Buddha one day trip (08-13-2022)</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <th>User id</th>
+                    <th>User name</th>
+                    <th>Action</th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>johnny</td>
+                    <td>
+                        <a class="btn btn-small" th:href="@{/host/chat}">Chat</a>
+                        <button type="button" class="btn btn-small">Remove</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>oscar</td>
+                    <td>
+                        <a class="btn btn-small" th:href="@{/host/chat}">Chat</a>
+                        <button type="button" class="btn btn-small">Remove</button>
+                    </td>
+                </tr>
+
+            </table>
+
         </td>
     </tr>
     <tr>
