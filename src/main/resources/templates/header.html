@@ -32,11 +32,11 @@
                     <a class="btn btn-long" th:href="@{/user/profile}">Profile</a>
 
                     <form class="form-signin" method="POST" action="/logout">
-                            <input
-                                    hidden
-                                    type="text"
-                                    th:name="${_csrf.parameterName}"
-                                    th:value="${_csrf.token}" />
+<!--                            <input-->
+<!--                                    hidden-->
+<!--                                    type="text"-->
+<!--                                    th:name="${_csrf.parameterName}"-->
+<!--                                    th:value="${_csrf.token}" />-->
                         <button class="btn btn-long" type="submit">Logout</button>
                     </form>
 <!--                    <a class="btn btn-long" th:href="@{/logout}">Logout</a>-->

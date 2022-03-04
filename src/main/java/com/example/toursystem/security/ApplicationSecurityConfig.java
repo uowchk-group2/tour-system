@@ -1,15 +1,19 @@
 package com.example.toursystem.security;
 
 import com.example.toursystem.auth.ApplicationUserService;
+import com.example.toursystem.jwt.JwtTokenVerifier;
+import com.example.toursystem.jwt.JwtUsernameAndPasswordFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsPasswordService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -28,7 +32,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public ApplicationSecurityConfig(PasswordEncoder passwordEncoder,
-                                     ApplicationUserService applicationUserService){
+                                     ApplicationUserService applicationUserService) {
         this.passwordEncoder = passwordEncoder;
         this.applicationUserService = applicationUserService;
     }
@@ -39,7 +43,11 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
         http
 //                .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
 //                .and()
-//                .csrf().disable()
+                .csrf().disable()
+//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//                .and()
+//                .addFilter(new JwtUsernameAndPasswordFilter(authenticationManager()))  //Add filter before accessing resources
+//                .addFilterAfter(new JwtTokenVerifier(), JwtUsernameAndPasswordFilter.class)
                 .authorizeRequests()
                 .antMatchers("/", "/*.css").permitAll()
                 .antMatchers("/tourist", "/tourist/**").hasAnyRole(TOURIST.name())
@@ -56,9 +64,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/")
                 .defaultSuccessUrl("/", true)
                 .and()
-                .rememberMe().tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(30)).key("somethingVerySecured")
-                .and()
-                .logout().logoutUrl("/logout").clearAuthentication(true).invalidateHttpSession(true).deleteCookies("JSESSIONID").logoutSuccessUrl("/");
+                .rememberMe().tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(30)).key("somethingVerySecured");
     }
 
     @Override
@@ -67,10 +73,10 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public DaoAuthenticationProvider daoAuthenticationProvider(){
+    public DaoAuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(passwordEncoder);
-        provider.setUserDetailsService(applicationUserService );
+        provider.setUserDetailsService(applicationUserService);
         return provider;
     }
 }
