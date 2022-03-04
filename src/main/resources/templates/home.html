@@ -11,14 +11,27 @@
     <table class="table center horizontalTrim" >
         <tr>
             <td>
-                <h4>Login</h4><br>
-                <div class="alert alert-danger" role="alert">
-                    The username or password is wrong!
-                </div>
-                Username: <input type="text" name="username"/><br><br>
-                Password: <input type="password" name="password"/><br><br>
-                <a class="btn btn-long" th:href="@{user/passwordReset}">Forget Password</a>
-                <button type="submit" name="submit" class="btn btn-long ">Submit</button>
+                <form class="form-signin" method="POST" action="/">
+                    <input
+                            hidden
+                            type="text"
+                            th:name="${_csrf.parameterName}"
+                            th:value="${_csrf.token}" />
+                    <h2 class="form-signin-heading">Please sign in</h2>
+                    <p>
+                        <label for="username" class="sr-only">Username</label>
+                        <input type="text" id="username" name="username" class="form-control" placeholder="Username" required="" autofocus="">
+                    </p>
+                    <p>
+                        <label for="password" class="sr-only">Password</label>
+                        <input type="password" id="password" name="password" class="form-control" placeholder="Password" required="">
+                    </p>
+                    <p>
+                        <label for="remember-me" class="sr-only">Remember Me</label>
+                        <input type="checkbox" id="remember-me" name="remember-me">
+                    </p>
+                    <button class="btn btn-long" type="submit">Sign in</button>
+                </form>
             </td>
             <td>
                 <h4>Signup</h4><br>
