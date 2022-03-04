@@ -62,7 +62,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin()
                 .loginPage("/")
-                .defaultSuccessUrl("/", true)
+//                .defaultSuccessUrl( "/", true)
                 .and()
                 .rememberMe().tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(30)).key("somethingVerySecured");
     }
