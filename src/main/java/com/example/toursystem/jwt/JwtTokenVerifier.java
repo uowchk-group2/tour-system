@@ -49,18 +49,18 @@ public class JwtTokenVerifier extends OncePerRequestFilter {
             //Start evaluate body
             Claims body = claimsJws.getBody();
             String username = body.getSubject();
-            var authorities = (List<Map<String,String>>) body.get("authorities");
-
-            Set<SimpleGrantedAuthority> authority = authorities.stream()
-                    .map(m -> new SimpleGrantedAuthority(m.get("authority")))
-                    .collect(Collectors.toSet());
-
-            Authentication authentication = new UsernamePasswordAuthenticationToken(
-                    username,
-                    null,
-                    authority
-            );
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+//            var authorities = (List<Map<String,String>>) body.get("authorities");
+//
+//            Set<SimpleGrantedAuthority> authority = authorities.stream()
+//                    .map(m -> new SimpleGrantedAuthority(m.get("authority")))
+//                    .collect(Collectors.toSet());
+//
+//            Authentication authentication = new UsernamePasswordAuthenticationToken(
+//                    username,
+//                    null,
+//                    authority
+//            );
+//            SecurityContextHolder.getContext().setAuthentication(authentication);
         }catch (JwtException e){
             throw new IllegalStateException(String.format("Token cannot be trusted", token));
         }
