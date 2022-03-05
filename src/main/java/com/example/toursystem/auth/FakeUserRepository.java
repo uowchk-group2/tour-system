@@ -11,12 +11,12 @@ import java.util.Optional;
 import static com.example.toursystem.security.ApplicationUserRole.*;
 
 @Repository("fake")
-public class FakeApplicationUserDaoService implements ApplicationUserDao{
+public class FakeUserRepository implements ApplicationUserDao{
 
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public FakeApplicationUserDaoService(PasswordEncoder passwordEncoder) {
+    public FakeUserRepository(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
     }
 

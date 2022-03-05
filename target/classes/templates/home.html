@@ -1,4 +1,12 @@
 <html>
+<head>
+    <script>
+        function loadDefaultUsers(type){
+            document.getElementById("username").value = type;
+            document.getElementById("password").value = type;
+        }
+    </script>
+</head>
 <body>
 
 <header th:insert="header.html :: header"></header>
@@ -32,6 +40,13 @@
                     </p>
                     <button class="btn btn-long" type="submit">Sign in</button>
                 </form>
+                <p>
+                    Load demo accounts<br>
+                    <button class="btn btn-long" onclick="loadDefaultUsers('staff')" >Staff</button>
+                    <button class="btn btn-long" onclick="loadDefaultUsers('host')" >Host</button>
+                    <button class="btn btn-long" onclick="loadDefaultUsers('tourist')" >Tourist</button>
+                </p>
+
             </td>
             <td>
                 <h4>Signup</h4><br>

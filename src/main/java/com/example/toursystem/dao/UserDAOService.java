@@ -3,8 +3,13 @@ package com.example.toursystem.dao;
 import com.example.toursystem.model.User;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
+
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class UserDAOService implements UserDAO{
@@ -23,8 +28,12 @@ public class UserDAOService implements UserDAO{
     @Override
     public User findByUsername(String username) {
         Session currentSession = entityManager.unwrap(Session.class);
-        User user = currentSession.get(User.class, username);
-        return user;
+        String hql = "FROM User u WHERE u.username = '"+username+"'";
+        Query query = currentSession.createQuery(hql);
+        query.setMaxResults(1);
+        Object result1 = query.getSingleResult();
+        User result = (User) result1;
+        return result;
     }
 
     @Override
