@@ -1,5 +1,57 @@
 <html xmlns:th="https://www.thymeleaf.org">
 
+<head>
+    <script>
+        //For make a random filename
+        function makeid() {
+            var text = "";
+            var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            for (var i = 0; i < 20; i++)
+                text += possible.charAt(Math.floor(Math.random() * possible.length));
+            return text;
+        }
+
+
+        function uploadFile(type){
+            let filename = document.getElementById("fileUpload_"+type).files[0].name;
+            let randomFileName = makeid()+"."+filename.split(".")[filename.split(".").length-1]
+            console.log(randomFileName)
+
+            let file = document.getElementById("fileUpload_" + type).files[0];
+            console.log(document.getElementById("fileUpload_" + type).files[0])
+
+
+            var requestURL = "https://api.johnnyip.com/s3?filename="+randomFileName+"&filetype="+file.type;
+            console.log("RequestURL: "+ requestURL)
+
+            //Get upload URL
+            var xmlHttpGet = new XMLHttpRequest();
+            xmlHttpGet.open( "GET",requestURL , false ); // false for synchronous request
+            xmlHttpGet.send(null);
+            var uploadURL = xmlHttpGet.responseText;
+            console.log("UploadURL: "+uploadURL)
+
+            var formData = new FormData();
+            formData.append(filename,file);
+            fetch(uploadURL,
+                {
+                    method:"PUT",
+                    headers:{
+                        "Content-Type" : file.type
+                    },
+                    body:formData
+                }
+            );
+            var finalURL =  "https://uow-project-tour-system.s3.ap-east-1.amazonaws.com/"+randomFileName
+            console.log("FinalURL: "+finalURL)
+
+            setTimeout(function () {
+                document.getElementById("result_"+type).src=finalURL;
+            }, 1000);
+
+        }
+    </script>
+</head>
 <body>
 
 <header th:insert="header.html :: header"></header>
@@ -9,7 +61,7 @@
 </div>
 
 <form action="#" th:action="@{/signup/host}" th:object="${user}" method="POST">
-    <table class="horizontalTrim center morePadding">
+    <table class=" center morePadding">
         <tr>
             <td>Username</td>
             <td><input type="text" th:field="*{username}" id="username"></td>
@@ -52,15 +104,21 @@
         </tr>
         <tr>
             <td>Identity Card/Passport</td>
-            <td><input type="file" multiple></td>
+            <td>
+                <embed id="result_id"  >
+                <br>
+<!--                Only accept pdf-->
+                <input type="file" id="fileUpload_id" accept=".pdf">
+                <button type="button"  class="btn-long btn" onclick="uploadFile('id')">Upload</button>
+            </td>
         </tr>
         <tr>
             <td>Home Address Proof</td>
-            <td><input type="file" multiple></td>
+            <td><input type="file"></td>
         </tr>
         <tr>
             <td>Bank Account Proof</td>
-            <td><input type="file" multiple></td>
+            <td><input type="file"></td>
         </tr>
 
         <tr>
