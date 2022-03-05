@@ -6,16 +6,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/user")
-public class user {
-
-    @GetMapping("passwordReset")
-    public String passwordReset(Model model){
-        return "user/passwordReset";
+@RequestMapping("/signup")
+public class signup {
+    @GetMapping("host")
+    public String hostSignup(Model model){
+        return "signup/host";
     }
-    @GetMapping("profile")
-    public String profile(Model model){
-        return "user/profile";
+    @GetMapping("tourist")
+    public String touristSignup(Model model){
+        return "signup/tourist";
     }
 
 }

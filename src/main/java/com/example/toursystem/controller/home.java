@@ -3,7 +3,6 @@ package com.example.toursystem.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -32,4 +31,14 @@ public class home {
         }
         return "home";
     }
+
+    @GetMapping("hostSignup")
+    public String hostSignup(Model model){
+        return "user/hostSignup";
+    }
+    @GetMapping("touristSignup")
+    public String touristSignup(Model model){
+        return "user/touristSignup";
+    }
+
 }

@@ -49,7 +49,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 //                .addFilter(new JwtUsernameAndPasswordFilter(authenticationManager()))  //Add filter before accessing resources
 //                .addFilterAfter(new JwtTokenVerifier(), JwtUsernameAndPasswordFilter.class)
                 .authorizeRequests()
-                .antMatchers("/","/api/**", "/*.css").permitAll()
+                .antMatchers("/","/api/**","/signup/**", "/*.css").permitAll()
                 .antMatchers("/tourist", "/tourist/**").hasAnyRole(TOURIST.name())
                 .antMatchers("/host", "/host/**").hasAnyRole(HOST.name())
                 .antMatchers("/staff", "/staff/**").hasAnyRole(STAFF.name())

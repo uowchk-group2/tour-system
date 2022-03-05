@@ -13,10 +13,6 @@ public class host {
     public String demopage(Model model){
         return "host/welcome";
     }
-    @GetMapping("signup")
-    public String signup(Model model){
-        return "host/signup";
-    }
     @GetMapping("signupResult")
     public String signupResult(Model model){
         return "host/signupResult";
