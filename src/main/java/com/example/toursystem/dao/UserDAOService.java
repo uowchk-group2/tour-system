@@ -31,8 +31,15 @@ public class UserDAOService implements UserDAO{
         String hql = "FROM User u WHERE u.username = '"+username+"'";
         Query query = currentSession.createQuery(hql);
         query.setMaxResults(1);
-        Object result1 = query.getSingleResult();
-        User result = (User) result1;
+        User result = new User();
+
+        try {
+            Object result1 = query.getSingleResult();
+            result = (User) result1;
+        }catch (Exception e){
+            System.out.println("Exceiption: "+e.getMessage());
+        }
+
         return result;
     }
 

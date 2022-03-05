@@ -35,7 +35,11 @@ public class UserRepository implements ApplicationUserDao {
         Set<SimpleGrantedAuthority> grantedAuthorities = null;
         String userRole = user.getRole();
         System.out.println("Role: "+userRole);
-        System.out.println("Check: "+(userRole == "ROLE_STAFF"));
+        if (userRole == null){
+            System.out.println("User not found. Returned");
+            Optional<ApplicationUser> result = Optional.empty();
+            return result;
+        }
         switch (userRole){
             case "ROLE_STAFF":
                 grantedAuthorities = STAFF.getGrantedAuthorities();
@@ -61,19 +65,4 @@ public class UserRepository implements ApplicationUserDao {
         return applicationUser;
     }
 
-//    private List<ApplicationUser> getApplicationUsers() {
-//        List<ApplicationUser> applicationUsers = Lists.newArrayList(
-//                new ApplicationUser(
-//                        "johnny",
-//                        passwordEncoder.encode("johnny"),
-//                        STAFF.getGrantedAuthorities(),
-//                        true,
-//                        true,
-//                        true,
-//                        true
-//                )
-//        );
-//
-//        return applicationUsers;
-//    }
 }

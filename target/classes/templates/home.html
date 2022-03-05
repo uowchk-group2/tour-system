@@ -1,7 +1,8 @@
-<html>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <script>
-        function loadDefaultUsers(type){
+        function loadDefaultUsers(type) {
             document.getElementById("username").value = type;
             document.getElementById("password").value = type;
         }
@@ -16,23 +17,28 @@
     <h3>Welcome! Please Login or Sign Up.</h3>
     <hr class="horizontalTrim">
 
-    <table class="table center horizontalTrim" >
+    <table class="table center horizontalTrim">
         <tr>
             <td>
                 <form class="form-signin" method="POST" th:action="@{/}">
-<!--                    <input-->
-<!--                            hidden-->
-<!--                            type="text"-->
-<!--                            th:name="${_csrf.parameterName}"-->
-<!--                            th:value="${_csrf.token}" />-->
+                    <!--                    <input-->
+                    <!--                            hidden-->
+                    <!--                            type="text"-->
+                    <!--                            th:name="${_csrf.parameterName}"-->
+                    <!--                            th:value="${_csrf.token}" />-->
                     <h2 class="form-signin-heading">Please sign in</h2>
+                    <div th:if="${loginError}" class="alert alert-danger" role="alert">
+                        The username or password is wrong!
+                    </div>
                     <p>
                         <label for="username" class="sr-only">Username</label>
-                        <input type="text" id="username" name="username" class="form-control" placeholder="Username" required="" autofocus="">
+                        <input type="text" id="username" name="username" class="form-control" placeholder="Username"
+                               required="" autofocus="">
                     </p>
                     <p>
                         <label for="password" class="sr-only">Password</label>
-                        <input type="password" id="password" name="password" class="form-control" placeholder="Password" required="">
+                        <input type="password" id="password" name="password" class="form-control" placeholder="Password"
+                               required="">
                     </p>
                     <p>
                         <label for="remember-me" class="sr-only">Remember Me</label>
@@ -42,9 +48,9 @@
                 </form>
                 <p>
                     Load demo accounts<br>
-                    <button class="btn btn-long" onclick="loadDefaultUsers('staff')" >Staff</button>
-                    <button class="btn btn-long" onclick="loadDefaultUsers('host')" >Host</button>
-                    <button class="btn btn-long" onclick="loadDefaultUsers('tourist')" >Tourist</button>
+                    <button class="btn btn-long" onclick="loadDefaultUsers('staff')">Staff</button>
+                    <button class="btn btn-long" onclick="loadDefaultUsers('host')">Host</button>
+                    <button class="btn btn-long" onclick="loadDefaultUsers('tourist')">Tourist</button>
                 </p>
 
             </td>
