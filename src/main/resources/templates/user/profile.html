@@ -1,10 +1,10 @@
 <html>
 <script>
-    function toggleEdit(editing){
-        if (editing){
+    function toggleEdit(editing) {
+        if (editing) {
             document.getElementById("editing_no").hidden = true;
             document.getElementById("editing_yes").hidden = false;
-        }else{
+        } else {
             document.getElementById("editing_no").hidden = false;
             document.getElementById("editing_yes").hidden = true;
         }
@@ -16,7 +16,15 @@
 <header th:insert="header.html :: header"></header>
 <h1>Profile</h1>
 
-<table class="horizontalTrim center morePadding" id="editing_no" >
+<div th:if="${success != null && success}" class="alert alert-success " role="alert">
+    Upadte successful!
+</div>
+<div th:if="${success != null && !success}" class="alert alert-danger " role="alert">
+    Upadte failed!
+</div>
+
+
+<table class="horizontalTrim center morePadding" id="editing_no">
     <tr>
         <td colspan="2" class="alignRight">
             <button type="button" class="btn btn-primary" onclick="toggleEdit(true)">Edit</button>
@@ -25,48 +33,72 @@
     <tr>
         <td>Username</td>
         <td>
-            username
+            <span th:text="${user.username}"/>
         </td>
     </tr>
     <tr>
         <td>Email</td>
-        <td>sample@gmail.com</td>
-    </tr>
-    <tr>
-        <td>Full Name</td>
-        <td>Johnny IP</td>
-    </tr>
-    <tr>
-        <td>Nationality</td>
-        <td>Hong Kong</td>
-    </tr>
-</table>
-
-<table class="horizontalTrim center morePadding" id="editing_yes" hidden>
-    <tr>
-        <td colspan="2" class="alignRight">
-            <button type="button" class="btn btn-primary" onclick="toggleEdit(false)">Cancel</button>
-            <button type="button" class="btn btn-primary" onclick="toggleEdit(false)">Save</button>
+        <td>
+            <span th:text="${user.email}"/>
         </td>
     </tr>
     <tr>
-        <td>Username</td>
-        <td><input type="text" value="username"></td>
-    </tr>
-    <tr>
-        <td>Email</td>
-        <td><input type="text" value="sample@gmail.com"></td>
-    </tr>
-    <tr>
         <td>Full Name</td>
-        <td><input type="text" value="Johnny IP"></td>
+        <td>
+            <span th:text="${user.fullName}"/>
+        </td>
     </tr>
     <tr>
         <td>Nationality</td>
-        <td><input type="text" value="Hong Kong"></td>
+        <td>
+            <span th:text="${user.nationality}"/>
+        </td>
     </tr>
 </table>
 
+<form th:action="@{/user/profile}" th:object="${user}" method="POST">
+
+    <table class="horizontalTrim center morePadding" id="editing_yes" hidden>
+        <tr>
+            <td colspan="2" class="alignRight">
+                <button type="button" class="btn btn-primary" onclick="toggleEdit(false)">Cancel</button>
+                <input type="submit" class="btn btn-primary"/>
+            </td>
+        </tr>
+        <tr>
+            <td>Username</td>
+            <td>
+                <input type="text" disabled th:value="${user.username}">
+            </td>
+        </tr>
+        <tr>
+            <td>Email</td>
+            <td><input type="text" name="email" th:value="${user.email}"></td>
+        </tr>
+        <tr>
+            <td>Full Name</td>
+            <td><input type="text" name="fullName" th:value="${user.fullName}"></td>
+        </tr>
+        <tr>
+            <td>Nationality</td>
+            <td><input type="text" name="nationality" th:value="${user.nationality}"></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="text" hidden name="username" th:value="${user.username}">
+                <input type="text" hidden name="id" th:value="${user.id}">
+                <input type="text" hidden name="password" th:value="${user.password}">
+                <input type="text" hidden name="role" th:value="${user.role}">
+                <input type="text" hidden name="bankAccountNumber" th:value="${user.bankAccountNumber}">
+                <input type="text" hidden name="homeAddress" th:value="${user.homeAddress}">
+                <input type="text" hidden name="docId" th:value="${user.docId}">
+                <input type="text" hidden name="docHome" th:value="${user.docHome}">
+                <input type="text" hidden name="docBank" th:value="${user.docBank}">
+            </td>
+        </tr>
+    </table>
+
+</form>
 <table class=" table horizontalTrim">
     <tr>
         <td colspan="2">

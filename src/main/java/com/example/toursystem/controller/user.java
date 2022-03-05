@@ -1,21 +1,56 @@
 package com.example.toursystem.controller;
 
+import com.example.toursystem.model.User;
+import com.example.toursystem.service.UserServices;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.view.RedirectView;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping("/user")
 public class user {
+    private UserServices userServices;
+
+    public user(UserServices userServices) {
+        this.userServices = userServices;
+    }
 
     @GetMapping("passwordReset")
-    public String passwordReset(Model model){
+    public String passwordReset(Model model) {
         return "user/passwordReset";
     }
+
     @GetMapping("profile")
-    public String profile(Model model){
+    public String profile(Model model, HttpServletRequest request) {
+        String success = request.getParameter("success");
+        if (success != null){
+            model.addAttribute("success",success);
+        }
+
+        String username = request.getUserPrincipal().getName();
+        User user = userServices.findByUsername(username);
+        if (user.getUsername() != null) {
+            model.addAttribute("user", user);
+        }
         return "user/profile";
+    }
+
+    @PostMapping("profile")
+    public RedirectView profileSubmit(@ModelAttribute User user, HttpServletRequest request) {
+        try {
+            userServices.save(user);
+        }catch (Exception e){
+            System.out.println("Error: "+ e.getMessage());
+            return new RedirectView("/user/profile?success=false");
+        }
+
+        return new RedirectView("/user/profile?success=true");
     }
 
 }

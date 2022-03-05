@@ -1,51 +1,47 @@
-<html>
+<html xmlns:th="https://www.thymeleaf.org">
 
 <body>
 
 <header th:insert="header.html :: header"></header>
 <h1>Signup as Tourist</h1>
 
-<form th:action="@{/signup/tourist}" method="POST" modelAttribute="touristSignupForm">
-    <table class="horizontalTrim center morePadding" >
-        <tr>
-            <td colspan="2">
-                <div class="alert alert-danger" role="alert">
-                    The username is already been used!
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td>Username</td>
-            <td><input type="text"></td>
-        </tr>
-        <tr>
-            <td>Password</td>
-            <td><input type="text"></td>
-        </tr>
-        <tr>
-            <td>Re-enter password</td>
-            <td><input type="text"></td>
-        </tr>
-        <tr>
-            <td>Email</td>
-            <td><input type="text"></td>
-        </tr>
-        <tr>
-            <td>Full Name</td>
-            <td><input type="text"></td>
-        </tr>
-        <tr>
-            <td>Nationality</td>
-            <td><input type="text"></td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <button type="button" class="btn btn-long">Clear</button>
-                <a class="btn btn-long" th:href="@{/tourist/signupResult}">Submit</a>
-            </td>
-        </tr>
-    </table>
-</form>
+    <form action="#" th:action="@{/signup/tourist}" th:object="${user}" method="POST">
+        <table class="horizontalTrim center morePadding">
+            <tr>
+                <td>Username:</td>
+                <td><input type="text" th:field="*{username}" id="username"></td>
+            </tr>
+            <tr>
+                <td>Password</td>
+                <td><input type="password" th:field="*{password}" id="password"></td>
+            </tr>
+            <tr>
+                <td>Re-enter password</td>
+                <td><input type="password" id="password2"></td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td><input type="text" th:field="*{email}"></td>
+
+            </tr>
+            <tr>
+                <td>Full Name</td>
+                <td><input type="text" th:field="*{fullName}"></td>
+            </tr>
+            <tr>
+                <td>Nationality</td>
+                <td><input type="text" th:field="*{nationality}"></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <input type="clear" value="Clear" class="btn btn-long">
+                    <input type="submit" value="Submit" class="btn btn-long">
+
+                </td>
+            </tr>
+        </table>
+
+    </form>
 
 
 </body>
