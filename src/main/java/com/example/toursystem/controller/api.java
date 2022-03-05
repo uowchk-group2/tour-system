@@ -30,7 +30,7 @@ public class api {
     public User findUser(@PathVariable String username){
         User user = userServices.findByUsername(username);
         if (user == null) {
-            throw new RuntimeException("User not found - " + username);
+            throw new RuntimeException("User not found -  " + username);
         }
         return user;
     }
