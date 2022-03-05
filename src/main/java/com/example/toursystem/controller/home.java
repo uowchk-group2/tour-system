@@ -14,10 +14,10 @@ public class home {
 //        System.out.println("Staff: "+request.isUserInRole("ROLE_STAFF"));
 //        System.out.println("Tourist: "+request.isUserInRole("ROLE_TOURIST"));
 //        System.out.println("Staff: "+request.isUserInRole("ROLE_HOST"));
+//        System.out.println("Test: "+);
         String error = request.getParameter("error");
         System.out.println("Error: "+(error != null));
         if (error != null){
-            System.out.println("error attribute added");
             model.addAttribute("loginError",true);
         }
         if (request.isUserInRole("ROLE_STAFF")){
