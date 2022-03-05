@@ -28,22 +28,43 @@ public class signup {
     }
 
     @GetMapping("host")
-    public String hostSignup(Model model){
+    public String hostSignup(Model model, HttpServletRequest request){
+        String error = request.getParameter("error");
+        if (error != null){
+            model.addAttribute("error",true);
+        }
+
         model.addAttribute("user", new User());
         return "signup/host";
     }
     @GetMapping("tourist")
-    public String touristSignup(Model model){
+    public String touristSignup(Model model, HttpServletRequest request){
+        String error = request.getParameter("error");
+        if (error != null){
+            model.addAttribute("error",true);
+        }
         model.addAttribute("user", new User());
         return "signup/tourist";
     }
 
     @PostMapping("host")
-    public RedirectView hostSubmit(@ModelAttribute User user){
-        System.out.println("Profile "+user);
-        System.out.println("Model");
+    public RedirectView hostSubmit(@ModelAttribute User user, HttpServletRequest request){
+        user.setId(0);
+        String password = user.getPassword();
+        String encodedPassword = passwordEncoder.encode(password);
+        user.setPassword(encodedPassword);
+        user.setRole("ROLE_HOST");
+        userServices.save(user);
 
-        return new RedirectView("/host");
+        //Auto-login
+        try {
+            request.login(user.getUsername(),password);
+        }catch (ServletException e){
+            System.out.println("Error: "+e.getMessage());
+            return new RedirectView("/signup/host?error=true");
+        }
+
+        return new RedirectView("/host?signup=true");
     }
 
     @PostMapping("tourist")
@@ -51,7 +72,6 @@ public class signup {
         user.setId(0);
         String password = user.getPassword();
         String encodedPassword = passwordEncoder.encode(password);
-        String username = user.getUsername();
         user.setPassword(encodedPassword);
         user.setRole("ROLE_TOURIST");
         userServices.save(user);
@@ -61,6 +81,7 @@ public class signup {
             request.login(user.getUsername(),password);
         }catch (ServletException e){
             System.out.println("Error: "+e.getMessage());
+            return new RedirectView("/signup/tourist?error=true");
         }
 
         return new RedirectView("/tourist?signup=true");

@@ -4,44 +4,47 @@
 
 <header th:insert="header.html :: header"></header>
 <h1>Signup as Tourist</h1>
+<div th:if="${error}" class="alert alert-danger" role="alert">
+    Problem occurs when trying to submit.
+</div>
 
-    <form action="#" th:action="@{/signup/tourist}" th:object="${user}" method="POST">
-        <table class="horizontalTrim center morePadding">
-            <tr>
-                <td>Username:</td>
-                <td><input type="text" th:field="*{username}" id="username"></td>
-            </tr>
-            <tr>
-                <td>Password</td>
-                <td><input type="password" th:field="*{password}" id="password"></td>
-            </tr>
-            <tr>
-                <td>Re-enter password</td>
-                <td><input type="password" id="password2"></td>
-            </tr>
-            <tr>
-                <td>Email</td>
-                <td><input type="text" th:field="*{email}"></td>
 
-            </tr>
-            <tr>
-                <td>Full Name</td>
-                <td><input type="text" th:field="*{fullName}"></td>
-            </tr>
-            <tr>
-                <td>Nationality</td>
-                <td><input type="text" th:field="*{nationality}"></td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <input type="clear" value="Clear" class="btn btn-long">
-                    <input type="submit" value="Submit" class="btn btn-long">
+<form action="#" th:action="@{/signup/tourist}" th:object="${user}" method="POST">
+    <table class="horizontalTrim center morePadding">
+        <tr>
+            <td>Username</td>
+            <td><input type="text" th:field="*{username}" id="username"></td>
+        </tr>
+        <tr>
+            <td>Password</td>
+            <td><input type="password" th:field="*{password}" id="password"></td>
+        </tr>
+        <tr>
+            <td>Re-enter password</td>
+            <td><input type="password" id="password2"></td>
+        </tr>
+        <tr>
+            <td>Email</td>
+            <td><input type="text" th:field="*{email}"></td>
 
-                </td>
-            </tr>
-        </table>
+        </tr>
+        <tr>
+            <td>Full Name</td>
+            <td><input type="text" th:field="*{fullName}"></td>
+        </tr>
+        <tr>
+            <td>Nationality</td>
+            <td><input type="text" th:field="*{nationality}"></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="submit" value="Submit" class="btn btn-long">
 
-    </form>
+            </td>
+        </tr>
+    </table>
+
+</form>
 
 
 </body>

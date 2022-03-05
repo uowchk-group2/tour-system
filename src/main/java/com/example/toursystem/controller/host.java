@@ -5,12 +5,19 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Controller
 @RequestMapping("/host")
 public class host {
 
     @GetMapping("")
-    public String demopage(Model model){
+    public String demopage(Model model, HttpServletRequest request){
+        String signup = request.getParameter("signup");
+        if (signup != null){
+            model.addAttribute("signUpSuccess",true);
+        }
+
         return "host/welcome";
     }
     @GetMapping("signupResult")

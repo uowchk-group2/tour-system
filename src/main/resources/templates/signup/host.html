@@ -1,49 +1,49 @@
-<html>
+<html xmlns:th="https://www.thymeleaf.org">
 
 <body>
 
 <header th:insert="header.html :: header"></header>
 <h1>Sign up as Host</h1>
+<div th:if="${error}" class="alert alert-danger" role="alert">
+    Problem occurs when trying to submit.
+</div>
 
-<form>
-    <table class="horizontalTrim center morePadding" >
-        <tr>
-            <td colspan="2">
-                <div class="alert alert-danger" role="alert">
-                    The username is already been used!
-                </div>
-            </td>
-        </tr>
+<form action="#" th:action="@{/signup/host}" th:object="${user}" method="POST">
+    <table class="horizontalTrim center morePadding">
         <tr>
             <td>Username</td>
-            <td><input type="text"></td>
+            <td><input type="text" th:field="*{username}" id="username"></td>
         </tr>
         <tr>
             <td>Password</td>
-            <td><input type="text"></td>
+            <td><input type="password" th:field="*{password}" id="password"></td>
+        </tr>
+        <tr>
+            <td>Re-enter password</td>
+            <td><input type="password" id="password2"></td>
+        </tr>
+        <tr>
+            <td>Email</td>
+            <td><input type="text" th:field="*{email}"></td>
         </tr>
         <tr>
             <td>Full Name</td>
-            <td><input type="text"></td>
+            <td><input type="text" th:field="*{fullName}"></td>
         </tr>
         <tr>
             <td>Nationality</td>
-            <td><input type="text"></td>
+            <td><input type="text" th:field="*{nationality}"></td>
         </tr>
         <tr>
             <td>Home Address</td>
-            <td><input type="text"></td>
+            <td><input type="text" th:field="*{homeAddress}"></td>
         </tr>
         <tr>
             <td>
                 Bank Account Number<br>
                 <span style="font-size: small">For receive payment</span>
             </td>
-            <td><input type="text"></td>
-        </tr>
-        <tr>
-            <td>Email</td>
-            <td><input type="text"></td>
+            <td><input type="text" th:field="*{bankAccountNumber}"></td>
         </tr>
         <tr>
             <td colspan="2">
@@ -62,13 +62,15 @@
             <td>Bank Account Proof</td>
             <td><input type="file" multiple></td>
         </tr>
+
         <tr>
             <td colspan="2">
-                <button type="button" class="btn-long btn">Clear</button>
-                <a class="btn btn-long" th:href="@{/host/signupResult}">Submit</a>
+                <input type="submit" value="Submit" class="btn btn-long">
+
             </td>
         </tr>
     </table>
+
 </form>
 
 </body>

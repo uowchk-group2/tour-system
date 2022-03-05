@@ -4,6 +4,11 @@
 
 <header th:insert="header.html :: header"></header>
 <h1>Host homepage</h1>
+<div th:if="${signUpSuccess}" class="alert alert-success " role="alert">
+    Sign up successful!
+</div>
+
+
 <table class="center horizontalTrim morePadding">
     <tr>
         <td colspan="2">
