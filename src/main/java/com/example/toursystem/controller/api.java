@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api")
 public class api {
@@ -17,6 +19,12 @@ public class api {
         this.userServices = userServices;
         this.passwordEncoder = passwordEncoder;
     }
+
+    @GetMapping("/find")
+    public List<User> findUser(){
+        return userServices.findAll();
+    }
+
 
     @GetMapping("/find/{username}")
     public User findUser(@PathVariable String username){

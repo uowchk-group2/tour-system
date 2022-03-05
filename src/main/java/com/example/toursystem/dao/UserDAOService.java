@@ -1,15 +1,13 @@
 package com.example.toursystem.dao;
 
-import com.example.toursystem.model.User;
-
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import com.example.toursystem.model.User;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public class UserDAOService implements UserDAO{
@@ -26,10 +24,19 @@ public class UserDAOService implements UserDAO{
     }
 
     @Override
+    public List<User> findAll() {
+        Session currentSession = entityManager.unwrap(Session.class);
+        org.hibernate.query.Query<User> theQuery = currentSession.createQuery("FROM User", User.class);
+        List<User> users = theQuery.getResultList();
+        return users;
+
+    }
+
+    @Override
     public User findByUsername(String username) {
         Session currentSession = entityManager.unwrap(Session.class);
         String hql = "FROM User u WHERE u.username = '"+username+"'";
-        Query query = currentSession.createQuery(hql);
+        Query query = currentSession.createQuery(hql,User.class);
         query.setMaxResults(1);
         User result = new User();
 

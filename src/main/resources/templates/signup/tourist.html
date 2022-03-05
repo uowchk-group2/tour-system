@@ -5,7 +5,7 @@
 <header th:insert="header.html :: header"></header>
 <h1>Signup as Tourist</h1>
 
-<form >
+<form th:action="@{/signup/tourist}" method="POST" modelAttribute="touristSignupForm">
     <table class="horizontalTrim center morePadding" >
         <tr>
             <td colspan="2">

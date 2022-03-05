@@ -1,6 +1,5 @@
 package com.example.toursystem.auth;
 
-import com.example.toursystem.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UserDetails;
