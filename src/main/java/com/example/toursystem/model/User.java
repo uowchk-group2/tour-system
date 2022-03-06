@@ -1,8 +1,11 @@
 package com.example.toursystem.model;
 
+import org.hibernate.annotations.DynamicUpdate;
+
 import javax.persistence.*;
 
 @Entity
+@DynamicUpdate
 public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -41,11 +44,16 @@ public class User {
     @Basic
     @Column(name = "doc_bank")
     private String docBank;
+    @Basic
+    @Column(name = "host_approve_status")
+    @Enumerated(EnumType.STRING)
+    private ApproveStatus hostApproveStatus;
+    //0=Approved, 1=WaitForReview, 2=WaitForResubmission, 3=Resubmitted, 4=Rejected
 
     public User() {
     }
 
-    public User(String username, String password, String role, String fullName, String email, String nationality, String bankAccountNumber, String homeAddress, String docId, String docHome, String docBank) {
+    public User(String username, String password, String role, String fullName, String email, String nationality, String bankAccountNumber, String homeAddress, String docId, String docHome, String docBank, ApproveStatus hostApproveStatus) {
         this.username = username;
         this.password = password;
         this.role = role;
@@ -57,6 +65,7 @@ public class User {
         this.docId = docId;
         this.docHome = docHome;
         this.docBank = docBank;
+        this.hostApproveStatus = hostApproveStatus;
     }
 
     public int getId() {
@@ -155,4 +164,11 @@ public class User {
         this.docBank = docBank;
     }
 
+    public ApproveStatus getHostApproveStatus() {
+        return hostApproveStatus;
+    }
+
+    public void setHostApproveStatus(ApproveStatus hostApproveStatus) {
+        this.hostApproveStatus = hostApproveStatus;
+    }
 }

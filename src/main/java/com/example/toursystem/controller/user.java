@@ -44,7 +44,12 @@ public class user {
     @PostMapping("profile")
     public RedirectView profileSubmit(@ModelAttribute User user, HttpServletRequest request) {
         try {
-            userServices.save(user);
+            User userFromQuery = userServices.findByID(user.getId());
+            userFromQuery.setEmail(user.getEmail());
+            userFromQuery.setFullName(user.getFullName());
+            userFromQuery.setNationality(user.getNationality());
+
+            userServices.save(userFromQuery);
         }catch (Exception e){
             System.out.println("Error: "+ e.getMessage());
             return new RedirectView("/user/profile?success=false");

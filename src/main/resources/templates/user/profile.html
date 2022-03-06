@@ -1,4 +1,5 @@
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
+
 <script>
     function toggleEdit(editing) {
         if (editing) {
@@ -17,7 +18,7 @@
 <h1>Profile</h1>
 
 <div th:if="${success != null && success}" class="alert alert-success " role="alert">
-    Upadte successful!
+    Update successful!
 </div>
 <div th:if="${success != null && !success}" class="alert alert-danger " role="alert">
     Upadte failed!
@@ -68,7 +69,7 @@
         <tr>
             <td>Username</td>
             <td>
-                <input type="text" disabled th:value="${user.username}">
+                <span th:text="${user.username}"></span>
             </td>
         </tr>
         <tr>
@@ -85,15 +86,7 @@
         </tr>
         <tr>
             <td colspan="2">
-                <input type="text" hidden name="username" th:value="${user.username}">
                 <input type="text" hidden name="id" th:value="${user.id}">
-                <input type="text" hidden name="password" th:value="${user.password}">
-                <input type="text" hidden name="role" th:value="${user.role}">
-                <input type="text" hidden name="bankAccountNumber" th:value="${user.bankAccountNumber}">
-                <input type="text" hidden name="homeAddress" th:value="${user.homeAddress}">
-                <input type="text" hidden name="docId" th:value="${user.docId}">
-                <input type="text" hidden name="docHome" th:value="${user.docHome}">
-                <input type="text" hidden name="docBank" th:value="${user.docBank}">
             </td>
         </tr>
     </table>

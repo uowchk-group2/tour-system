@@ -20,10 +20,6 @@ public class host {
 
         return "host/welcome";
     }
-    @GetMapping("signupResult")
-    public String signupResult(Model model){
-        return "host/signupResult";
-    }
     @GetMapping("create")
     public String create(Model model){
         return "host/create";
