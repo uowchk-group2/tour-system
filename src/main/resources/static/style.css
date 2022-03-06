@@ -80,6 +80,18 @@ embed{
     min-width: 75%;
 }
 
-.greenText{
-    color: green;
+.green{
+    color: #157347;
+    font-weight: bold;
 }
+
+.yellow{
+    color: #ffca2c;
+    font-weight: bold;
+}
+
+.red{
+    color: #bb2d3b;
+    font-weight: bold;
+}
+

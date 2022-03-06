@@ -1,5 +1,6 @@
 package com.example.toursystem.controller;
 
+import com.example.toursystem.model.ApproveStatus;
 import com.example.toursystem.model.User;
 import com.example.toursystem.service.UserServices;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,6 @@ public class api {
         return userServices.findAll();
     }
 
-
     @GetMapping("/find/{username}")
     public User findUser(@PathVariable String username){
         User user = userServices.findByUsername(username);
@@ -44,6 +44,19 @@ public class api {
 
         userServices.save(user);
         return "Done";
+    }
+
+    @PostMapping("/hostApprove/{id}")
+    public String changeHostStatus(@PathVariable int id, @RequestParam String newStatus){
+        try {
+            User user = userServices.findByID(id);
+            ApproveStatus newApproveStatus = ApproveStatus.valueOf(newStatus);
+            user.setHostApproveStatus(newApproveStatus);
+            userServices.save(user);
+        }catch (Exception e){
+            return e.getMessage();
+        }
+        return "success";
     }
 
 }

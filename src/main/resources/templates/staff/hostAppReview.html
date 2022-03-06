@@ -1,11 +1,87 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
+<head>
+    <script>
+        function changeType(type) {
+            let userId = document.getElementById("chosenUserId").value;
+            document.getElementById("form_id").setAttribute("hidden", "hidden");
+            document.getElementById("form_home").setAttribute("hidden", "hidden");
+            document.getElementById("form_bank").setAttribute("hidden", "hidden");
+
+            console.log("Type: "+type)
+            let navLink = document.getElementsByClassName("nav-link");
+
+            for (let link of navLink) {
+                if (link.classList.contains("active")) {
+                    link.classList.remove("active")
+                }
+                if (("tab_" + type) == link.id) {
+                    link.classList.add("active");
+                    document.getElementById("form_"+type).removeAttribute("hidden")
+                    let fileURL = document.getElementById("doc_" + type + "_" + userId).value;
+                    let URLHead = "https://uow-project-tour-system.s3.ap-east-1.amazonaws.com/"
+                    if (fileURL != "") {
+                        document.getElementById("result_"+type).src = URLHead + fileURL;
+                        document.getElementById("resultNewTab_"+type).href = URLHead + fileURL;
+                    }
+                }
+            }
+        }
+
+        function viewDocs(id){
+            document.getElementById("chosenUserId").value = id;
+            changeType("id")
+        }
+
+        function changeStatus(id,status,statusText){
+
+            let requestURL = '/api/hostApprove/'+id+'?newStatus='+status;
+            var xmlHttpGet = new XMLHttpRequest();
+            xmlHttpGet.open( "POST",requestURL , false ); // false for synchronous request
+            xmlHttpGet.send(null);
+            var responseText = xmlHttpGet.responseText;
+            if (responseText == "success"){
+
+                document.getElementById("status_"+id).innerText = statusText;
+                document.getElementById("update_success").removeAttribute("hidden")
+
+                document.getElementById("status_"+id).removeAttribute("class")
+
+                if (status == "APPROVED"){
+                    document.getElementById("status_"+id).classList.add("green")
+                }else if (status == "REJECTED"){
+                    document.getElementById("status_"+id).classList.add("red")
+                }else if (status == "WAITFORRESUBMISSION"){
+                    document.getElementById("status_"+id).classList.add("yellow")
+                }
+
+                setTimeout(()=>{
+                    document.getElementById("update_success").setAttribute("hidden","hidden")
+                },5000)
+
+
+            }else{
+                document.getElementById("update_fail").removeAttribute("hidden")
+                setTimeout(()=>{
+                    document.getElementById("update_fail").setAttribute("hidden","hidden")
+                },5000)
+            }
+        }
+    </script>
+</head>
+
 <body>
 
 <header th:insert="header.html :: header"></header>
 <h1>Host User Application</h1>
 
 <div class="btn-group center ">
+</div>
+<div class="alert alert-success " role="alert" id="update_success" hidden="hidden">
+    Operation Success!
+</div>
+<div class="alert alert-danger" role="alert" id="update_fail" hidden="hidden">
+    Operation Failed!
 </div>
 
 <table class="table center ">
@@ -30,61 +106,115 @@
         <th>Username</th>
         <th>Full Name</th>
         <th>Status</th>
-        <th>Resubmission Status</th>
         <th>Actions</th>
     </tr>
-    <tr>
-        <td>14</td>
-        <td>johnny</td>
-        <td>Johnny IP</td>
-        <td>Approved</td>
-        <td>-</td>
+
+<!--    Iteration-->
+    <tr th:each="user: ${users}" th:if="${user.role == 'ROLE_HOST'}">
+        <td th:text="${user.id}"></td>
+        <td th:text="${user.username}"></td>
+        <td th:text="${user.fullName}"></td>
+        <td th:each="status: ${T(com.example.toursystem.model.ApproveStatus).values()}"
+            th:text="${status.getDisplayName()}"
+            th:if="${status == user.hostApproveStatus}"
+            th:id="'status_'+${user.id}"
+            th:class="${ (user.hostApproveStatus == user.hostApproveStatus.APPROVED) ? 'green':
+                ((user.hostApproveStatus == user.hostApproveStatus.REJECTED) ? 'red':'yellow')
+                }">
+        </td>
         <td>
-            <button type="button" class="btn btn-long">View documents</button>
-            <button type="button" class="btn btn-success">Approve</button>
-            <button type="button" class="btn btn-warning">Ask For Resubmission</button>
-            <button type="button" class="btn btn-danger">Reject</button>
+            <button type="button" class="btn btn-long" data-bs-toggle="modal" data-bs-target="#exampleModal" th:onclick="'viewDocs('+${user.id}+')'" >View documents</button>
+            <button type="button" class="btn btn-success" th:onclick="'changeStatus('+${user.id}+',\'APPROVED\',\'Approved\')'">Approve</button>
+            <button type="button" class="btn btn-warning" th:onclick="'changeStatus('+${user.id}+',\'WAITFORRESUBMISSION\',\'Wait For Resubmission\')'">Ask For Resubmission</button>
+            <button type="button" class="btn btn-danger" th:onclick="'changeStatus('+${user.id}+',\'REJECTED\',\'Rejected\')'">Reject</button>
+
+            <input type="text" hidden th:value="${user.docId}" th:id="'doc_id_'+${user.id}" >
+            <input type="text" hidden th:value="${user.docHome}" th:id="'doc_home_'+${user.id}" >
+            <input type="text" hidden th:value="${user.docBank}" th:id="'doc_bank_'+${user.id}" >
         </td>
     </tr>
-    <tr>
-        <td colspan="6" style="background-color: #e4e1de">
-            <table class="table center" width="100%">
-                <tr>
-                    <td class="alignRight">
-                        <button type="button" class="btn-long">close</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <select>
-                            <option>Identity Card/Passport</option>
-                            <option>Home Address Proof</option>
-                            <option>Bank Account Proof</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="center">
-                        <embed th:src="@{/img/sample.png}" >
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-    <tr>
-        <td>24</td>
-        <td>oscar</td>
-        <td>Oscar</td>
-        <td>Ask For Resubmission</td>
-        <td>Not submitted</td>
-        <td>
-            <button type="button" class="btn btn-long">View documents</button>
-            <button type="button" class="btn btn-success">Approve</button>
-            <button type="button" class="btn btn-warning">Ask For Resubmission</button>
-            <button type="button" class="btn btn-danger">Reject</button>
-        </td>
-    </tr>
+
 </table>
+
+<!--Floating View-->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" width="100%">
+    <div class="modal-dialog modal-dialog-centered modal-fullscreen horizontalTrim morePadding">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+<!--                Document Display-->
+                <div class="card text-center">
+                    <div class="card-header">
+                        <input id="chosenUserId" hidden>
+                        <ul class="nav nav-pills card-header-pills">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="tab_id" onclick="changeType('id')">
+                                    Identity Card/Passport
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="tab_home" onclick="changeType('home')">
+                                    Home Address Proof
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="tab_bank" onclick="changeType('bank')">
+                                    Bank Account Proof
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body" id="card-body">
+
+                        <!--                        ID Card-->
+                        <div id="form_id">
+
+                            <h5 class="card-title">Identity Card/Passport</h5>
+
+                            <div id="form_id_uploaded" >
+                                <p>
+                                    <a id="resultNewTab_id" target="_blank" class="btn-long btn">Open in new tab</a>
+                                </p>
+                                <iframe id="result_id" width="100%" height="70%"></iframe>
+                            </div>
+                        </div>
+
+                        <!--                        Home address-->
+                        <div id="form_home" hidden="hidden">
+
+                            <h5 class="card-title">Home Address Proof</h5>
+
+                            <div id="form_home_uploaded" >
+                                <p>
+                                    <a id="resultNewTab_home" target="_blank" class="btn-long btn">Open in new tab</a>
+                                </p>
+                                <iframe id="result_home" width="100%" height="70%"></iframe>
+                            </div>
+                        </div>
+
+                        <!--                        Bank-->
+                        <div id="form_bank" hidden="hidden">
+
+                            <h5 class="card-title">Bank Account Proof</h5>
+
+                            <div id="form_bank_uploaded" >
+                                <p>
+                                    <a id="resultNewTab_bank" target="_blank" class="btn-long btn">Open in new tab</a>
+                                </p>
+                                <iframe id="result_bank" width="100%" height="70%"></iframe>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
 
 
 </body>
