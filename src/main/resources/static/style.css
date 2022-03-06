@@ -95,3 +95,9 @@ embed{
     font-weight: bold;
 }
 
+.whiteBackground{
+    background-color: white;
+}
+.greyBackground{
+    background-color: grey;
+}

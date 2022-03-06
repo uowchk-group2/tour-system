@@ -36,10 +36,6 @@ public class host {
     public String review(Model model){
         return "host/review";
     }
-    @GetMapping("hostChat")
-    public String hostChat(Model model){
-        return "host/hostChat";
-    }
     @GetMapping("hostReport")
     public String hostReport(Model model){
         return "host/hostReport";

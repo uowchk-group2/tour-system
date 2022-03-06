@@ -39,10 +39,6 @@ public class   tourist {
     public String bookingDetail(Model model){
         return "tourist/bookingDetail";
     }
-    @GetMapping("chat")
-    public String chat(Model model){
-        return "tourist/chat";
-    }
     @GetMapping("payment")
     public String payment(Model model){
         return"tourist/payment";

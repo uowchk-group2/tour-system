@@ -45,11 +45,4 @@ public class staff {
         return "staff/hostAppReview";
     }
 
-
-
-    @GetMapping("chat")
-    public String chat(Model model){
-        return "staff/chat";
-    }
-
 }

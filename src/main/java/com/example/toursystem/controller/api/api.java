@@ -1,4 +1,4 @@
-package com.example.toursystem.controller;
+package com.example.toursystem.controller.api;
 
 import com.example.toursystem.model.ApproveStatus;
 import com.example.toursystem.model.User;

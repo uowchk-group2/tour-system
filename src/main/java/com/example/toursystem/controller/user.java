@@ -21,11 +21,6 @@ public class user {
         this.userServices = userServices;
     }
 
-    @GetMapping("passwordReset")
-    public String passwordReset(Model model) {
-        return "user/passwordReset";
-    }
-
     @GetMapping("profile")
     public String profile(Model model, HttpServletRequest request) {
         String success = request.getParameter("success");
@@ -57,5 +52,14 @@ public class user {
 
         return new RedirectView("/user/profile?success=true");
     }
+
+    @GetMapping("chat")
+    public String chat(){
+
+        return "user/chat";
+    }
+
+
+
 
 }
