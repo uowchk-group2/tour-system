@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <script>
         let totalMessage = 0;
@@ -61,7 +61,7 @@
                 chatListHTML += `
                 <a class="list-group-item list-group-item-action " aria-current="true"
                     id="list_item_${chat.id}"
-                    onclick="fetchChatHistoryHandler(${chat.id})">
+                    onclick="fetchChatHistoryHandler(${chat.id},'${targetUser}')">
                     <div class="d-flex w-100 justify-content-between">
                         <h5 class="mb-1">${targetUser}</h5>
                     </div>
@@ -80,9 +80,9 @@
 
         }
 
-        function fetchChatHistoryHandler(id){
+        function fetchChatHistoryHandler(id,target){
             document.getElementById("chatId").value = id;
-
+            document.getElementById("chatTargetName").innerText = target
             fetchChatHistory()
 
 
@@ -206,7 +206,11 @@
 
             <div class="container h-100">
                     <input type="text" id="chatId" hidden>
-                <div style="height: 550px" class="table-responsive">
+                <div style="height: 50px;background-color: lightgray;margin: 10px;padding: 7px;padding-left: 30px"
+                     class="morePadding">
+                <h3><img th:src="@{/img/person.png}">&nbsp;&nbsp;&nbsp;&nbsp;<span id="chatTargetName"></span> </h3>
+                </div>
+                <div style="height: 500px" class="table-responsive">
 
                     <table id="chatTable" style="width: 100%">
 
