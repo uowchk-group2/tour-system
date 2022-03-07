@@ -65,8 +65,6 @@
                     <div class="d-flex w-100 justify-content-between">
                         <h5 class="mb-1">${targetUser}</h5>
                     </div>
-                    <p class="mb-1">Text</p>
-                    <small>Text</small>
                 </a>`;
             }
             document.getElementById("list-group").innerHTML = chatListHTML
@@ -120,13 +118,20 @@
             let tableHTML = ""
             for (const [index,msg] of resultObject.entries() ) {
                 let isSelf = (msg.username == username)
-                let timeString = msg.time.substring(0,10) + " " +msg.time.substring(11,16)
+
+                //set time
+                const offset = (new Date()).getTimezoneOffset();
+                let time = (new Date(Date.parse(msg.time) - offset));
+                let date = `${time.getFullYear()}-${time.getMonth()+1}-${time.getDate()} `
+                time = (time.toTimeString()).substring(0,8);
+
+                let timeString = date+time
 
                 tableHTML += `
                 <tr >
                     <td>
                         <div class=" ${ (isSelf)? 'right chatBubbleSelf':'left chatBubbleOthers'} " style="padding-inline: 20px">
-                            <small>${msg.username}  ${timeString}</small><br>
+                            <b>${msg.username}</b>   <small>${timeString}</small><br>
                             ${msg.content}
                             <br>
                             ${(index == resultObject.length-1 ) ? "<a name='bottom'></a><hr>":"<hr>"}
@@ -149,21 +154,26 @@
 
         function sendMessage() {
             let message = document.getElementById("messageText").value;
-            let id = document.getElementById("chatId").value
-            let requestURL = '/api/chat/message/' + id
 
-            let bodyJSON = JSON.stringify({
-                username: username,
-                content: message
-            })
+            if (message != "") {
 
-            var xmlHttpPOST = new XMLHttpRequest();
-            xmlHttpPOST.open("POST", requestURL, false); // false for synchronous request
-            xmlHttpPOST.setRequestHeader("Content-Type","application/json")
-            xmlHttpPOST.send(bodyJSON);
 
-            document.getElementById("messageText").value = "";
-            fetchChatHistory(id);
+                let id = document.getElementById("chatId").value
+                let requestURL = '/api/chat/message/' + id
+
+                let bodyJSON = JSON.stringify({
+                    username: username,
+                    content: message
+                })
+
+                var xmlHttpPOST = new XMLHttpRequest();
+                xmlHttpPOST.open("POST", requestURL, false); // false for synchronous request
+                xmlHttpPOST.setRequestHeader("Content-Type", "application/json")
+                xmlHttpPOST.send(bodyJSON);
+
+                document.getElementById("messageText").value = "";
+                fetchChatHistory(id);
+            }
         }
 
     </script>
@@ -186,7 +196,7 @@
     <br>
 
     <div class="row ">
-        <div class="col-3" style="height: 700px">
+        <div class="col-3" style="height: 600px">
             <div class="list-group " id="list-group">
 
             </div>
@@ -196,7 +206,7 @@
 
             <div class="container h-100">
                     <input type="text" id="chatId" hidden>
-                <div style="height: 650px" class="table-responsive">
+                <div style="height: 550px" class="table-responsive">
 
                     <table id="chatTable" style="width: 100%">
 
@@ -207,13 +217,17 @@
 
                 <div class="center" style="height: 50px;width: 100%">
                     <input type="text" id="messageText" style="height: 50px;width: 80%;text-align: left"
-                           placeholder="Your message here" on="sendMessage()">
+                           placeholder="Your message here" required >
+
                     <button type="button" class="btn-long btn"
                             id="send_button" onclick="sendMessage()">Send
                     </button>
                 </div>
             </div>
         </div>
+    </div>
+    <div class="container">
+        <br><br><br><br>
     </div>
 </div>
 

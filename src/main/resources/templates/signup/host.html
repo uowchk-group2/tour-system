@@ -101,16 +101,16 @@
 <form action="#" th:action="@{/signup/host}" th:object="${user}" method="POST">
     <table class=" center morePadding">
         <tr>
-            <td>Username</td>
-            <td><input type="text" th:field="*{username}" id="username"></td>
+            <td><b>*Username</b></td>
+            <td><input type="text" required th:field="*{username}" id="username"></td>
         </tr>
         <tr>
-            <td>Password</td>
-            <td><input type="password" th:field="*{password}" id="password"></td>
+            <td><b>*Password</b></td>
+            <td><input type="password" required th:field="*{password}" id="password"></td>
         </tr>
         <tr>
-            <td>Re-enter password</td>
-            <td><input type="password" id="password2"></td>
+            <td><b>*Re-enter password</b></td>
+            <td><input type="password" required id="password2"></td>
         </tr>
         <tr>
             <td>Email</td>
@@ -128,6 +128,7 @@
             <td>Home Address</td>
             <td><input type="text" th:field="*{homeAddress}"></td>
         </tr>
+
         <tr>
             <td>
                 Bank Account Number<br>
@@ -135,6 +136,13 @@
             </td>
             <td><input type="text" th:field="*{bankAccountNumber}"></td>
         </tr>
+        <tr>
+            <td class="right">
+                *Required
+            </td>
+            <td></td>
+        </tr>
+
         <tr>
             <td colspan="2">
                 <h3>Document Proof Upload</h3>
@@ -234,9 +242,6 @@
 
                     </div>
                 </div>
-
-
-
             </td>
         </tr>
         <tr>
