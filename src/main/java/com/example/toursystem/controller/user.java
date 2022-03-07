@@ -54,8 +54,9 @@ public class user {
     }
 
     @GetMapping("chat")
-    public String chat(){
-
+    public String chat(Model model,HttpServletRequest request){
+        String username = request.getUserPrincipal().getName();
+        model.addAttribute("username",username);
         return "user/chat";
     }
 

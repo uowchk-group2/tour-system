@@ -1,42 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Chat System</title>
-    <link rel="stylesheet" th:href="@{/chat.css}">
+    <script>
+        function fetchChats(){
+            console.log("Fetching")
+            let username = document.getElementById("username").value;
+            let requestURL = '/api/chat/list/'+username
+
+            var xmlHttpGet = new XMLHttpRequest();
+            xmlHttpGet.open( "GET",requestURL , false ); // false for synchronous request
+            xmlHttpGet.send(null);
+            let resultObject = JSON.parse(xmlHttpGet.responseText);
+            console.log(resultObject)
+
+            let chatListHTML = "";
+            for(const chat of resultObject){
+                let targetUser = (chat.user1 == username ? chat.user2:chat.user1)
+
+                chatListHTML+=`
+                <a class="list-group-item list-group-item-action " aria-current="true">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">${targetUser}</h5>
+                    </div>
+                    <p class="mb-1">Text</p>
+                    <small>Text</small>
+                </a>`;
+            }
+            document.getElementById("list-group").innerHTML = chatListHTML
+        }
+    </script>
 </head>
-<body>
+<body onload="fetchChats()">
 <header th:insert="header.html :: header"></header>
 <h1>Chat System</h1>
+
+<input id="username" th:value="${username}" hidden>
 
 <div class="container" >
     <div class="row ">
         <div class="col-3" style="height: 700px">
 
-            <div class="list-group ">
-                <a href="#" class="list-group-item list-group-item-action active" aria-current="true">
-                    <div class="d-flex w-100 justify-content-between">
-                        <h5 class="mb-1">username</h5>
-                    </div>
-                    <p class="mb-1">Some placeholder content in a paragraph.</p>
-                    <small>And some small print.</small>
-                </a>
-                <!--        <a href="#" class="list-group-item list-group-item-action">-->
-                <!--            <div class="d-flex w-100 justify-content-between">-->
-                <!--                <h5 class="mb-1">List group item heading</h5>-->
-                <!--                <small class="text-muted">3 days ago</small>-->
-                <!--            </div>-->
-                <!--            <p class="mb-1">Some placeholder content in a paragraph.</p>-->
-                <!--            <small class="text-muted">And some muted small print.</small>-->
-                <!--        </a>-->
-                <!--        <a href="#" class="list-group-item list-group-item-action">-->
-                <!--            <div class="d-flex w-100 justify-content-between">-->
-                <!--                <h5 class="mb-1">List group item heading</h5>-->
-                <!--                <small class="text-muted">3 days ago</small>-->
-                <!--            </div>-->
-                <!--            <p class="mb-1">Some placeholder content in a paragraph.</p>-->
-                <!--            <small class="text-muted">And some muted small print.</small>-->
-                <!--        </a>-->
+            <div class="list-group " id="list-group">
+
             </div>
         </div>
 

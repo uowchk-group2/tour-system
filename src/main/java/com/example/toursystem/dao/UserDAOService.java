@@ -52,6 +52,7 @@ public class UserDAOService implements UserDAO{
         return result;
     }
 
+
     @Override
     public void newUser(User user) {
         Session currentSession = entityManager.unwrap(Session.class);
