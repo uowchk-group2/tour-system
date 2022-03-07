@@ -22,6 +22,7 @@ public class ChatHistory {
     @Column(name = "content")
     private String content;
 
+
     public ChatHistory() {
     }
 
