@@ -1,5 +1,6 @@
 package com.example.toursystem.service;
 
+import com.example.toursystem.model.ChatUsers;
 import com.example.toursystem.model.User;
 
 import java.util.List;

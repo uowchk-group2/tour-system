@@ -7,6 +7,7 @@ import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -28,10 +29,10 @@ public class ChatUsersDAOService implements ChatUsersDAO {
     public Boolean checkExistance(ChatUsers chatUsers) {
         Session currentSession = entityManager.unwrap(Session.class);
         Query<ChatUsers> query = currentSession.createQuery("from ChatUsers c " +
-                "WHERE c.user1 = '"+chatUsers.getUser1()+"' OR c.user1 = '"+chatUsers.getUser2()+"'", ChatUsers.class);
+                "WHERE c.user1 = '" + chatUsers.getUser1() + "' OR c.user1 = '" + chatUsers.getUser2() + "'", ChatUsers.class);
         List<ChatUsers> resultList = query.getResultList();
 
-        if (resultList.isEmpty()){
+        if (resultList.isEmpty()) {
             return false;
         }
 
@@ -41,10 +42,17 @@ public class ChatUsersDAOService implements ChatUsersDAO {
     @Override
     public List<ChatUsers> findWithUsername(String username) {
         Session currentSession = entityManager.unwrap(Session.class);
-        Query<ChatUsers> query = currentSession.createQuery("from ChatUsers c " +
-                "WHERE c.user1 = '"+username+"' OR c.user2 = '"+username+"'", ChatUsers.class);
+        Query<ChatUsers> query = currentSession.createQuery( "from ChatUsers c " +
+                "WHERE c.user1 = '" + username + "' OR c.user2 = '" + username + "'", ChatUsers.class);
         List<ChatUsers> resultList = query.getResultList();
 
         return resultList;
+    }
+
+    @Override
+    public ChatUsers findWithId(int id) {
+        Session currentSession = entityManager.unwrap(Session.class);
+        ChatUsers chatUsers = currentSession.get(ChatUsers.class, id);
+        return chatUsers;
     }
 }

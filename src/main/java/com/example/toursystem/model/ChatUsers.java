@@ -1,6 +1,10 @@
 package com.example.toursystem.model;
 
+import net.bytebuddy.build.ToStringPlugin;
+
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class ChatUsers {
@@ -8,10 +12,10 @@ public class ChatUsers {
     @Id
     @Column(name = "id")
     private int id;
-    @Basic
+
     @Column(name = "user1")
     private String user1;
-    @Basic
+
     @Column(name = "user2")
     private String user2;
 

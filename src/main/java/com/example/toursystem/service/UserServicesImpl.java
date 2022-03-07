@@ -1,6 +1,7 @@
 package com.example.toursystem.service;
 
 import com.example.toursystem.dao.UserDAOService;
+import com.example.toursystem.model.ChatUsers;
 import com.example.toursystem.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

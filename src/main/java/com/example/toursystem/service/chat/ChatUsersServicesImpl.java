@@ -37,4 +37,9 @@ public class ChatUsersServicesImpl implements ChatUsersServices{
     public Boolean checkExistance(ChatUsers chatUsers) {
         return chatUsersDAOService.checkExistance(chatUsers);
     }
+
+    @Override
+    public ChatUsers findWithId(int id) {
+        return chatUsersDAOService.findWithId(id);
+    }
 }
