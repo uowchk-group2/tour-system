@@ -1,6 +1,8 @@
 package com.example.toursystem.entity;
 
 import javax.persistence.*;
+import java.sql.Date;
+import java.sql.Timestamp;
 
 @Entity
 public class ChatUsers {
@@ -14,6 +16,7 @@ public class ChatUsers {
 
     @Column(name = "user2")
     private String user2;
+
 
     public ChatUsers() {
     }

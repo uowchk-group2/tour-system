@@ -26,8 +26,9 @@ public class ChatUsersDAOService implements ChatUsersDAO {
     @Override
     public Boolean checkExistance(ChatUsers chatUsers) {
         Session currentSession = entityManager.unwrap(Session.class);
-        Query<ChatUsers> query = currentSession.createQuery("from ChatUsers c " +
-                "WHERE c.user1 = '" + chatUsers.getUser1() + "' OR c.user1 = '" + chatUsers.getUser2() + "'", ChatUsers.class);
+        Query<ChatUsers> query = currentSession.createQuery("FROM ChatUsers c WHERE (c.user1 = :user1 AND c.user2 = :user2) OR (c.user1 = :user2 AND c.user2 = :user1)", ChatUsers.class);
+        query.setParameter("user1",chatUsers.getUser1());
+        query.setParameter("user2",chatUsers.getUser2());
         List<ChatUsers> resultList = query.getResultList();
 
         if (resultList.isEmpty()) {

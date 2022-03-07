@@ -2,6 +2,8 @@ package com.example.toursystem.controller.api;
 
 import com.example.toursystem.entity.ChatHistory;
 import com.example.toursystem.entity.ChatUsers;
+import com.example.toursystem.entity.User;
+import com.example.toursystem.service.UserServices;
 import com.example.toursystem.service.chat.ChatHistoryServices;
 import com.example.toursystem.service.chat.ChatUsersServices;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 @RestController
 @RequestMapping("/api/chat")
@@ -17,17 +20,51 @@ public class chat {
 
     private ChatUsersServices chatUsersServices;
     private ChatHistoryServices chatHistoryServices;
+    private UserServices userServices;
 
     @Autowired
-    public chat(ChatUsersServices chatUsersServices, ChatHistoryServices chatHistoryServices) {
+    public chat(ChatUsersServices chatUsersServices, ChatHistoryServices chatHistoryServices, UserServices userServices) {
         this.chatUsersServices = chatUsersServices;
         this.chatHistoryServices = chatHistoryServices;
+        this.userServices = userServices;
+    }
+
+    @GetMapping("/lsitAvailableUsers/{username}")
+    public List<String> getAvailableUsers(@PathVariable String username){
+        List<User> allUsers = userServices.findAll();
+        List<ChatUsers> chatUsersList = chatUsersServices.findWithUsername(username);
+        List<String> excludeUser = new ArrayList<>();
+        excludeUser.add(username);
+
+        for(ChatUsers chatUser:chatUsersList){
+            String user1 = chatUser.getUser1();
+            String user2 = chatUser.getUser2();
+
+            if(!username.equals(user1)){
+                excludeUser.add(user1);
+            }else{
+                excludeUser.add(user2);
+            }
+        }
+
+        List<String> usernameList = new ArrayList<String>();
+        for(User user:allUsers){
+            String listUsername = user.getUsername();
+
+            if ( excludeUser.contains(listUsername) ){
+//                System.out.println("Matched.");
+            }else{
+                usernameList.add(listUsername);
+            }
+        }
+
+        return usernameList;
     }
 
     @GetMapping("/list/{username}")
     public List<ChatUsers> getChatListOfUser(@PathVariable String username) {
-
         List<ChatUsers> chats = chatUsersServices.findWithUsername(username);
+
         return chats;
     }
 

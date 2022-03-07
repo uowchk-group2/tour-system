@@ -2,8 +2,49 @@
 <html lang="en">
 <head>
     <script>
+        let totalMessage = 0;
+        let username = "";
+
+        function fetchNewUser(){
+            let requestURL = '/api/chat/lsitAvailableUsers/' + username
+
+            var xmlHttpGet = new XMLHttpRequest();
+            xmlHttpGet.open("GET", requestURL, false); // false for synchronous request
+            xmlHttpGet.send(null);
+            let resultObject = JSON.parse(xmlHttpGet.responseText);
+            console.log(xmlHttpGet.responseText)
+
+            let optionText = ""
+            for(let username of resultObject){
+                optionText += `<option value="${username}">${username}</option>`
+            }
+            document.getElementById("allUsername").innerHTML = optionText;
+        }
+
+        function newMessageToUser(){
+            let selected = document.getElementById("allUsername").value;
+
+            let bodyJSON = JSON.stringify({
+                user1: username,
+                user2: selected
+            })
+
+            console.log(bodyJSON)
+
+            var xmlHttpPOST = new XMLHttpRequest();
+            xmlHttpPOST.open("POST", '/api/chat/newChat', false); // false for synchronous request
+            xmlHttpPOST.setRequestHeader("Content-Type","application/json")
+            xmlHttpPOST.send(bodyJSON);
+            console.log(xmlHttpPOST.responseText)
+
+            fetchChats()
+        }
+
         function fetchChats() {
-            let username = document.getElementById("username").value;
+            username = document.getElementById("username").value;
+
+            fetchNewUser()
+
             let requestURL = '/api/chat/list/' + username
             console.log("URL: " + requestURL)
 
@@ -20,7 +61,7 @@
                 chatListHTML += `
                 <a class="list-group-item list-group-item-action " aria-current="true"
                     id="list_item_${chat.id}"
-                    onclick="fetchChatHistory(${chat.id})">
+                    onclick="fetchChatHistoryHandler(${chat.id})">
                     <div class="d-flex w-100 justify-content-between">
                         <h5 class="mb-1">${targetUser}</h5>
                     </div>
@@ -29,19 +70,33 @@
                 </a>`;
             }
             document.getElementById("list-group").innerHTML = chatListHTML
+
+            var input = document.getElementById("messageText");
+
+            input.addEventListener("keyup", function(event) {
+                if (event.keyCode === 13) {
+                    event.preventDefault();
+                    sendMessage();
+                }
+            });
+
         }
 
-        function fetchChatHistory(id) {
-            let selfUsername = document.getElementById("username").value;
-            let requestURL = '/api/chat/message/' + id
+        function fetchChatHistoryHandler(id){
             document.getElementById("chatId").value = id;
+
+            fetchChatHistory()
+
+
+            var animationSchedule = setInterval( fetchChatHistory, 1500);
+
+        }
+
+        function fetchChatHistory() {
+            id = document.getElementById("chatId").value;
+            let requestURL = '/api/chat/message/' + id
             document.getElementById("chatArea").removeAttribute("hidden")
 
-            var xmlHttpGet = new XMLHttpRequest();
-            xmlHttpGet.open("GET", requestURL, false); // false for synchronous request
-            xmlHttpGet.send(null);
-            let resultObject = JSON.parse(xmlHttpGet.responseText);
-            console.log(resultObject)
 
             //Change color after pressed
             let list_items = document.getElementsByClassName("list-group-item");
@@ -53,37 +108,52 @@
                 }
             }
 
+
+            var xmlHttpGet = new XMLHttpRequest();
+            xmlHttpGet.open("GET", requestURL, false); // false for synchronous request
+            xmlHttpGet.send(null);
+            let resultObject = JSON.parse(xmlHttpGet.responseText);
+            console.log(resultObject)
+
+
             //Loading chat item
             let tableHTML = ""
-            console.log()
             for (const [index,msg] of resultObject.entries() ) {
+                let isSelf = (msg.username == username)
                 let timeString = msg.time.substring(0,10) + " " +msg.time.substring(11,16)
 
                 tableHTML += `
                 <tr >
                     <td>
-                        <div class="${ (msg.username == selfUsername)? 'right':'left' }">
+                        <div class=" ${ (isSelf)? 'right chatBubbleSelf':'left chatBubbleOthers'} " style="padding-inline: 20px">
                             <small>${msg.username}  ${timeString}</small><br>
                             ${msg.content}
-                            ${(index == resultObject.length-1 ) ? "<a name='bottom'></a>":"<hr>"}
+                            <br>
+                            ${(index == resultObject.length-1 ) ? "<a name='bottom'></a><hr>":"<hr>"}
                         </div>
                     </td>
                 </tr>
                 `
             }
-
             document.getElementById("chatTable").innerHTML = tableHTML
-            location.replace('#bottom')
+
+
+            if (resultObject.length != totalMessage){
+                location.replace('#bottom')
+            }
+            totalMessage = resultObject.length;
+
+            console.log("Looping...")
+
         }
 
         function sendMessage() {
-            let selfUsername = document.getElementById("username").value;
             let message = document.getElementById("messageText").value;
             let id = document.getElementById("chatId").value
             let requestURL = '/api/chat/message/' + id
 
             let bodyJSON = JSON.stringify({
-                username: selfUsername,
+                username: username,
                 content: message
             })
 
@@ -94,7 +164,6 @@
 
             document.getElementById("messageText").value = "";
             fetchChatHistory(id);
-
         }
 
     </script>
@@ -106,9 +175,18 @@
 <input id="username" th:value="${username}" hidden>
 
 <div class="container">
+    <h6>New Conversation:</h6>
+    <div class="input-group mb-3" style="width: 50%">
+        <select class="form-select" id="allUsername">
+
+        </select>
+        <button class="btn btn-primary" onclick="newMessageToUser()">Submit</button>
+    </div>
+
+    <br>
+
     <div class="row ">
         <div class="col-3" style="height: 700px">
-
             <div class="list-group " id="list-group">
 
             </div>
@@ -129,7 +207,7 @@
 
                 <div class="center" style="height: 50px;width: 100%">
                     <input type="text" id="messageText" style="height: 50px;width: 80%;text-align: left"
-                           placeholder="Your message here">
+                           placeholder="Your message here" on="sendMessage()">
                     <button type="button" class="btn-long btn"
                             id="send_button" onclick="sendMessage()">Send
                     </button>
