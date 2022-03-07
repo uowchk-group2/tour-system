@@ -114,7 +114,7 @@
         <td th:text="${user.id}"></td>
         <td th:text="${user.username}"></td>
         <td th:text="${user.fullName}"></td>
-        <td th:each="status: ${T(com.example.toursystem.model.ApproveStatus).values()}"
+        <td th:each="status: ${T(com.example.toursystem.entity.ApproveStatus).values()}"
             th:text="${status.getDisplayName()}"
             th:if="${status == user.hostApproveStatus}"
             th:id="'status_'+${user.id}"

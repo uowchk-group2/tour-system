@@ -1,7 +1,6 @@
 package com.example.toursystem.dao.chat;
 
-import com.example.toursystem.model.ChatHistory;
-import com.example.toursystem.model.ChatUsers;
+import com.example.toursystem.entity.ChatHistory;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package com.example.toursystem.controller.api;
 
-import com.example.toursystem.model.ChatHistory;
-import com.example.toursystem.model.ChatUsers;
+import com.example.toursystem.entity.ChatHistory;
+import com.example.toursystem.entity.ChatUsers;
 import com.example.toursystem.service.chat.ChatHistoryServices;
 import com.example.toursystem.service.chat.ChatUsersServices;
 import org.springframework.beans.factory.annotation.Autowired;

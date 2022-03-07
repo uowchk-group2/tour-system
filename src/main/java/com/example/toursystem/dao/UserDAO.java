@@ -1,6 +1,6 @@
 package com.example.toursystem.dao;
 
-import com.example.toursystem.model.User;
+import com.example.toursystem.entity.User;
 
 import java.util.List;
 

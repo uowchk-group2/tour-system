@@ -1,4 +1,4 @@
-package com.example.toursystem.model;
+package com.example.toursystem.entity;
 
 public enum ApproveStatus {
     APPROVED("Approved"),

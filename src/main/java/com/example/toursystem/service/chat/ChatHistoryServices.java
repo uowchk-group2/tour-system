@@ -1,6 +1,6 @@
 package com.example.toursystem.service.chat;
 
-import com.example.toursystem.model.ChatHistory;
+import com.example.toursystem.entity.ChatHistory;
 
 import java.util.List;
 

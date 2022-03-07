@@ -1,13 +1,11 @@
 package com.example.toursystem.dao.chat;
 
-import com.example.toursystem.model.ChatUsers;
-import com.example.toursystem.model.User;
+import com.example.toursystem.entity.ChatUsers;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository

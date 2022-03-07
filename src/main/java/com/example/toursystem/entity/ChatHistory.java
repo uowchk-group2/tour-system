@@ -1,4 +1,4 @@
-package com.example.toursystem.model;
+package com.example.toursystem.entity;
 
 import javax.persistence.*;
 import java.sql.Timestamp;

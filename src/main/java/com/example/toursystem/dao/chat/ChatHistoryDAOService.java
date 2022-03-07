@@ -1,6 +1,6 @@
 package com.example.toursystem.dao.chat;
 
-import com.example.toursystem.model.ChatHistory;
+import com.example.toursystem.entity.ChatHistory;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;

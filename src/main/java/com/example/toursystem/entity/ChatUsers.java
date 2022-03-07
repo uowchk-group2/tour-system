@@ -1,10 +1,6 @@
-package com.example.toursystem.model;
-
-import net.bytebuddy.build.ToStringPlugin;
+package com.example.toursystem.entity;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 public class ChatUsers {

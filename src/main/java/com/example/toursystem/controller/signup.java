@@ -1,7 +1,7 @@
 package com.example.toursystem.controller;
 
-import com.example.toursystem.model.ApproveStatus;
-import com.example.toursystem.model.User;
+import com.example.toursystem.entity.ApproveStatus;
+import com.example.toursystem.entity.User;
 import com.example.toursystem.service.UserServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
