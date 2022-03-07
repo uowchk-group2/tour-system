@@ -55,15 +55,25 @@
 
             //Loading chat item
             let tableHTML = ""
-            for (const msg of resultObject) {
+            console.log()
+            for (const [index,msg] of resultObject.entries() ) {
+                let timeString = msg.time.substring(0,10) + " " +msg.time.substring(11,16)
+
                 tableHTML += `
-                <tr>
-                    <td>${msg.content}</td>
+                <tr >
+                    <td>
+                        <div class="${ (msg.username == selfUsername)? 'right':'left' }">
+                            <small>${msg.username}  ${timeString}</small><br>
+                            ${msg.content}
+                            ${(index == resultObject.length-1 ) ? "<a name='bottom'></a>":"<hr>"}
+                        </div>
+                    </td>
                 </tr>
                 `
             }
 
             document.getElementById("chatTable").innerHTML = tableHTML
+            location.replace('#bottom')
         }
 
         function sendMessage() {
@@ -110,7 +120,7 @@
                     <input type="text" id="chatId">
                 <div style="height: 650px" class="table-responsive">
 
-                    <table id="chatTable" >
+                    <table id="chatTable" style="width: 100%">
 
                     </table>
                 </div>
@@ -119,7 +129,7 @@
 
                 <div class="center" style="height: 50px;width: 100%">
                     <input type="text" id="messageText" style="height: 50px;width: 80%;text-align: left"
-                           placeholder="Your message here">
+                           placeholder="Your message here" hidden>
                     <button type="button" class="btn-long btn"
                             id="send_button" onclick="sendMessage()">Send
                     </button>

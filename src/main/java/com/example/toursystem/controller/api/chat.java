@@ -36,6 +36,7 @@ public class chat {
         List<ChatHistory> chatHistory = new ArrayList<>();
         try {
             chatHistory = chatHistoryServices.findWithChatId(chatId);
+
             return chatHistory;
         }catch (Exception e){
             System.out.println(e.getMessage());

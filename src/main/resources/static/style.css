@@ -7,6 +7,14 @@
 
 }
 
+.left{
+    text-align: left;
+}
+
+.right{
+    text-align: right
+}
+
 body{
     background-color: #F0FAEF;
     margin-left: 10%;
