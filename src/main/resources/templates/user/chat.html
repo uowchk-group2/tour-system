@@ -124,8 +124,15 @@
                 let time = (new Date(Date.parse(msg.time) - offset));
                 let date = `${time.getFullYear()}-${time.getMonth()+1}-${time.getDate()} `
                 time = (time.toTimeString()).substring(0,8);
-
                 let timeString = date+time
+
+                //Check if it is a photo (starts with ::Photo::)
+                if (msg.content.substring(0,9) == "::Photo::"){
+
+                    let photoFilename = "https://uow-project-tour-system.s3.ap-east-1.amazonaws.com/"+msg.content.substring(9,(msg.content.length))
+                    console.log(`https://uow-project-tour-system.s3.ap-east-1.amazonaws.com/"${photoFilename}`)
+                    msg.content = `<a href="${photoFilename}" target="_blank"><img src="${photoFilename}" height="200"/></a>`
+                }
 
                 tableHTML += `
                 <tr >
@@ -153,10 +160,22 @@
         }
 
         function sendMessage() {
+            console.log("Send...")
             let message = document.getElementById("messageText").value;
+            let photoName = document.getElementById("photoUpload").files[0].name;
+            let photoFile = document.getElementById("photoUpload").files[0];
 
-            if (message != "") {
+            if (message != "" || photoName != undefined) {
 
+                //Upload photo if have a file chosen
+                if (photoName != undefined){
+                    let filename = uploadFile();
+                    message = "::Photo::"+filename
+
+                    document.getElementById("photoUpload").value = "";
+                }else{
+                    document.getElementById("messageText").value = "";
+                }
 
                 let id = document.getElementById("chatId").value
                 let requestURL = '/api/chat/message/' + id
@@ -171,9 +190,54 @@
                 xmlHttpPOST.setRequestHeader("Content-Type", "application/json")
                 xmlHttpPOST.send(bodyJSON);
 
-                document.getElementById("messageText").value = "";
                 fetchChatHistory(id);
             }
+        }
+
+        function uploadFile(){
+            let filename = document.getElementById("photoUpload").files[0].name;
+            let randomFileName = makeid()+"."+filename.split(".")[filename.split(".").length-1]
+            console.log(randomFileName)
+
+            let file = document.getElementById("photoUpload").files[0];
+
+            var requestURL = "https://api.johnnyip.com/s3?filename="+randomFileName+"&filetype="+file.type;
+            console.log("RequestURL: "+ requestURL)
+
+            //Get upload URL
+            var xmlHttpGet = new XMLHttpRequest();
+            xmlHttpGet.open( "GET",requestURL , false ); // false for synchronous request
+            xmlHttpGet.send(null);
+            var uploadURL = xmlHttpGet.responseText;
+            console.log("UploadURL: "+uploadURL)
+
+            //convert file to blob
+            let objectURL = URL.createObjectURL(file);
+            console.log(objectURL)
+            console.log(file.type)
+            let blob = new Blob([file],{type: file.type})
+
+            var formData = new FormData();
+            formData.append(filename,file);
+            fetch(uploadURL,
+                {
+                    method:"PUT",
+                    body:blob
+                }
+            );
+            var finalURL =  "https://uow-project-tour-system.s3.ap-east-1.amazonaws.com/"+randomFileName
+
+            return randomFileName;
+
+        }
+
+        //For making random filename
+        function makeid() {
+            var text = "";
+            var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            for (var i = 0; i < 20; i++)
+                text += possible.charAt(Math.floor(Math.random() * possible.length));
+            return text;
         }
 
     </script>
@@ -220,6 +284,9 @@
                 <hr>
 
                 <div class="center" style="height: 50px;width: 100%">
+                        <input type="file" id="photoUpload" hidden accept="image/*" onchange="sendMessage()">
+                        <label for="photoUpload"> <img th:src="@{/img/photo.png}"> </label>
+
                     <input type="text" id="messageText" style="height: 50px;width: 80%;text-align: left"
                            placeholder="Your message here" required >
 
