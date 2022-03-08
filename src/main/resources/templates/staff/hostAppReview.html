@@ -5,6 +5,9 @@
 
         function loadFromAPI() {
             let requestURL = '/api/user/find/'
+            if (window.location.host == "tomcat.johnnyip.com"){
+                requestURL = '/tour-system' + requestURL
+            }
 
             var xmlHttpGet = new XMLHttpRequest();
             xmlHttpGet.open("GET", requestURL, false); // false for synchronous request
@@ -107,6 +110,10 @@
         function changeStatus(id, status, statusText) {
 
             let requestURL = '/api/user/hostApprove/' + id + '?newStatus=' + status;
+            if (window.location.host == "tomcat.johnnyip.com"){
+                requestURL = '/tour-system' + requestURL
+            }
+
             var xmlHttpGet = new XMLHttpRequest();
             xmlHttpGet.open("POST", requestURL, false); // false for synchronous request
             xmlHttpGet.send(null);

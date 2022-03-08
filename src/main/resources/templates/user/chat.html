@@ -7,6 +7,9 @@
 
         function fetchNewUser(){
             let requestURL = '/api/chat/lsitAvailableUsers/' + username
+            if (window.location.host == "tomcat.johnnyip.com"){
+                requestURL = '/tour-system' + requestURL
+            }
 
             var xmlHttpGet = new XMLHttpRequest();
             xmlHttpGet.open("GET", requestURL, false); // false for synchronous request
@@ -47,6 +50,9 @@
 
             let requestURL = '/api/chat/list/' + username
             console.log("URL: " + requestURL)
+            if (window.location.host == "tomcat.johnnyip.com"){
+                requestURL = '/tour-system' + requestURL
+            }
 
             var xmlHttpGet = new XMLHttpRequest();
             xmlHttpGet.open("GET", requestURL, false); // false for synchronous request
@@ -94,6 +100,9 @@
             id = document.getElementById("chatId").value;
             let requestURL = '/api/chat/message/' + id
             document.getElementById("chatArea").removeAttribute("hidden")
+            if (window.location.host == "tomcat.johnnyip.com"){
+                requestURL = '/tour-system' + requestURL
+            }
 
 
             //Change color after pressed
@@ -179,6 +188,9 @@
 
                 let id = document.getElementById("chatId").value
                 let requestURL = '/api/chat/message/' + id
+                if (window.location.host == "tomcat.johnnyip.com"){
+                    requestURL = '/tour-system' + requestURL
+                }
 
                 let bodyJSON = JSON.stringify({
                     username: username,
