@@ -2,13 +2,84 @@
 
 <head>
     <script>
+
+        function loadFromAPI() {
+            let requestURL = '/api/find/'
+
+            var xmlHttpGet = new XMLHttpRequest();
+            xmlHttpGet.open("GET", requestURL, false); // false for synchronous request
+            xmlHttpGet.send(null);
+            let resultObject = JSON.parse(xmlHttpGet.responseText);
+
+            return resultObject
+        }
+
+        function loadUsers() {
+
+            let userObjects = loadFromAPI()
+            let statusStrings = {
+                "APPROVED": "Approved",
+                "WAITFORREVIEW": "Wait For Review",
+                "WAITFORRESUBMISSION": "Wait For Resubmission",
+                "RESUBMITTED": "Resubmitted",
+                "REJECTED": "Rejected"
+            }
+
+            let resultTableHTML = `<tr>
+                                        <th>User id</th>
+                                        <th>Username</th>
+                                        <th>Full Name</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>`
+
+            for (const user of userObjects) {
+                console.log(user)
+
+                if (user.role == "ROLE_HOST") {
+                    let statusString = statusStrings[user.hostApproveStatus]
+                    let color = ""
+                    if (user.hostApproveStatus == "APPROVED"){ color = "green" }
+                    else if (user.hostApproveStatus == "REJECTED"){ color = "red" }
+                    else{ color = "yellow" }
+
+                    resultTableHTML += `
+                <tr>
+                    <td>${user.id}</td>
+                    <td>${user.username}</td>
+                    <td>${user.fullName}</td>
+                    <td id="status_${user.id}"
+                        class="${color}">
+                        ${statusString}
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-long" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="viewDocs(${user.id})" >View documents</button>
+                        <button type="button" class="btn btn-success" onclick="changeStatus(${user.id},'APPROVED','Approved')">Approve</button>
+                        <button type="button" class="btn btn-warning" onclick="changeStatus(${user.id},'WAITFORRESUBMISSION','Wait For Resubmission')">Ask For Resubmission</button>
+                        <button type="button" class="btn btn-danger" onclick="changeStatus(${user.id},'REJECTED','Rejected')">Reject</button>
+
+                        <input type="text" hidden value="${user.docId}" id="doc_id_${user.id}" >
+                        <input type="text" hidden value="${user.docHome}" id="doc_home_${user.id}" >
+                        <input type="text" hidden value="${user.docBank}" id="doc_bank_${user.id}" >
+                    </td>
+                </tr>`
+
+                }
+
+            }
+
+            document.getElementById("resultTable").innerHTML = resultTableHTML
+
+
+        }
+
         function changeType(type) {
             let userId = document.getElementById("chosenUserId").value;
             document.getElementById("form_id").setAttribute("hidden", "hidden");
             document.getElementById("form_home").setAttribute("hidden", "hidden");
             document.getElementById("form_bank").setAttribute("hidden", "hidden");
 
-            console.log("Type: "+type)
+            console.log("Type: " + type)
             let navLink = document.getElementsByClassName("nav-link");
 
             for (let link of navLink) {
@@ -17,65 +88,65 @@
                 }
                 if (("tab_" + type) == link.id) {
                     link.classList.add("active");
-                    document.getElementById("form_"+type).removeAttribute("hidden")
+                    document.getElementById("form_" + type).removeAttribute("hidden")
                     let fileURL = document.getElementById("doc_" + type + "_" + userId).value;
                     let URLHead = "https://uow-project-tour-system.s3.ap-east-1.amazonaws.com/"
                     if (fileURL != "") {
-                        document.getElementById("result_"+type).src = URLHead + fileURL;
-                        document.getElementById("resultNewTab_"+type).href = URLHead + fileURL;
+                        document.getElementById("result_" + type).src = URLHead + fileURL;
+                        document.getElementById("resultNewTab_" + type).href = URLHead + fileURL;
                     }
                 }
             }
         }
 
-        function viewDocs(id){
+        function viewDocs(id) {
             document.getElementById("chosenUserId").value = id;
             changeType("id")
         }
 
-        function changeStatus(id,status,statusText){
+        function changeStatus(id, status, statusText) {
 
-            let requestURL = '/api/hostApprove/'+id+'?newStatus='+status;
+            let requestURL = '/api/hostApprove/' + id + '?newStatus=' + status;
             var xmlHttpGet = new XMLHttpRequest();
-            xmlHttpGet.open( "POST",requestURL , false ); // false for synchronous request
+            xmlHttpGet.open("POST", requestURL, false); // false for synchronous request
             xmlHttpGet.send(null);
             var responseText = xmlHttpGet.responseText;
-            if (responseText == "success"){
+            if (responseText == "success") {
 
-                document.getElementById("status_"+id).innerText = statusText;
+                document.getElementById("status_" + id).innerText = statusText;
                 document.getElementById("update_success").removeAttribute("hidden")
 
-                document.getElementById("status_"+id).removeAttribute("class")
+                document.getElementById("status_" + id).removeAttribute("class")
 
-                if (status == "APPROVED"){
-                    document.getElementById("status_"+id).classList.add("green")
-                }else if (status == "REJECTED"){
-                    document.getElementById("status_"+id).classList.add("red")
-                }else if (status == "WAITFORRESUBMISSION"){
-                    document.getElementById("status_"+id).classList.add("yellow")
+                if (status == "APPROVED") {
+                    document.getElementById("status_" + id).classList.add("green")
+                } else if (status == "REJECTED") {
+                    document.getElementById("status_" + id).classList.add("red")
+                } else if (status == "WAITFORRESUBMISSION") {
+                    document.getElementById("status_" + id).classList.add("yellow")
                 }
 
-                setTimeout(()=>{
-                    document.getElementById("update_success").setAttribute("hidden","hidden")
-                },5000)
+                setTimeout(() => {
+                    document.getElementById("update_success").setAttribute("hidden", "hidden")
+                }, 5000)
 
 
-            }else{
+            } else {
                 document.getElementById("update_fail").removeAttribute("hidden")
-                setTimeout(()=>{
-                    document.getElementById("update_fail").setAttribute("hidden","hidden")
-                },5000)
+                setTimeout(() => {
+                    document.getElementById("update_fail").setAttribute("hidden", "hidden")
+                }, 5000)
             }
         }
     </script>
 </head>
 
-<body>
+<body onload="loadUsers()">
 
 <header th:insert="header.html :: header"></header>
 <h1>Host User Application</h1>
 
-<div class="btn-group center ">
+<div class="btn-group center">
 </div>
 <div class="alert alert-success " role="alert" id="update_success" hidden="hidden">
     Operation Success!
@@ -101,43 +172,13 @@
             <button type="button" class="btn btn-secondary">Rejected</button>
         </td>
     </tr>
-    <tr>
-        <th>User id</th>
-        <th>Username</th>
-        <th>Full Name</th>
-        <th>Status</th>
-        <th>Actions</th>
-    </tr>
-
-<!--    Iteration-->
-    <tr th:each="user: ${users}" th:if="${user.role == 'ROLE_HOST'}">
-        <td th:text="${user.id}"></td>
-        <td th:text="${user.username}"></td>
-        <td th:text="${user.fullName}"></td>
-        <td th:each="status: ${T(com.example.toursystem.entity.ApproveStatus).values()}"
-            th:text="${status.getDisplayName()}"
-            th:if="${status == user.hostApproveStatus}"
-            th:id="'status_'+${user.id}"
-            th:class="${ (user.hostApproveStatus == user.hostApproveStatus.APPROVED) ? 'green':
-                ((user.hostApproveStatus == user.hostApproveStatus.REJECTED) ? 'red':'yellow')
-                }">
-        </td>
-        <td>
-            <button type="button" class="btn btn-long" data-bs-toggle="modal" data-bs-target="#exampleModal" th:onclick="'viewDocs('+${user.id}+')'" >View documents</button>
-            <button type="button" class="btn btn-success" th:onclick="'changeStatus('+${user.id}+',\'APPROVED\',\'Approved\')'">Approve</button>
-            <button type="button" class="btn btn-warning" th:onclick="'changeStatus('+${user.id}+',\'WAITFORRESUBMISSION\',\'Wait For Resubmission\')'">Ask For Resubmission</button>
-            <button type="button" class="btn btn-danger" th:onclick="'changeStatus('+${user.id}+',\'REJECTED\',\'Rejected\')'">Reject</button>
-
-            <input type="text" hidden th:value="${user.docId}" th:id="'doc_id_'+${user.id}" >
-            <input type="text" hidden th:value="${user.docHome}" th:id="'doc_home_'+${user.id}" >
-            <input type="text" hidden th:value="${user.docBank}" th:id="'doc_bank_'+${user.id}" >
-        </td>
-    </tr>
-
+</table>
+<table class="table center " id="resultTable">
 </table>
 
 <!--Floating View-->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" width="100%">
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+     width="100%">
     <div class="modal-dialog modal-dialog-centered modal-fullscreen horizontalTrim morePadding">
         <div class="modal-content">
             <div class="modal-header">
@@ -145,7 +186,7 @@
             </div>
             <div class="modal-body">
 
-<!--                Document Display-->
+                <!--                Document Display-->
                 <div class="card text-center">
                     <div class="card-header">
                         <input id="chosenUserId" hidden>
@@ -174,7 +215,7 @@
 
                             <h5 class="card-title">Identity Card/Passport</h5>
 
-                            <div id="form_id_uploaded" >
+                            <div id="form_id_uploaded">
                                 <p>
                                     <a id="resultNewTab_id" target="_blank" class="btn-long btn">Open in new tab</a>
                                 </p>
@@ -187,7 +228,7 @@
 
                             <h5 class="card-title">Home Address Proof</h5>
 
-                            <div id="form_home_uploaded" >
+                            <div id="form_home_uploaded">
                                 <p>
                                     <a id="resultNewTab_home" target="_blank" class="btn-long btn">Open in new tab</a>
                                 </p>
@@ -200,7 +241,7 @@
 
                             <h5 class="card-title">Bank Account Proof</h5>
 
-                            <div id="form_bank_uploaded" >
+                            <div id="form_bank_uploaded">
                                 <p>
                                     <a id="resultNewTab_bank" target="_blank" class="btn-long btn">Open in new tab</a>
                                 </p>

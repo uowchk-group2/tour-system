@@ -38,10 +38,7 @@ public class staff {
     }
 
     @GetMapping("hostAppReview")
-    public String hostApplication(Model model, HttpServletRequest request){
-        List<User> allUser = userServices.findAll();
-
-        model.addAttribute("users",allUser);
+    public String hostApplication(){
         return "staff/hostAppReview";
     }
 
