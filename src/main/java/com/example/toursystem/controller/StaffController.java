@@ -7,6 +7,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Controller
 @RequestMapping("/staff")
 public class StaffController {
@@ -19,7 +21,10 @@ public class StaffController {
     }
 
     @GetMapping("user")
-    public String user(Model model){
+    public String user(Model model, HttpServletRequest request){
+        String username = request.getUserPrincipal().getName();
+        model.addAttribute("username",username);
+
         return "staff/user";
     }
 

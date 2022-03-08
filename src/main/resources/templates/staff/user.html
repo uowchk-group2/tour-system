@@ -2,7 +2,9 @@
 
 <head>
     <script>
-        function loadFromAPI() {
+
+
+        function loadUsersFromAPI() {
             let requestURL = '/api/user/find/'
             if (window.location.host == "tomcat.johnnyip.com"){
                 requestURL = '/tour-system' + requestURL
@@ -16,9 +18,10 @@
             return resultObject
         }
 
+        // UI table setup
         function loadUsers() {
 
-            let userObjects = loadFromAPI()
+            let userObjects = loadUsersFromAPI()
             let roleStrings = {
                 "ROLE_STAFF": "Staff",
                 "ROLE_TOURIST": "Tourist",
@@ -53,7 +56,7 @@
 
                     resultTableHTML += `<td>
                                 <button type="button" class="btn btn-small" data-bs-toggle="modal" data-bs-target="#modalEdit" onclick="editButtonClicked('${user.username}')">Edit</button>
-                                <button type="button" class="btn btn-small">Chat</button>`
+                                <button type="button" class="btn btn-small" data-bs-toggle="modal" data-bs-target="#modalChat" onclick="chatButtonClicked('${user.username}')">Chat</button>`
 
 
                     resultTableHTML += `
@@ -69,6 +72,7 @@
             document.getElementById("resultTable").innerHTML = resultTableHTML
         }
 
+        //Edit button
         function editButtonClicked(username) {
             let requestURL = '/api/user/find/' + username
             if (window.location.host == "tomcat.johnnyip.com"){
@@ -115,6 +119,38 @@
             console.log(xmlHttpPOST.responseText);
         }
 
+        //Chat button
+        function chatButtonClicked(targetUsername){
+            let selfUsername = document.getElementById("selfUsername").value;
+
+            let bodyJSON = JSON.stringify({
+                user1: selfUsername,
+                user2: targetUsername
+            })
+
+            console.log(bodyJSON)
+
+            var xmlHttpPOST = new XMLHttpRequest();
+            xmlHttpPOST.open("POST", '/api/chat/newChat', false); // false for synchronous request
+            xmlHttpPOST.setRequestHeader("Content-Type","application/json")
+            xmlHttpPOST.send(bodyJSON);
+            console.log(xmlHttpPOST.responseText)
+
+            let result = xmlHttpPOST.responseText
+            if (result == "success"){
+                document.getElementById("chat_resultText").innerText = "Chat created successfully."
+            }else{
+                document.getElementById("chat_resultText").innerText = "Chat already exist."
+            }
+
+            let requestURL = '/user/chat'
+            if (window.location.host == "tomcat.johnnyip.com"){
+                requestURL = '/tour-system' + requestURL
+            }
+
+            document.getElementById("chat_button").href = requestURL;
+        }
+
     </script>
 </head>
 
@@ -123,6 +159,7 @@
 
 <header th:insert="header.html :: header"></header>
 <h1>User Management</h1>
+<input type="text" hidden id="selfUsername" th:value="${username}">
 
 <div class="table center horizontalTrim">
     <select>
@@ -544,6 +581,24 @@
     </div>
 </div>
 
+<!--Chat modal-->
+<div class="modal fade" id="modalChat" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit User Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="chat_resultText">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a id="chat_button" class="btn btn-primary" >Go To Chat</a>
+            </div>
+        </div>
+    </div>
+</div>
 
 </body>
 
