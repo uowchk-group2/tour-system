@@ -19,12 +19,12 @@ import java.security.Principal;
 
 @Controller
 @RequestMapping("/signup")
-public class signup {
+public class SignupController {
     private UserServices userServices;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public signup(UserServices userServices, PasswordEncoder passwordEncoder) {
+    public SignupController(UserServices userServices, PasswordEncoder passwordEncoder) {
         this.userServices = userServices;
         this.passwordEncoder = passwordEncoder;
     }
@@ -95,7 +95,7 @@ public class signup {
     @GetMapping("result")
     public String signupResult(Model model, HttpServletRequest request, Principal principal) {
 
-        //Get detail of user
+        //Get detail of UserController
         String username = request.getUserPrincipal().getName();
         User user = new User();
         try {

@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
-public class api {
+@RequestMapping("/api/user")
+public class UserAPIController {
     private UserServices userServices;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public api(UserServices userServices, PasswordEncoder passwordEncoder) {
+    public UserAPIController(UserServices userServices, PasswordEncoder passwordEncoder) {
         this.userServices = userServices;
         this.passwordEncoder = passwordEncoder;
     }
@@ -35,7 +35,25 @@ public class api {
         return user;
     }
 
-    @PostMapping("/save")
+    @PostMapping("/update")
+    public String updateUser(@RequestBody User user) {
+        try {
+            User userFromQuery = userServices.findByID(user.getId());
+
+            userFromQuery.setEmail(user.getEmail());
+            userFromQuery.setFullName(user.getFullName());
+            userFromQuery.setNationality(user.getNationality());
+            userFromQuery.setHomeAddress(user.getHomeAddress());
+            userFromQuery.setBankAccountNumber(user.getBankAccountNumber());
+
+            userServices.save(userFromQuery);
+        } catch (Exception e) {
+            return e.getMessage();
+        }
+        return "success";
+    }
+
+    @PostMapping("/newUser")
     public String saveUser(@RequestBody User user){
         user.setId(0);
         String password = user.getPassword();
@@ -58,5 +76,4 @@ public class api {
         }
         return "success";
     }
-
 }

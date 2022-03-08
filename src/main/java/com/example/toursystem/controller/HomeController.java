@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 
 @Controller
-public class home {
+public class HomeController {
     @Autowired
     private UserServices userServices;
 
@@ -44,11 +44,11 @@ public class home {
 
     @GetMapping("hostSignup")
     public String hostSignup(Model model){
-        return "user/hostSignup";
+        return "UserController/hostSignup";
     }
     @GetMapping("touristSignup")
     public String touristSignup(Model model){
-        return "user/touristSignup";
+        return "UserController/touristSignup";
     }
 
 }

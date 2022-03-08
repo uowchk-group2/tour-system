@@ -190,7 +190,10 @@
                 xmlHttpPOST.setRequestHeader("Content-Type", "application/json")
                 xmlHttpPOST.send(bodyJSON);
 
-                fetchChatHistory(id);
+
+                setTimeout( ()=>{
+                    fetchChatHistory(id);
+                },500)
             }
         }
 

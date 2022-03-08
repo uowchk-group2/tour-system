@@ -29,7 +29,7 @@
                     &nbsp;&nbsp;&nbsp;Enjoy your local tour experience here!
                 </td>
                 <td style="text-align: right">
-                    <!--                    For Signed in user-->
+                    <!--                    For Signed in UserController-->
                     <div th:if="${#authentication.getName() != 'anonymousUser'}">
 <!--                        <span th:text="${#authentication.toString()}"/>-->
                         Welcome, <span th:text="${#authentication.getName()}"/>!

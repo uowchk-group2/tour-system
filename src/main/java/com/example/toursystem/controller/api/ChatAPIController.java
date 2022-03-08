@@ -12,18 +12,17 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 
 @RestController
 @RequestMapping("/api/chat")
-public class chat {
+public class ChatAPIController {
 
     private ChatUsersServices chatUsersServices;
     private ChatHistoryServices chatHistoryServices;
     private UserServices userServices;
 
     @Autowired
-    public chat(ChatUsersServices chatUsersServices, ChatHistoryServices chatHistoryServices, UserServices userServices) {
+    public ChatAPIController(ChatUsersServices chatUsersServices, ChatHistoryServices chatHistoryServices, UserServices userServices) {
         this.chatUsersServices = chatUsersServices;
         this.chatHistoryServices = chatHistoryServices;
         this.userServices = userServices;

@@ -4,7 +4,7 @@
     <script>
 
         function loadFromAPI() {
-            let requestURL = '/api/find/'
+            let requestURL = '/api/user/find/'
 
             var xmlHttpGet = new XMLHttpRequest();
             xmlHttpGet.open("GET", requestURL, false); // false for synchronous request
@@ -106,7 +106,7 @@
 
         function changeStatus(id, status, statusText) {
 
-            let requestURL = '/api/hostApprove/' + id + '?newStatus=' + status;
+            let requestURL = '/api/user/hostApprove/' + id + '?newStatus=' + status;
             var xmlHttpGet = new XMLHttpRequest();
             xmlHttpGet.open("POST", requestURL, false); // false for synchronous request
             xmlHttpGet.send(null);
@@ -179,7 +179,7 @@
 <!--Floating View-->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
      width="100%">
-    <div class="modal-dialog modal-dialog-centered modal-fullscreen horizontalTrim morePadding">
+    <div class="modal-dialog modal-dialog-centered  modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

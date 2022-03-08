@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping("/tourist")
-public class   tourist {
+public class TouristController {
 
     @GetMapping("")
     public String demopage(Model model, HttpServletRequest request){

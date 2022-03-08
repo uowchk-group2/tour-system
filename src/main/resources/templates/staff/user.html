@@ -2,22 +2,113 @@
 
 <head>
     <script>
-        function toggleEdit(editing){
-            if (editing){
-                document.getElementById("editing_no").hidden = true;
-                document.getElementById("editing_yes").hidden = false;
-                document.getElementById("editing_no1").hidden = true;
-                document.getElementById("editing_yes1").hidden = false;
-            }else{
-                document.getElementById("editing_no").hidden = false;
-                document.getElementById("editing_yes").hidden = true;
-                document.getElementById("editing_no1").hidden = false;
-                document.getElementById("editing_yes1").hidden = true;
-            }
+        function loadFromAPI() {
+            let requestURL = '/api/user/find/'
+
+            var xmlHttpGet = new XMLHttpRequest();
+            xmlHttpGet.open("GET", requestURL, false); // false for synchronous request
+            xmlHttpGet.send(null);
+            let resultObject = JSON.parse(xmlHttpGet.responseText);
+
+            return resultObject
         }
+
+        function loadUsers() {
+
+            let userObjects = loadFromAPI()
+            let roleStrings = {
+                "ROLE_STAFF": "Staff",
+                "ROLE_TOURIST": "Tourist",
+                "ROLE_HOST": "Host",
+            }
+
+            let resultTableHTML = `<tr>
+                                        <th>User id</th>
+                                        <th>Role</th>
+                                        <th>Username</th>
+                                        <th>Full Name</th>
+                                        <th>Action</th>
+                                    </tr>`
+
+            for (let user of userObjects) {
+                let roleString = roleStrings[user.role]
+                console.log(user)
+                if (user.fullName == null) {
+                    user.fullName = "-"
+                }
+
+                resultTableHTML += `
+                        <tr>
+                            <td>${user.id}</td>
+                            <td>${roleString}</td>
+                            <td>${user.username}</td>
+                            <td>${user.fullName}</td>`
+
+                if (roleString == "Staff") {
+                    resultTableHTML += `<td></td>`
+                } else {
+
+                    resultTableHTML += `<td>
+                                <button type="button" class="btn btn-small" data-bs-toggle="modal" data-bs-target="#modalEdit" onclick="editButtonClicked('${user.username}')">Edit</button>
+                                <button type="button" class="btn btn-small">Chat</button>`
+
+
+                    resultTableHTML += `
+                                <button type="button" class="btn btn-small">View Created Tours</button>
+                                <button type="button" class="btn btn-small">View Written Reviews</button>
+                            </td>`
+                }
+
+
+
+                resultTableHTML += `</tr>`
+            }
+            document.getElementById("resultTable").innerHTML = resultTableHTML
+        }
+
+        function editButtonClicked(username) {
+            let requestURL = '/api/user/find/' + username
+
+            var xmlHttpGet = new XMLHttpRequest();
+            xmlHttpGet.open("GET", requestURL, false); // false for synchronous request
+            xmlHttpGet.send(null);
+            let user = JSON.parse(xmlHttpGet.responseText);
+
+            console.log(user)
+
+            document.getElementById("edit_idText").innerHTML = `${user.id} <input type="text" hidden id="editField_id" value="${user.id}">`
+            document.getElementById("edit_usernameText").innerText = user.username;
+            document.getElementById("editField_email").value = user.email;
+            document.getElementById("editField_fullname").value = user.fullName;
+            document.getElementById("editField_nationality").value = user.nationality;
+
+            document.getElementById("editField_homeAddress").value = user.homeAddress;
+            document.getElementById("editField_bankAccount").value = user.bankAccountNumber;
+
+        }
+
+        function editSubmit(){
+            let bodyJSON = JSON.stringify({
+                id: document.getElementById("editField_id").value,
+                email: document.getElementById("editField_email").value,
+                fullName: document.getElementById("editField_fullname").value,
+                nationality: document.getElementById("editField_nationality").value,
+                homeAddress: document.getElementById("editField_homeAddress").value,
+                bankAccountNumber: document.getElementById("editField_bankAccount").value,
+            })
+
+            var xmlHttpPOST = new XMLHttpRequest();
+            xmlHttpPOST.open("POST", '/api/user/update', false); // false for synchronous request
+            xmlHttpPOST.setRequestHeader("Content-Type", "application/json")
+            xmlHttpPOST.send(bodyJSON);
+            console.log(xmlHttpPOST.responseText);
+        }
+
     </script>
 </head>
-<body>
+
+
+<body onload="loadUsers()">
 
 <header th:insert="header.html :: header"></header>
 <h1>User Management</h1>
@@ -33,58 +124,11 @@
 </div>
 
 <h2 class="center">Search result</h2>
-<table class="table center" valign="center">
-    <tr>
-        <th>User id</th>
-        <th>Role</th>
-        <th>Username</th>
-        <th>Name</th>
-        <th>Action</th>
-    </tr>
-    <tr>
-        <td>1</td>
-        <td>Host</td>
-        <td>johnny</td>
-        <td>Johnny IP</td>
-        <td>
-            <button type="button" class="btn btn-small">Edit</button>
-            <button type="button" class="btn btn-small">Chat</button>
-            <button type="button" class="btn btn-small">View Created Tours</button>
-            <button type="button" class="btn btn-small">View Written Reviews</button>
-            <button type="button" class="btn btn-danger">Remove</button>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="5" style="background-color: #e4e1de">
+<table class="table center" valign="center" id="resultTable">
+</table>
 
-            <table class="horizontalTrim center morePadding" id="editing_yes" >
-                <tr>
-                    <td colspan="2" class="alignRight">
-                        <button type="button" class="btn btn-primary" onclick="toggleEdit(false)">Cancel</button>
-                        <button type="button" class="btn btn-primary" onclick="toggleEdit(false)">Save</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Username</td>
-                    <td><input type="text" value="username"></td>
-                </tr>
-                <tr>
-                    <td>Email</td>
-                    <td><input type="text" value="sample@gmail.com"></td>
-                </tr>
-                <tr>
-                    <td>Full Name</td>
-                    <td><input type="text" value="Johnny IP"></td>
-                </tr>
-                <tr>
-                    <td>Nationality</td>
-                    <td><input type="text" value="Hong Kong"></td>
-                </tr>
-            </table>
 
-        </td>
-    </tr>
-    <tr><td></td></tr>
+<table class="table center">
     <tr>
         <td colspan="5" style="background-color: #e4e1de">
 
@@ -123,7 +167,9 @@
         </td>
     </tr>
 
-    <tr><td></td></tr>
+    <tr>
+        <td></td>
+    </tr>
     <tr>
         <td colspan="5" style="background-color: #e4e1de">
 
@@ -139,89 +185,90 @@
                 <tr>
                     <td colspan="3">
 
-                <table class="table center horizontalTrim" id="editing_no">
-                    <tr>
-                        <td colspan="2">
-                            Tour
-                            <select>
-                                <option>Tian Tan Buddha one day trip (08-13-2022)</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2" class="alignRight">
-                            <button type="button" class="btn-long btn">Remove</button>
-                            <button type="button" class="btn-long btn" onclick="toggleEdit(true)">Edit</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Tourist</th>
-                        <td>
-                            <select>
-                                <option>Johnny</option>
-                                <option>Oscar</option>
-                                <option>James</option>
-                                <option>Ivan</option>
-                                <option>Jacky</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">
-                            <h4>Review for the tourist</h4>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Rating</th>
-                        <td>
-                            &#9733;&#9733;&#9733;&#9733;&#9733;
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Comment</th>
-                        <td>
-                            Nice chat.
-                        </td>
-                    </tr>
+                        <table class="table center horizontalTrim" id="editing_no">
+                            <tr>
+                                <td colspan="2">
+                                    Tour
+                                    <select>
+                                        <option>Tian Tan Buddha one day trip (08-13-2022)</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="alignRight">
+                                    <button type="button" class="btn-long btn">Remove</button>
+                                    <button type="button" class="btn-long btn" onclick="toggleEdit(true)">Edit</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Tourist</th>
+                                <td>
+                                    <select>
+                                        <option>Johnny</option>
+                                        <option>Oscar</option>
+                                        <option>James</option>
+                                        <option>Ivan</option>
+                                        <option>Jacky</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <h4>Review for the tourist</h4>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Rating</th>
+                                <td>
+                                    &#9733;&#9733;&#9733;&#9733;&#9733;
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Comment</th>
+                                <td>
+                                    Nice chat.
+                                </td>
+                            </tr>
 
-                </table>
+                        </table>
 
-                <table class="table center horizontalTrim" hidden="true" id="editing_yes">
-                    <tr>
-                        <td colspan="2" class="alignRight">
-                            <button type="button" class="btn-long btn" onclick="toggleEdit(false)">Cancel</button>
-                            <button type="button" class="btn-long btn" onclick="toggleEdit(false)">Save</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Tourist</th>
-                        <td>
-                            Johnny
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">
-                            <h4>Review for the tourist</h4>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Rating</th>
-                        <td>
-                            <button type="button" class="btn rating">&#9733;</button>
-                            <button type="button" class="btn rating">&#9733;</button>
-                            <button type="button" class="btn rating">&#9733;</button>
-                            <button type="button" class="btn rating">&#9733;</button>
-                            <button type="button" class="btn rating">&#9733;</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Comment</th>
-                        <td>
-                            <textarea>Nice chat.</textarea>
-                        </td>
-                    </tr>
+                        <table class="table center horizontalTrim" hidden="true" id="editing_yes">
+                            <tr>
+                                <td colspan="2" class="alignRight">
+                                    <button type="button" class="btn-long btn" onclick="toggleEdit(false)">Cancel
+                                    </button>
+                                    <button type="button" class="btn-long btn" onclick="toggleEdit(false)">Save</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Tourist</th>
+                                <td>
+                                    Johnny
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <h4>Review for the tourist</h4>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Rating</th>
+                                <td>
+                                    <button type="button" class="btn rating">&#9733;</button>
+                                    <button type="button" class="btn rating">&#9733;</button>
+                                    <button type="button" class="btn rating">&#9733;</button>
+                                    <button type="button" class="btn rating">&#9733;</button>
+                                    <button type="button" class="btn rating">&#9733;</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Comment</th>
+                                <td>
+                                    <textarea>Nice chat.</textarea>
+                                </td>
+                            </tr>
 
-                </table>
+                        </table>
 
                     </td>
                 </tr>
@@ -310,7 +357,9 @@
 
         </td>
     </tr>
-    <tr><td></td></tr>
+    <tr>
+        <td></td>
+    </tr>
     <tr>
         <td colspan="5" style="background-color: #e4e1de">
             <div class="alignRight">
@@ -318,7 +367,7 @@
             </div>
             <h3>Written Reviews</h3>
 
-            <table class="table center horizontalTrim"  id="editing_no1" >
+            <table class="table center horizontalTrim" id="editing_no1">
                 <tr>
                     <td colspan="2">
                         <div class="center horizontalTrim">
@@ -429,6 +478,60 @@
         </td>
     </tr>
 </table>
+
+<!--Edit modal-->
+<div class="modal fade" id="modalEdit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Edit User Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="edit_content">
+                <table class="horizontalTrim center morePadding">
+                    <tr>
+                        <td><b>User ID</b></td>
+                        <td id="edit_idText"></td>
+                    </tr>
+                    <tr>
+                        <td><b>Username</b></td>
+                        <td id="edit_usernameText"></td>
+                    </tr>
+                    <tr>
+                        <td>Email</td>
+                        <td><input type="text" id="editField_email"></td>
+                    </tr>
+                    <tr>
+                        <td>Full Name</td>
+                        <td><input type="text" id="editField_fullname"></td>
+                    </tr>
+                    <tr>
+                        <td>Nationality</td>
+                        <td><input type="text" id="editField_nationality"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <p>(For Host User)</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Home Address</td>
+                        <td><input type="text" id="editField_homeAddress"></td>
+                    </tr>
+                    <tr>
+                        <td>Bank Account</td>
+                        <td><input type="text" id="editField_bankAccount"></td>
+                    </tr>
+                </table>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="editSubmit()">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 </body>

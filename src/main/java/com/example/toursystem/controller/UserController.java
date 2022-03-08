@@ -15,11 +15,11 @@ import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping("/user")
-public class user {
+public class UserController {
     private UserServices userServices;
 
     @Autowired
-    public user(UserServices userServices) {
+    public UserController(UserServices userServices) {
         this.userServices = userServices;
     }
 
@@ -49,10 +49,10 @@ public class user {
             userServices.save(userFromQuery);
         }catch (Exception e){
             System.out.println("Error: "+ e.getMessage());
-            return new RedirectView("/user/profile?success=false");
+            return new RedirectView("/UserController/profile?success=false");
         }
 
-        return new RedirectView("/user/profile?success=true");
+        return new RedirectView("/UserController/profile?success=true");
     }
 
     @GetMapping("chat")
