@@ -4,6 +4,9 @@
     <script>
         function loadFromAPI() {
             let requestURL = '/api/user/find/'
+            if (window.location.host == "tomcat.johnnyip.com"){
+                requestURL = '/tour-system' + requestURL
+            }
 
             var xmlHttpGet = new XMLHttpRequest();
             xmlHttpGet.open("GET", requestURL, false); // false for synchronous request
@@ -68,6 +71,9 @@
 
         function editButtonClicked(username) {
             let requestURL = '/api/user/find/' + username
+            if (window.location.host == "tomcat.johnnyip.com"){
+                requestURL = '/tour-system' + requestURL
+            }
 
             var xmlHttpGet = new XMLHttpRequest();
             xmlHttpGet.open("GET", requestURL, false); // false for synchronous request
@@ -88,6 +94,11 @@
         }
 
         function editSubmit(){
+            let requestURL = '/api/user/update' + username
+            if (window.location.host == "tomcat.johnnyip.com"){
+                requestURL = '/tour-system' + requestURL
+            }
+
             let bodyJSON = JSON.stringify({
                 id: document.getElementById("editField_id").value,
                 email: document.getElementById("editField_email").value,
@@ -98,7 +109,7 @@
             })
 
             var xmlHttpPOST = new XMLHttpRequest();
-            xmlHttpPOST.open("POST", '/api/user/update', false); // false for synchronous request
+            xmlHttpPOST.open("POST", requestURL, false); // false for synchronous request
             xmlHttpPOST.setRequestHeader("Content-Type", "application/json")
             xmlHttpPOST.send(bodyJSON);
             console.log(xmlHttpPOST.responseText);
