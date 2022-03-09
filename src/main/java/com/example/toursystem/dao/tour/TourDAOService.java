@@ -1,6 +1,5 @@
 package com.example.toursystem.dao.tour;
 
-import com.example.toursystem.entity.User;
 import com.example.toursystem.entity.tour.Tour;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
@@ -22,9 +21,6 @@ public class TourDAOService implements TourDAO{
     public void updateOrCreateTour(Tour tour) {
         Session currentSession = entityManager.unwrap(Session.class);
         currentSession.saveOrUpdate(tour);
-
-        //Retrieve
-        System.out.println(tour);
     }
 
     @Override

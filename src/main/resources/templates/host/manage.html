@@ -5,6 +5,18 @@
 <header th:insert="header.html :: header"></header>
 <h1>Manage tours</h1>
 
+<div th:if="${newCreate}" class="alert alert-success " role="alert" >
+    Created a tour successfully!
+</div>
+
+<div class="alert alert-success " role="alert" id="update_success" hidden="hidden">
+    Operation Success!
+</div>
+<div class="alert alert-danger" role="alert" id="update_fail" hidden="hidden">
+    Operation Failed!
+</div>
+
+
 <table class="table center" valign="center">
     <tr>
         <th>Tour id</th>

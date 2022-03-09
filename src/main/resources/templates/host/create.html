@@ -2,7 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <script>
+    <script >
+
         function makeid() {
             var text = "";
             var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -66,6 +67,22 @@
             document.getElementById("form_coverPhoto").value = "";
         }
 
+        function submitHandler(){
+            let tourId = postNewTour()
+            let result = postNewDates(tourId);
+
+            if (result == "success"){
+                let resultURL = '/host/manage?newCreate=true'
+                if (window.location.host == "tomcat.johnnyip.com"){
+                    resultURL = '/tour-system' + resultURL
+                }
+
+                window.location.href = resultURL;
+            }else{
+                document.getElementById("update_fail").removeAttribute("hidden")
+            }
+        }
+
         function postNewTour(){
 
             //Save result of creation of tour
@@ -84,7 +101,7 @@
 
             console.log(bodyJSON)
 
-            let requestURL = '/api/tour/save'
+            let requestURL = '/api/tour/saveTour'
             if (window.location.host == "tomcat.johnnyip.com"){
                 requestURL = '/tour-system' + requestURL
             }
@@ -98,18 +115,47 @@
 
             if (createTourResult.id == 0){
                 document.getElementById("update_fail").removeAttribute("hidden")
-                return false;
             }else{
                 document.getElementById("tourIdRow").removeAttribute("hidden")
                 document.getElementById("tourIdText").innerText = createTourResult.id
                 document.getElementById("form_tourId").value = createTourResult.id;
+                return createTourResult.id;
             }
 
 
+        }
 
-            return false;
+        function postNewDates(tourId){
+            let dates = document.getElementById("form_datePicker").value.split(', ')
+            let dateArray = []
+
+            for(const [index,dateString] of dates.entries()){
+                let date = Date.parse(dateString)
+                dateArray[index] = {
+                            id:0,
+                            tourId:tourId,
+                            date: date
+                }
+            }
+
+            let bodyJSON = JSON.stringify(dateArray)
+
+            console.log(bodyJSON)
+
+            let requestURL = '/api/tour/saveTourDates'
+            if (window.location.host == "tomcat.johnnyip.com"){
+                requestURL = '/tour-system' + requestURL
+            }
+
+            var xmlHttpPOST = new XMLHttpRequest();
+            xmlHttpPOST.open("POST", requestURL, false); // false for synchronous request
+            xmlHttpPOST.setRequestHeader("Content-Type","application/json")
+            xmlHttpPOST.send(bodyJSON);
+            let createTourResult = xmlHttpPOST.responseText
+            return createTourResult;
 
         }
+
 
     </script>
 </head>
@@ -127,7 +173,7 @@
 
 <input id="form_username" th:value="${username}" hidden/>
 
-<form onsubmit="return postNewTour()" >
+<form onsubmit="submitHandler(); return false;" >
     <table class="horizontalTrim center morePadding" >
         <tbody>
         <tr id="tourIdRow" hidden>
@@ -193,7 +239,7 @@
         </tr>
         <tr>
             <td colspan="2">
-                <h3 class="borderedWithColor">Dates available for tours</h3>
+                <h3 class="borderedWithColor">Dates Available For The Tour</h3>
             </td>
         </tr>
         <tr>
@@ -201,19 +247,15 @@
             <td>
                 <input type="text" id="form_datePicker" class="form-control datepicker btn-long btn"
                        placeholder="Choose a date to participate" name="date"
-                       maxlength="25" size="25" onchange="dateOnChange()">
+                       maxlength="25" size="25" required>
 
                 <script type="text/javascript">
-
-                    function dateOnChange() {
-                        console.log(document.getElementById("form_datePicker").value)
-                    }
-
                     $('.datepicker').datepicker({
-                        format: 'mm-dd-yyyy',
+                        format: 'yyyy-mm-dd',
                         multidate: true,
                         multidateSeparator: ", ",
                     });
+
                 </script>
             </td>
         </tr>

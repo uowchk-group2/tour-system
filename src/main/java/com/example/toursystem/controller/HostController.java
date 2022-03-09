@@ -27,7 +27,11 @@ public class HostController {
         return "host/create";
     }
     @GetMapping("manage")
-    public String manage(Model model){
+    public String manage(Model model, HttpServletRequest request){
+        String newCreate = request.getParameter("newCreate");
+        if ( newCreate != null){
+            model.addAttribute("newCreate",true);
+        }
         return "host/manage";
     }
     @GetMapping("tourDetailEdit")
