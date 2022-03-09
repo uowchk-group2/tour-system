@@ -1,22 +1,151 @@
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <script>
+        function makeid() {
+            var text = "";
+            var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            for (var i = 0; i < 20; i++)
+                text += possible.charAt(Math.floor(Math.random() * possible.length));
+            return text;
+        }
+
+        function uploadFile(){
+            let filename = document.getElementById("fileUpload").files[0].name;
+            let randomFileName = makeid()+"."+filename.split(".")[filename.split(".").length-1]
+            console.log(randomFileName)
+
+            let file = document.getElementById("fileUpload").files[0];
+            console.log(document.getElementById("fileUpload").files[0])
+
+
+            var requestURL = "https://api.johnnyip.com/s3?filename="+randomFileName+"&filetype="+file.type;
+            console.log("RequestURL: "+ requestURL)
+
+            //Get upload URL
+            var xmlHttpGet = new XMLHttpRequest();
+            xmlHttpGet.open( "GET",requestURL , false ); // false for synchronous request
+            xmlHttpGet.send(null);
+            var uploadURL = xmlHttpGet.responseText;
+            console.log("UploadURL: "+uploadURL)
+
+            //convert file to blob
+            let objectURL = URL.createObjectURL(file);
+            console.log(objectURL)
+            console.log(file.type)
+            let blob = new Blob([file],{type: file.type})
+
+            var formData = new FormData();
+            formData.append(filename,file);
+            fetch(uploadURL,
+                {
+                    method:"PUT",
+                    body:blob
+                }
+            );
+            var finalURL =  "https://uow-project-tour-system.s3.ap-east-1.amazonaws.com/"+randomFileName
+            console.log("FinalURL: "+finalURL)
+
+            setTimeout(function () {
+                document.getElementById("coverPhotoPreview").src=finalURL;
+                document.getElementById("resultNewTab").href=finalURL;
+                document.getElementById("upload_no").setAttribute("hidden","hidden")
+                document.getElementById("upload_yes").removeAttribute("hidden")
+                document.getElementById("form_coverPhoto").value = randomFileName;
+                document.getElementById("fileUpload").value = "";
+
+            }, 500);
+        }
+
+        function removePhoto(){
+            document.getElementById("coverPhotoPreview").src="";
+            document.getElementById("resultNewTab").href="";
+            document.getElementById("upload_yes").setAttribute("hidden","hidden")
+            document.getElementById("upload_no").removeAttribute("hidden")
+            document.getElementById("form_coverPhoto").value = "";
+        }
+
+        function postNewTour(){
+
+            //Save result of creation of tour
+            let bodyJSON = JSON.stringify({
+                id:document.getElementById("form_tourId").value,
+                name:document.getElementById("form_name").value,
+                hostUsername: document.getElementById("form_username").value,
+                country:document.getElementById("form_country").value,
+                days:document.getElementById("form_days").value,
+                description:document.getElementById("form_description").value,
+                schedule:document.getElementById("form_tourSchedule").value,
+                coverPhoto:document.getElementById("form_coverPhoto").value,
+                fee:document.getElementById("form_fee").value,
+                participantLimit:document.getElementById("form_maxParti").value
+            })
+
+            console.log(bodyJSON)
+
+            let requestURL = '/api/tour/save'
+            if (window.location.host == "tomcat.johnnyip.com"){
+                requestURL = '/tour-system' + requestURL
+            }
+
+            var xmlHttpPOST = new XMLHttpRequest();
+            xmlHttpPOST.open("POST", requestURL, false); // false for synchronous request
+            xmlHttpPOST.setRequestHeader("Content-Type","application/json")
+            xmlHttpPOST.send(bodyJSON);
+            let createTourResult = JSON.parse(xmlHttpPOST.responseText)
+            console.log(createTourResult)
+
+            if (createTourResult.id == 0){
+                document.getElementById("update_fail").removeAttribute("hidden")
+                return false;
+            }else{
+                document.getElementById("tourIdRow").removeAttribute("hidden")
+                document.getElementById("tourIdText").innerText = createTourResult.id
+                document.getElementById("form_tourId").value = createTourResult.id;
+            }
+
+
+
+            return false;
+
+        }
+
+    </script>
+</head>
 
 <body>
 
 <header th:insert="header.html :: header"></header>
 <h1>Create a new tour</h1>
+<div class="alert alert-success " role="alert" id="update_success" hidden="hidden">
+    Operation Success!
+</div>
+<div class="alert alert-danger" role="alert" id="update_fail" hidden="hidden">
+    Operation Failed!
+</div>
 
-<form>
+<input id="form_username" th:value="${username}" hidden/>
+
+<form onsubmit="return postNewTour()" >
     <table class="horizontalTrim center morePadding" >
         <tbody>
+        <tr id="tourIdRow" hidden>
+            <td>Tour ID</td>
+            <td>
+                <span id="tourIdText"></span>
+                <input type="number" id="form_tourId" value="0" hidden>
+            </td>
+        </tr>
 
         <tr>
             <td width="20%">Name of tour:</td>
-            <td><input type="text"></td>
+            <td><input type="text" id="form_name" required></td>
         </tr>
         <tr>
             <td>Country of tour:</td>
             <td>
-                <select>
+                <select id="form_country">
                     <option>Hong Kong</option>
                     <option>China</option>
                     <option>Australia</option>
@@ -25,20 +154,42 @@
         </tr>
         <tr>
             <td>Duration of tour (day):</td>
-            <td><input type="number" min="1" value="1"></td>
+            <td><input type="number" id="form_days" required min="1" value="1"></td>
+        </tr>
+        <tr>
+            <td>Fee per participant: </td>
+            <td>$<input type="number" id="form_fee" required min="1" value="1"></td>
         </tr>
         <tr>
             <td>Description:</td>
-            <td><textarea></textarea></td>
+            <td><textarea id="form_description" ></textarea></td>
         </tr>
         <tr>
             <td>Tour Schedule:</td>
-            <td><textarea></textarea></td>
+            <td><textarea id="form_tourSchedule"></textarea></td>
+        </tr>
+        <tr>
+            <td>Maximum participants</td>
+            <td>
+                <input type="number" id="form_maxParti" required>
+            </td>
         </tr>
 
         <tr>
             <td>Upload photo(optional):</td>
-            <td><input type="file" multiple></td>
+            <td>
+                <div id="upload_no">
+                    <input type="file" id="fileUpload" accept="image/*">
+                    <button type="button" class="btn-long" onclick="uploadFile()" >Upload</button>
+                </div>
+                <div id="upload_yes" hidden>
+                    <button type="button" class="btn-long" onclick="removePhoto()">Remove</button>
+                    <a target="_blank" id="resultNewTab" ><button type="button" class="btn-long">Open In New Tab</button></a>
+                    <input type="text" id="form_coverPhoto" hidden>
+                    <br>
+                    <img id="coverPhotoPreview" height="300">
+                </div>
+            </td>
         </tr>
         <tr>
             <td colspan="2">
@@ -48,39 +199,28 @@
         <tr>
             <td>Dates of tour</td>
             <td>
-                <input type="text" id="datepicker" class="form-control datepicker"
+                <input type="text" id="form_datePicker" class="form-control datepicker btn-long btn"
                        placeholder="Choose a date to participate" name="date"
                        maxlength="25" size="25" onchange="dateOnChange()">
+
                 <script type="text/javascript">
 
                     function dateOnChange() {
-                        console.log(document.getElementById("datepicker").value)
+                        console.log(document.getElementById("form_datePicker").value)
                     }
 
-                    var datesForDisable = ["02-19-2022", "02-20-2022"]
                     $('.datepicker').datepicker({
                         format: 'mm-dd-yyyy',
                         multidate: true,
                         multidateSeparator: ", ",
-                        datesDisabled: datesForDisable
                     });
                 </script>
             </td>
         </tr>
         <tr>
-            <td>Minimum participants</td>
-            <td>
-                <input type="number">
+            <td colspan="2">
+                <input type="submit" value="Create Tour" >
             </td>
-        </tr>
-        <tr>
-            <td>Maximum participants</td>
-            <td>
-                <input type="number">
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2"><input type="submit" value="Create Tour"></td>
         </tr>
         </tbody>
     </table>

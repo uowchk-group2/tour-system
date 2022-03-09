@@ -1,4 +1,4 @@
-package com.example.toursystem.entity;
+package com.example.toursystem.entity.chat;
 
 import javax.persistence.*;
 import java.sql.Date;

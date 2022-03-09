@@ -1,7 +1,7 @@
 package com.example.toursystem.controller.api;
 
-import com.example.toursystem.entity.ChatHistory;
-import com.example.toursystem.entity.ChatUsers;
+import com.example.toursystem.entity.chat.ChatHistory;
+import com.example.toursystem.entity.chat.ChatUsers;
 import com.example.toursystem.entity.User;
 import com.example.toursystem.service.UserServices;
 import com.example.toursystem.service.chat.ChatHistoryServices;

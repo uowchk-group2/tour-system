@@ -1,6 +1,6 @@
 package com.example.toursystem.dao.chat;
 
-import com.example.toursystem.entity.ChatUsers;
+import com.example.toursystem.entity.chat.ChatUsers;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;

@@ -21,7 +21,7 @@ public class UserDAOService implements UserDAO{
     @Override
     public List<User> findAll() {
         Session currentSession = entityManager.unwrap(Session.class);
-        org.hibernate.query.Query<User> theQuery = currentSession.createQuery("FROM User", User.class);
+        Query theQuery = currentSession.createQuery("FROM User", User.class);
         List<User> users = theQuery.getResultList();
         return users;
 

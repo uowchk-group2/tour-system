@@ -21,7 +21,9 @@ public class HostController {
         return "host/welcome";
     }
     @GetMapping("create")
-    public String create(Model model){
+    public String create(Model model, HttpServletRequest request){
+        String username = request.getUserPrincipal().getName();
+        model.addAttribute("username", username);
         return "host/create";
     }
     @GetMapping("manage")
