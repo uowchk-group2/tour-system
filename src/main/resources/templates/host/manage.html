@@ -1,9 +1,49 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
-<body>
+<head>
+    <script>
+        function fetchTours(){
+            let selfUsername = document.getElementById("username").value
+
+            let requestURL = '/api/tour/tours/'+selfUsername
+            if (window.location.host == "tomcat.johnnyip.com"){
+                requestURL = '/tour-system' + requestURL
+            }
+
+            var xmlHttpGet = new XMLHttpRequest();
+            xmlHttpGet.open("GET", requestURL, false); // false for synchronous request
+            xmlHttpGet.send(null);
+            let resultObject = JSON.parse(xmlHttpGet.responseText);
+
+            let resultHTML = `<tr>
+                                <th>Tour id</th>
+                                <th>Tour name</th>
+                                <th>Action</th>
+                               </tr>`
+            for(let tour of resultObject){
+                resultHTML += `<tr>
+                                    <td>${tour.id}</td>
+                                    <td>${tour.name}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-small">Edit Detail</button>
+                                        <button type="button" class="btn btn-small">Joined Users</button>
+                                        <button type="button" class="btn btn-small">Ratings</button>
+                                        <button type="button" class="btn btn-small">Remove</button>
+                                    </td>
+                               </tr>`
+            }
+            document.getElementById("result_table").innerHTML = resultHTML;
+        }
+
+    </script>
+</head>
+
+<body onload="fetchTours()">
 
 <header th:insert="header.html :: header"></header>
 <h1>Manage tours</h1>
+<input id="username" th:value="${username}" hidden>
+
 
 <div th:if="${newCreate}" class="alert alert-success " role="alert" >
     Created a tour successfully!
@@ -15,6 +55,9 @@
 <div class="alert alert-danger" role="alert" id="update_fail" hidden="hidden">
     Operation Failed!
 </div>
+
+<table class="table center" valign="center" id="result_table">
+</table>
 
 
 <table class="table center" valign="center">

@@ -28,6 +28,9 @@ public class HostController {
     }
     @GetMapping("manage")
     public String manage(Model model, HttpServletRequest request){
+        String username = request.getUserPrincipal().getName();
+        model.addAttribute("username", username);
+
         String newCreate = request.getParameter("newCreate");
         if ( newCreate != null){
             model.addAttribute("newCreate",true);

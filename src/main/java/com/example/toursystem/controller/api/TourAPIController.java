@@ -33,6 +33,17 @@ public class TourAPIController {
         }
     }
 
+    @GetMapping("/tours/{hostUsername}")
+    public List<Tour> getAllTours(@PathVariable String hostUsername){
+        try {
+            List<Tour> tours = tourServices.findWithHostUsername(hostUsername);
+            return tours;
+        }catch (Exception e) {
+            return new ArrayList<Tour>();
+        }
+    }
+
+
     @GetMapping("/tourDates/{tourId}")
     public List<TourDate> getTourDatesByTourId(@PathVariable int tourId){
         try {

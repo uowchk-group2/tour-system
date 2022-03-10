@@ -34,7 +34,7 @@ public class TourDAOService implements TourDAO{
     @Override
     public List<Tour> findWithHostUsername(String username) {
         Session currentSession = entityManager.unwrap(Session.class);
-        String hql = "FROM Tour t WHERE t.username = '"+username+"'";
+        String hql = "FROM Tour t WHERE t.hostUsername = '"+username+"'";
         Query query = currentSession.createQuery(hql,Tour.class);
         List<Tour> tours = query.getResultList();
 
