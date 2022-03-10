@@ -4,16 +4,19 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <script>
-        function onLoadHandler(){
+        let tour = {}
+        let tourDates = {}
+
+        function onLoadHandler() {
             fetchTour()
             fetchTourDates()
         }
 
-        function fetchTour(){
+        function fetchTour() {
             let tourId = document.getElementById("tourIdChosen").value;
 
-            let requestURL = '/api/tour/tourDetail/'+tourId
-            if (window.location.host == "tomcat.johnnyip.com"){
+            let requestURL = '/api/tour/tourDetail/' + tourId
+            if (window.location.host == "tomcat.johnnyip.com") {
                 requestURL = '/tour-system' + requestURL
             }
 
@@ -24,26 +27,26 @@
 
             console.log(tourDetail)
 
-            if (tourDetail.coverPhoto != ""){
-                document.getElementById("result_img").src = "https://uow-project-tour-system.s3.ap-east-1.amazonaws.com/"+tourDetail.coverPhoto
-            }else{
-                document.getElementById("result_img").setAttribute("hidden","hidden")
+            if (tourDetail.coverPhoto != "") {
+                document.getElementById("result_img").src = "https://uow-project-tour-system.s3.ap-east-1.amazonaws.com/" + tourDetail.coverPhoto
+            } else {
+                document.getElementById("result_img").setAttribute("hidden", "hidden")
             }
             document.getElementById("result_name").innerText = tourDetail.name
             document.getElementById("result_days").innerText = tourDetail.days
-            document.getElementById("result_fee").innerText = "$"+tourDetail.fee
+            document.getElementById("result_fee").innerText = "$" + tourDetail.fee
             document.getElementById("result_description").innerText = tourDetail.description
             document.getElementById("result_schedule").innerText = tourDetail.schedule
 
-
+            tour = tourDetail
 
         }
 
-        function fetchTourDates(){
+        function fetchTourDates() {
             let tourId = document.getElementById("tourIdChosen").value;
 
             let requestURL = '/api/tour/tourDates/' + tourId
-            if (window.location.host == "tomcat.johnnyip.com"){
+            if (window.location.host == "tomcat.johnnyip.com") {
                 requestURL = '/tour-system' + requestURL
             }
 
@@ -54,91 +57,122 @@
 
             console.log(resultObject)
 
+            tourDates = resultObject
+
             let selectHTML = ""
-            for(const dateDetail of resultObject){
+            for (const dateDetail of resultObject) {
                 const offset = (new Date()).getTimezoneOffset();
                 let tempDate = Date.parse(dateDetail.date) - offset;
                 let time = new Date(tempDate);
-                let date = `${time.getFullYear()}-${time.getMonth()+1}-${time.getDate()} `
+                let date = `${time.getFullYear()}-${time.getMonth() + 1}-${time.getDate()} `
 
-                selectHTML += `<option value="${dateDetail.id}">${date}</option>`
+                selectHTML += `<option value="${dateDetail.id}">${date} [3/${tour.participantLimit} remaining]</option>`
             }
 
             document.getElementById("result_tourDates").innerHTML = selectHTML
         }
 
+        function submitBooking() {
+            let tourDateId = document.getElementById("result_tourDates").value
+            let tourId = document.getElementById("tourIdChosen").value
+            let quantity = document.getElementById("quantity").value;
+
+
+            let bodyJSON = JSON.stringify({
+                id: 0,
+                tourId: tourId,
+                tourDateId: tourDateId,
+                quantity: quantity,
+            })
+
+            let requestURL = '/api/tour/saveTour'
+            if (window.location.host == "tomcat.johnnyip.com") {
+                requestURL = '/tour-system' + requestURL
+            }
+
+            var xmlHttpPOST = new XMLHttpRequest();
+            xmlHttpPOST.open("POST", requestURL, false); // false for synchronous request
+            xmlHttpPOST.setRequestHeader("Content-Type", "application/json")
+            xmlHttpPOST.send(bodyJSON);
+            let createTourResult = JSON.parse(xmlHttpPOST.responseText)
+            console.log(createTourResult)
+
+
+        }
 
     </script>
 </head>
 <body onload="onLoadHandler()">
 <header th:insert="header.html :: header"></header>
 
-<input type="text" id="tourIdChosen" th:value="${tourId}">
+<form>
+    <input type="text" name="tourId" id="tourIdChosen" th:value="${tourId}">
 
-<table class="center table horizontalTrim">
-    <tr>
-        <td colspan="2">
-            <h2 class="center borderedWithColor">Tour Detail</h2>
-        </td>
-    </tr>
+    <table class="center table horizontalTrim">
+        <tr>
+            <td colspan="2">
+                <h2 class="center borderedWithColor">Tour Detail</h2>
+            </td>
+        </tr>
 
-    <tr>
-        <!-- Photo -->
-        <td colspan="2">
-            <img id="result_img" class="center" style="height: 400px">
-        </td>
-    </tr>
-    <tr>
-        <th width="20%">Name of tour:</th>
-        <td id="result_name">Error</td>
-    </tr>
-    <tr>
-        <th>Tour's day(s):</th>
-        <td id="result_days"></td>
-    </tr>
-    <tr>
-        <th>Cost per tourist:</th>
-        <td id="result_fee"></td>
-    </tr>
-    <tr>
-        <th>Description:</th>
-        <td id="result_description"></td>
-    </tr>
-    <tr>
-        <th>Tour Schedule</th>
-        <td id="result_schedule"></td>
-    </tr>
+        <tr>
+            <!-- Photo -->
+            <td colspan="2">
+                <img id="result_img" class="center" style="height: 400px">
+            </td>
+        </tr>
+        <tr>
+            <th width="20%">Name of tour:</th>
+            <td id="result_name">Error</td>
+        </tr>
+        <tr>
+            <th>Tour's day(s):</th>
+            <td id="result_days"></td>
+        </tr>
+        <tr>
+            <th>Cost per tourist:</th>
+            <td id="result_fee"></td>
+        </tr>
+        <tr>
+            <th>Description:</th>
+            <td id="result_description"></td>
+        </tr>
+        <tr>
+            <th>Tour Schedule</th>
+            <td id="result_schedule"></td>
+        </tr>
 
-    <tr>
-        <td colspan="2">
-            <h2 class="center borderedWithColor">Booking Options</h2>
-        </td>
-    </tr>
-    <tr>
-        <th>Date</th>
-        <td>
-            <select id="result_tourDates">
-                <option>02-17-2022 3/10 remaining</option>
-                <option>02-19-2022 10/10 remaining</option>
-            </select>
-        </td>
-    </tr>
-    <tr>
-        <th>No. of people</th>
-        <td>
-            <select>
-                <option>1</option>
-                <option>2</option>
-                <option>3</option>
-            </select>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2">
-            <a class="btn btn-long" th:href="@{/tourist/payment}">Book Now</a>
-        </td>
-    </tr>
-</table>
+        <tr>
+            <td colspan="2">
+                <h2 class="center borderedWithColor">Booking Options</h2>
+            </td>
+        </tr>
+        <tr>
+            <th>Date</th>
+            <td>
+                <select name="tourDateId" id="result_tourDates">
+                    <option>02-17-2022 3/10 remaining</option>
+                    <option>02-19-2022 10/10 remaining</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th>No. of people</th>
+            <td>
+                <select name="quantity" id="quantity">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <button id="submit" onclick="submitBooking()">Book Now</button>
+            </td>
+        </tr>
+    </table>
+</form>
 
 <table class=" table horizontalTrim">
     <tr>

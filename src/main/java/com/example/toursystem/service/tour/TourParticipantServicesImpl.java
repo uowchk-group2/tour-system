@@ -4,9 +4,11 @@ import com.example.toursystem.dao.tour.TourParticipantDAO;
 import com.example.toursystem.dao.tour.TourParticipantDAOService;
 import com.example.toursystem.entity.tour.TourParticipant;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class TourParticipantServicesImpl implements TourParticipantServices{
 
     private TourParticipantDAOService tourParticipantDAOService;

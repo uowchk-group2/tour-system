@@ -21,7 +21,7 @@
                 console.log(tour)
                 let detailURL = '/tourist/tourDetail/'+tour.id
                 if (window.location.host == "tomcat.johnnyip.com"){
-                    detailURL = '/tour-system' + requestURL
+                    detailURL = '/tour-system' + detailURL
                 }
 
                 let imgURL = "https://uow-project-tour-system.s3.ap-east-1.amazonaws.com/"+tour.coverPhoto
