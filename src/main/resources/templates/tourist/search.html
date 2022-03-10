@@ -3,10 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <title>Apply System</title>
+    <script>
+        function fetchTours(){
+            let requestURL = '/api/tour/tours'
+            if (window.location.host == "tomcat.johnnyip.com"){
+                requestURL = '/tour-system' + requestURL
+            }
+
+            var xmlHttpGet = new XMLHttpRequest();
+            xmlHttpGet.open("GET", requestURL, false); // false for synchronous request
+            xmlHttpGet.send(null);
+            let resultObject = JSON.parse(xmlHttpGet.responseText);
+
+            let resultHTML = "";
+
+            for(const [index, tour] of resultObject.entries()){
+                console.log(tour)
+                let detailURL = '/tourist/tourDetail'
+                if (window.location.host == "tomcat.johnnyip.com"){
+                    detailURL = '/tour-system' + requestURL
+                }
+
+                let imgURL = "https://uow-project-tour-system.s3.ap-east-1.amazonaws.com/"+tour.coverPhoto
+
+                if (index % 2 == 0){
+                    resultHTML += `<tr>`
+                }
+
+                resultHTML += `<td>
+                                    <div class="card ">
+                                        <a href="${detailURL}" ">
+                                            <img width="400" src="${(tour.coverPhoto != "" ? imgURL:"" )}"><br>
+                                            <p>
+                                                ${tour.name}<br>   
+                                                Tour host: ${tour.hostUsername}<br>
+                                                Fee per tourist: $${tour.fee}<br>
+                                                Country: ${tour.country}
+                                            </p>
+                                        </a>
+                                    </div>
+                                </td>`
+
+                if ((index % 2 == 1) || (resultObject.length -1 == index) ){
+                    resultHTML += `</tr>`
+                }
+
+            }
+            document.getElementById("result_table").innerHTML = resultHTML;
+        }
+
+    </script>
 </head>
-<body>
+<body onload="fetchTours()">
 <header th:insert="header.html :: header"></header>
 <h1>Search Tour</h1>
+
 <div class="table center horizontalTrim">
     <select>
         <option>Tour id</option>
@@ -17,6 +68,9 @@
     <input type="text" name="keyword" placeholder="keyword"/>
     <button type="button" class="btn btn-long" name="search">Search</button>
 </div>
+
+<table class="table center" valign="center" id="result_table">
+</table>
 
 <table class="table center">
     <tr>
