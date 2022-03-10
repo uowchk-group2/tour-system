@@ -5,7 +5,7 @@
         function fetchTours(){
             let selfUsername = document.getElementById("username").value
 
-            let requestURL = '/api/tour/tours/'+selfUsername
+            let requestURL = '/api/tour/tours/?username='+selfUsername
             if (window.location.host == "tomcat.johnnyip.com"){
                 requestURL = '/tour-system' + requestURL
             }

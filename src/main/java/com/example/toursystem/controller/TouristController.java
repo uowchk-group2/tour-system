@@ -3,6 +3,7 @@ package com.example.toursystem.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,8 +28,9 @@ public class TouristController {
     public String search(Model model){
         return "tourist/search";
     }
-    @GetMapping("tourDetail")
-    public String tourDetail(Model model){
+    @GetMapping("tourDetail/{tourId}")
+    public String tourDetail(@PathVariable String tourId, Model model){
+        model.addAttribute("tourId",tourId);
         return "tourist/tourDetail";
     }
     @GetMapping("booking")

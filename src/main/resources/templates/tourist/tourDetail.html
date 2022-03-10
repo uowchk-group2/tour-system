@@ -4,10 +4,77 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <script>
+        function onLoadHandler(){
+            fetchTour()
+            fetchTourDates()
+        }
+
+        function fetchTour(){
+            let tourId = document.getElementById("tourIdChosen").value;
+
+            let requestURL = '/api/tour/tourDetail/'+tourId
+            if (window.location.host == "tomcat.johnnyip.com"){
+                requestURL = '/tour-system' + requestURL
+            }
+
+            var xmlHttpGet = new XMLHttpRequest();
+            xmlHttpGet.open("GET", requestURL, false); // false for synchronous request
+            xmlHttpGet.send(null);
+            let tourDetail = JSON.parse(xmlHttpGet.responseText);
+
+            console.log(tourDetail)
+
+            if (tourDetail.coverPhoto != ""){
+                document.getElementById("result_img").src = "https://uow-project-tour-system.s3.ap-east-1.amazonaws.com/"+tourDetail.coverPhoto
+            }else{
+                document.getElementById("result_img").setAttribute("hidden","hidden")
+            }
+            document.getElementById("result_name").innerText = tourDetail.name
+            document.getElementById("result_days").innerText = tourDetail.days
+            document.getElementById("result_fee").innerText = "$"+tourDetail.fee
+            document.getElementById("result_description").innerText = tourDetail.description
+            document.getElementById("result_schedule").innerText = tourDetail.schedule
+
+
+
+        }
+
+        function fetchTourDates(){
+            let tourId = document.getElementById("tourIdChosen").value;
+
+            let requestURL = '/api/tour/tourDates/' + tourId
+            if (window.location.host == "tomcat.johnnyip.com"){
+                requestURL = '/tour-system' + requestURL
+            }
+
+            var xmlHttpGet = new XMLHttpRequest();
+            xmlHttpGet.open("GET", requestURL, false); // false for synchronous request
+            xmlHttpGet.send(null);
+            let resultObject = JSON.parse(xmlHttpGet.responseText);
+
+            console.log(resultObject)
+
+            let selectHTML = ""
+            for(const dateDetail of resultObject){
+                const offset = (new Date()).getTimezoneOffset();
+                let tempDate = Date.parse(dateDetail.date) - offset;
+                let time = new Date(tempDate);
+                let date = `${time.getFullYear()}-${time.getMonth()+1}-${time.getDate()} `
+
+                selectHTML += `<option value="${dateDetail.id}">${date}</option>`
+            }
+
+            document.getElementById("result_tourDates").innerHTML = selectHTML
+        }
+
+
     </script>
 </head>
-<body>
+<body onload="onLoadHandler()">
 <header th:insert="header.html :: header"></header>
+
+<input type="text" id="tourIdChosen" th:value="${tourId}">
+
 <table class="center table horizontalTrim">
     <tr>
         <td colspan="2">
@@ -18,67 +85,28 @@
     <tr>
         <!-- Photo -->
         <td colspan="2">
-            <!--                        <img th:src="@{/img/buddha.jpg}" class="center" style="height: 400px">-->
-            <!-- Carousel -->
-            <div id="demo" class="carousel slide" data-bs-ride="carousel">
-
-                <!-- Indicators/dots -->
-                <div class="carousel-indicators">
-                    <button type="button" data-bs-target="#demo" data-bs-slide-to="0" class="active"></button>
-                    <button type="button" data-bs-target="#demo" data-bs-slide-to="1"></button>
-                    <button type="button" data-bs-target="#demo" data-bs-slide-to="2"></button>
-                </div>
-
-                <!-- The slideshow/carousel -->
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <img th:src="@{/img/buddha.jpg}" class="d-block w-100">
-                    </div>
-                    <!--                    <div class="carousel-item">-->
-                    <!--                        <img src="chicago.jpg" alt="Chicago" class="d-block w-100">-->
-                    <!--                    </div>-->
-                    <!--                    <div class="carousel-item">-->
-                    <!--                        <img src="ny.jpg" alt="New York" class="d-block w-100">-->
-                    <!--                    </div>-->
-                </div>
-
-                <!-- Left and right controls/icons -->
-                <button class="carousel-control-prev " type="button" data-bs-target="#demo" data-bs-slide="prev"
-                        style="color: gray">
-                    <span class="carousel-control-prev-icon"></span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#demo" data-bs-slide="next">
-                    <span class="carousel-control-next-icon"></span>
-                </button>
-            </div>
+            <img id="result_img" class="center" style="height: 400px">
         </td>
     </tr>
     <tr>
         <th width="20%">Name of tour:</th>
-        <td>Tian Tan Buddha one day trip</td>
+        <td id="result_name">Error</td>
     </tr>
     <tr>
         <th>Tour's day(s):</th>
-        <td><p>1</p></td>
+        <td id="result_days"></td>
     </tr>
     <tr>
         <th>Cost per tourist:</th>
-        <td>$100</td>
+        <td id="result_fee"></td>
     </tr>
     <tr>
         <th>Description:</th>
-        <td><p>The Big Buddha and Po Lin Monastery are a major draw for Buddhist pilgrims. And these majestic religious
-            monuments, set against beautiful mountain and coastal scenery, are just as popular with a wide range of
-            visitors in Hong Kong.</p></td>
+        <td id="result_description"></td>
     </tr>
     <tr>
         <th>Tour Schedule</th>
-        <td>
-            <pre>
-                1500 Gather at MTR
-                1600 Dismiss at MTR
-            </pre>
-        </td>
+        <td id="result_schedule"></td>
     </tr>
 
     <tr>
@@ -89,8 +117,8 @@
     <tr>
         <th>Date</th>
         <td>
-            <select>
-                <option selected>02-17-2022 3/10 remaining</option>
+            <select id="result_tourDates">
+                <option>02-17-2022 3/10 remaining</option>
                 <option>02-19-2022 10/10 remaining</option>
             </select>
         </td>

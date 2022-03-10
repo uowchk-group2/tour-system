@@ -29,7 +29,7 @@ public class TourDateDAOService implements TourDateDAO{
     public List<TourDate> findWithTourId(int tourId) {
         Session currentSession = entityManager.unwrap(Session.class);
         String hql = "FROM TourDate d WHERE d.tourId = '"+tourId+"'";
-        Query query = currentSession.createQuery(hql,Tour.class);
+        Query query = currentSession.createQuery(hql,TourDate.class);
         List<TourDate> tourDates = query.getResultList();
         return tourDates;
     }

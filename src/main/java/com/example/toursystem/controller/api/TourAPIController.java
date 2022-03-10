@@ -43,6 +43,17 @@ public class TourAPIController {
         }
     }
 
+    @GetMapping("/tourDetail/{tourId}")
+    public Tour getTourDetail(@PathVariable int tourId){
+        try {
+            Tour tour = tourServices.findWithId(tourId);
+            return tour;
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            return new Tour();
+        }
+    }
+
 
     @GetMapping("/tourDates/{tourId}")
     public List<TourDate> getTourDatesByTourId(@PathVariable int tourId){
