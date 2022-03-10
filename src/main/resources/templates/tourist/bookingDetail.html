@@ -1,12 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Booking Detail</title>
+    <script>
+        function onLoadHandler() {
+            let formActionURL = '/tourist/bookingDetail'
+            if (window.location.host == "tomcat.johnnyip.com") {
+                formActionURL = '/tour-system' + formActionURL
+            }
+            document.getElementById("submitForm").action = formActionURL
+
+        }
+
+    </script>
 </head>
 <body>
 <header th:insert="header.html :: header"></header>
 <h1>Booking Detail</h1>
+
+<form
 <div class="container center">
     <table class="table center horizontalTrim">
         <tr>

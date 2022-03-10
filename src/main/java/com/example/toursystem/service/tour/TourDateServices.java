@@ -10,6 +10,8 @@ public interface TourDateServices {
 
     public List<TourDate> findWithTourId(int tourId);
 
+    public TourDate findWithId(int Id);
+
     public void removeWithDateId(int dateId);
 
 }

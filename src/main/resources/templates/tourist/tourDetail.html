@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -8,6 +8,12 @@
         let tourDates = {}
 
         function onLoadHandler() {
+            let formActionURL = '/tourist/payment'
+            if (window.location.host == "tomcat.johnnyip.com") {
+                formActionURL = '/tour-system' + formActionURL
+            }
+            document.getElementById("submitForm").action = formActionURL
+
             fetchTour()
             fetchTourDates()
         }
@@ -105,8 +111,8 @@
 <body onload="onLoadHandler()">
 <header th:insert="header.html :: header"></header>
 
-<form>
-    <input type="text" name="tourId" id="tourIdChosen" th:value="${tourId}">
+<form method="POST" id="submitForm">
+    <input type="text" name="tourId" id="tourIdChosen" hidden th:value="${tourId}">
 
     <table class="center table horizontalTrim">
         <tr>
@@ -168,7 +174,7 @@
         </tr>
         <tr>
             <td colspan="2">
-                <button id="submit" onclick="submitBooking()">Book Now</button>
+                <input type="submit" class="btn-long btn"/>
             </td>
         </tr>
     </table>

@@ -30,14 +30,11 @@ public class TourParticipant {
     @Basic
     @Column(name = "card_name")
     private String cardName;
-    @Basic
-    @Column(name = "card_valid_date")
-    private String cardValidDate;
 
     public TourParticipant() {
     }
 
-    public TourParticipant(int tourId, int tourDateId, String username, int quantity, Timestamp joinedTime, String cardNumber, String cardName, String cardValidDate) {
+    public TourParticipant(int tourId, int tourDateId, String username, int quantity, Timestamp joinedTime, String cardNumber, String cardName) {
         this.tourId = tourId;
         this.tourDateId = tourDateId;
         this.username = username;
@@ -45,7 +42,6 @@ public class TourParticipant {
         this.joinedTime = joinedTime;
         this.cardNumber = cardNumber;
         this.cardName = cardName;
-        this.cardValidDate = cardValidDate;
     }
 
     public int getId() {
@@ -112,12 +108,5 @@ public class TourParticipant {
         this.cardName = cardName;
     }
 
-    public String getCardValidDate() {
-        return cardValidDate;
-    }
-
-    public void setCardValidDate(String cardValidDate) {
-        this.cardValidDate = cardValidDate;
-    }
 
 }

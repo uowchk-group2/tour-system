@@ -5,11 +5,17 @@
 <header th:insert="header.html :: header"></header>
 <h1>Paid Success</h1>
 
-<div class="center ">
+<div class="center " th:if="${success}">
     <h1 class="addPadding">Paid Successfully!</h1>
     <h3 class="addPadding">You can check your booking history for transaction detail.</h3>
     <a class="btn btn-long" th:href="@{/tourist/booking}">Booking History</a>
 </div>
+
+<div class="center " th:if="${error}">
+    <h1 class="addPadding">Error occured.</h1>
+    <p class="addPadding" th:text="${errorMessage}"></p>
+</div>
+
 
 
 </body>

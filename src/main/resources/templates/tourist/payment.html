@@ -1,101 +1,158 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Payment</title>
+    <script>
+
+        function onLoadHandler() {
+            let formActionURL = '/tourist/paid'
+            if (window.location.host == "tomcat.johnnyip.com") {
+                formActionURL = '/tour-system' + formActionURL
+            }
+            document.getElementById("submitForm").action = formActionURL
+            document.getElementById("form_cardNumber1").focus()
+        }
+
+        function cardOnChange(id) {
+            let cardValue = document.getElementById("form_cardNumber" + (id)).value;
+            if (cardValue.length == 4) {
+                if (id != 4) {
+                    document.getElementById("form_cardNumber" + (id + 1)).focus();
+                } else {
+                    document.getElementById("form_cardName").focus();
+                }
+
+                let l1 = document.getElementById("form_cardNumber1").value;
+                let l2 = document.getElementById("form_cardNumber2").value;
+                let l3 = document.getElementById("form_cardNumber3").value;
+                let l4 = document.getElementById("form_cardNumber4").value;
+
+                if (l1.length == 4 && l2.length == 4 && l3.length == 4 && l4.length == 4){
+                    document.getElementById("form_submit").removeAttribute("hidden")
+                    document.getElementById("form_cardNumber").value = l1+l2+l3+l4;
+
+                }else{
+                    document.getElementById("form_submit").setAttribute("hidden","hidden");
+                }
+            }else{
+                document.getElementById("form_submit").setAttribute("hidden","hidden");
+            }
+        }
+    </script>
 </head>
-<body>
+<body onload="onLoadHandler()">
 <header th:insert="header.html :: header"></header>
 <h1>Booking Summary</h1>
-<div class="container center">
-    <h1>Confirm Your Payment</h1>
-    <table class="table center horizontalTrim">
-        <tr>
-            <th>Tour Name</th>
-            <td>Tian Tan Buddha one day trip</td>
-        </tr>
-        <tr>
-            <th>Tour start date</th>
-            <td>02-17-2022</td>
-        </tr>
-        <tr>
-            <th>Number of people</th>
-            <td>2</td>
-        </tr>
-        <tr>
-            <th>Cost per tourist</th>
-            <td>$100</td>
-        </tr>
-        <tr>
-            <th>Total Amount</th>
-            <td>$200</td>
-        </tr>
-    </table>
 
-    <h2>Payment Detail</h2>
-    <table class="table center horizontalTrim">
-        <tr>
-            <td colspan="2">
-                <div class="alert alert-danger" role="alert">
-                    The payment detail is invalid.
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <th>Card Number</th>
-            <td>
-                <input type="text" value="1234 1234 1234 1234">
-            </td>
-        </tr>
-        <tr>
-            <th>Name On Card</th>
-            <td>
-                <input type="text" value="Johnny">
-            </td>
-        </tr>
-        <tr>
-            <th>CVV</th>
-            <td>
-                <input type="password" value="123">
-            </td>
-        </tr>
-        <tr>
-            <th>Valid Date</th>
-            <td>
-                <div class="date">
-                    <select name="months" id="months">
-                        <option value="Jan">Jan</option>
-                        <option value="Feb">Feb</option>
-                        <option value="Mar">Mar</option>
-                        <option value="Apr">Apr</option>
-                        <option value="May">May</option>
-                        <option value="Jun">Jun</option>
-                        <option value="Jul">Jul</option>
-                        <option value="Aug">Aug</option>
-                        <option value="Sep">Sep</option>
-                        <option value="Oct">Oct</option>
-                        <option value="Nov">Nov</option>
-                        <option value="Dec">Dec</option>
-                    </select>
-                    <select name="years" id="years">
-                        <option value="2020">2027</option>
-                        <option value="2019">2026</option>
-                        <option value="2018">2025</option>
-                        <option value="2017">2024</option>
-                        <option value="2016">2023</option>
-                        <option value="2015">2022</option>
-                    </select>
-                </div>
-            </td>
-        </tr>
-
-        <tr>
-            <td colspan="2">
-                <a class="btn btn-long" th:href="@{/tourist/paid}">Confirm</a>
-            </td>
-        </tr>
-    </table>
-
+<div class="alert alert-danger" role="alert" th:if="${error}">
+    Operation Failed!
 </div>
+<form method="POST" id="submitForm">
+    <div class="container center">
+        <h1>Confirm Your Payment</h1>
+        <table class="table center horizontalTrim">
+            <tr>
+                <th>Tour Name</th>
+                <td th:text="${text_tourName}"></td>
+            </tr>
+            <tr>
+                <th>Tour start date</th>
+                <td th:text="${text_dateString}"></td>
+            </tr>
+            <tr>
+                <th>Number of people</th>
+                <td th:text="${text_quantity}"></td>
+            </tr>
+            <tr>
+                <th>Cost per tourist</th>
+                <td th:text="'$'+${text_cost}"></td>
+            </tr>
+            <tr>
+                <th>Total Amount</th>
+                <td th:text="'$'+${text_totalCost}"></td>
+            </tr>
+        </table>
+
+        <h2>Payment Detail</h2>
+        <table class="table center horizontalTrim">
+            <tr>
+                <td colspan="2">
+
+                </td>
+            </tr>
+            <tr>
+                <th>Card Number</th>
+                <td>
+                    <input type="text" hidden id="form_cardNumber" name="cardNumber"><br>
+                    <input type="text" id="form_cardNumber1" required maxlength="4" size="4" value=""
+                           onkeyup="cardOnChange(1)">-
+                    <input type="text" id="form_cardNumber2" required maxlength="4" size="4" value=""
+                           onkeyup="cardOnChange(2)">-
+                    <input type="text" id="form_cardNumber3" required maxlength="4" size="4" value=""
+                           onkeyup="cardOnChange(3)">-
+                    <input type="text" id="form_cardNumber4" required maxlength="4" size="4" value=""
+                           onkeyup="cardOnChange(4)">
+                </td>
+            </tr>
+            <tr>
+                <th>Name On Card</th>
+                <td>
+                    <input type="text" name="cardName" id="form_cardName" required>
+                </td>
+            </tr>
+            <tr>
+                <th>CVV</th>
+                <td>
+                    <input type="password" required maxlength="4" size="4">
+                </td>
+            </tr>
+            <tr>
+                <th>Valid Date</th>
+                <td>
+                    <div class="date">
+                        <select name="months" id="months">
+                            <option value="Jan">Jan</option>
+                            <option value="Feb">Feb</option>
+                            <option value="Mar">Mar</option>
+                            <option value="Apr">Apr</option>
+                            <option value="May">May</option>
+                            <option value="Jun">Jun</option>
+                            <option value="Jul">Jul</option>
+                            <option value="Aug">Aug</option>
+                            <option value="Sep">Sep</option>
+                            <option value="Oct">Oct</option>
+                            <option value="Nov">Nov</option>
+                            <option value="Dec">Dec</option>
+                        </select>
+                        <select name="years" id="years">
+                            <option value="2020">2027</option>
+                            <option value="2019">2026</option>
+                            <option value="2018">2025</option>
+                            <option value="2017">2024</option>
+                            <option value="2016">2023</option>
+                            <option value="2015">2022</option>
+                        </select>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <input type="text" hidden name="id" value="0">
+                    <input type="text" hidden name="tourId" th:value="${tourParticipant.tourId}">
+                    <input type="text" hidden name="tourDateId" th:value="${tourParticipant.tourDateId}">
+                    <input type="text" hidden name="username" th:value="${tourParticipant.username}">
+                    <input type="text" hidden name="quantity" th:value="${text_quantity}">
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="2">
+                    <input id="form_submit" type="submit" hidden="hidden" class="btn-long btn">
+                </td>
+            </tr>
+        </table>
+    </div>
+</form>
 </body>
 </html>

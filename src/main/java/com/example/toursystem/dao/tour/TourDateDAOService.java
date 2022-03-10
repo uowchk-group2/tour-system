@@ -26,6 +26,13 @@ public class TourDateDAOService implements TourDateDAO{
     }
 
     @Override
+    public TourDate findWithId(int Id) {
+        Session currentSession = entityManager.unwrap(Session.class);
+        TourDate tourDate = currentSession.get(TourDate.class, Id);
+        return tourDate;
+    }
+
+    @Override
     public List<TourDate> findWithTourId(int tourId) {
         Session currentSession = entityManager.unwrap(Session.class);
         String hql = "FROM TourDate d WHERE d.tourId = '"+tourId+"'";

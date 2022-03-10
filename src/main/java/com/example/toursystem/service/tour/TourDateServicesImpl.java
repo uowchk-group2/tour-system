@@ -23,6 +23,11 @@ public class TourDateServicesImpl implements TourDateServices{
     }
 
     @Override
+    public TourDate findWithId(int Id) {
+        return tourDateDAOService.findWithId(Id);
+    }
+
+    @Override
     public List<TourDate> findWithTourId(int tourId) {
         return tourDateDAOService.findWithTourId(tourId);
     }

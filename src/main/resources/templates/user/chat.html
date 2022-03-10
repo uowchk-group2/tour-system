@@ -171,13 +171,13 @@
         function sendMessage() {
             console.log("Send...")
             let message = document.getElementById("messageText").value;
-            let photoName = document.getElementById("photoUpload").files[0].name;
             let photoFile = document.getElementById("photoUpload").files[0];
 
-            if (message != "" || photoName != undefined) {
+            if (message != "" || (document.getElementById("photoUpload").files[0] != undefined)) {
+
 
                 //Upload photo if have a file chosen
-                if (photoName != undefined){
+                if (photoFile != undefined){
                     let filename = uploadFile();
                     message = "::Photo::"+filename
 
