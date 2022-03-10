@@ -2,7 +2,9 @@ package com.example.toursystem.controller.api;
 
 import com.example.toursystem.entity.tour.Tour;
 import com.example.toursystem.entity.tour.TourDate;
+import com.example.toursystem.entity.tour.TourParticipant;
 import com.example.toursystem.service.tour.TourDateServices;
+import com.example.toursystem.service.tour.TourParticipantServices;
 import com.example.toursystem.service.tour.TourServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,11 +18,13 @@ public class TourAPIController {
 
     private TourServices tourServices;
     private TourDateServices tourDateServices;
+    private TourParticipantServices tourParticipantServices;
 
     @Autowired
-    public TourAPIController(TourServices tourServices, TourDateServices tourDateServices) {
+    public TourAPIController(TourServices tourServices, TourDateServices tourDateServices, TourParticipantServices tourParticipantServices) {
         this.tourServices = tourServices;
         this.tourDateServices = tourDateServices;
+        this.tourParticipantServices = tourParticipantServices;
     }
 
     @GetMapping("/tours")
@@ -91,4 +95,48 @@ public class TourAPIController {
     }
 
 
+    @PostMapping("/saveParticipant")
+    public String saveTourParticipant(@RequestBody TourParticipant tourParticipant){
+        try {
+            tourParticipantServices.createRecord(tourParticipant);
+            return "success";
+        }catch (Exception e){
+            return e.getMessage();
+        }
+    }
+
+    @GetMapping("/participant")
+    public TourParticipant getParticipantDetailOfUser(@RequestBody TourParticipant tourParticipant){
+        try {
+            int tourId = tourParticipant.getTourId();
+            int tourDateId = tourParticipant.getTourDateId();
+            String username = tourParticipant.getUsername();
+            TourParticipant participant = tourParticipantServices.retrieveUserRecord(tourId, tourDateId, username);
+            return participant;
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            return new TourParticipant();
+        }
+    }
+
+    @GetMapping("/participants/{tourDateId}")
+    public List<TourParticipant> getParticipantList(@PathVariable int tourDateId){
+        try {
+            List<TourParticipant> participantList = tourParticipantServices.getParticipantList(tourDateId);
+            return participantList;
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            return new ArrayList<>();
+        }
+    }
+
+    @DeleteMapping("/participant/{id}")
+    public String removeParticipant(@PathVariable int id){
+        try {
+            tourParticipantServices.removeRecord(id);
+            return "success";
+        }catch (Exception e){
+            return "failed";
+        }
+    }
 }
