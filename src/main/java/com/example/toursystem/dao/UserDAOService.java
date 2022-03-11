@@ -3,6 +3,7 @@ package com.example.toursystem.dao;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import com.example.toursystem.entity.ApproveStatus;
 import com.example.toursystem.entity.User;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
