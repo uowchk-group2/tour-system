@@ -6,6 +6,7 @@
     <script>
         let tour = {}
         let tourDates = {}
+        let tourSlotsLeft = {}
 
         function onLoadHandler() {
             let formActionURL = '/tourist/payment'
@@ -61,21 +62,80 @@
             xmlHttpGet.send(null);
             let resultObject = JSON.parse(xmlHttpGet.responseText);
 
+            console.log("TourDates:")
             console.log(resultObject)
 
             tourDates = resultObject
 
             let selectHTML = ""
             for (const dateDetail of resultObject) {
+                //Get slots left
+                let slotsLeft = fetchToursParticipants(dateDetail)
+
+                //set option detail
                 const offset = (new Date()).getTimezoneOffset();
                 let tempDate = Date.parse(dateDetail.date) - offset;
                 let time = new Date(tempDate);
                 let date = `${time.getFullYear()}-${time.getMonth() + 1}-${time.getDate()} `
 
-                selectHTML += `<option value="${dateDetail.id}">${date} [3/${tour.participantLimit} remaining]</option>`
+                selectHTML += `<option value="${dateDetail.id}">${date} [${slotsLeft}/${tour.participantLimit} remaining]</option>`
+            }
+            document.getElementById("result_tourDates").innerHTML = selectHTML
+
+            dateOnChange();
+
+        }
+
+        function fetchToursParticipants(tourDate) {
+
+            let requestURL = '/api/tour/tourParticipant/' + tourDate.id
+            if (window.location.host == "tomcat.johnnyip.com") {
+                requestURL = '/tour-system' + requestURL
             }
 
-            document.getElementById("result_tourDates").innerHTML = selectHTML
+            var xmlHttpGet = new XMLHttpRequest();
+            xmlHttpGet.open("GET", requestURL, false); // false for synchronous request
+            xmlHttpGet.send(null);
+            let resultObject = JSON.parse(xmlHttpGet.responseText);
+
+            console.log(resultObject)
+
+            let totalCapacity = tour.participantLimit
+
+            for (const participant of resultObject) {
+                totalCapacity = totalCapacity - participant.quantity;
+            }
+
+            tourSlotsLeft[tourDate.id] = totalCapacity;
+
+            return totalCapacity;
+
+        }
+
+        function setQuantityOption(quantity) {
+            let optionHTML = ""
+
+            for (let i = 1; i <= quantity; i++) {
+                optionHTML += `<option value="${i}">${i}</option>`
+            }
+                document.getElementById("quantity").innerHTML = optionHTML
+        }
+
+        function dateOnChange(){
+            let dateId = document.getElementById("result_tourDates").value
+            let quantity = tourSlotsLeft[dateId]
+
+            console.log("dateId: "+dateId)
+            console.log("Quantity: "+quantity)
+            setQuantityOption(quantity)
+
+            if (quantity == 0){
+                document.getElementById("formSubmitButton").setAttribute("hidden","hidden")
+            }else{
+                document.getElementById("formSubmitButton").removeAttribute("hidden")
+            }
+
+
         }
 
         function submitBooking() {
@@ -156,9 +216,7 @@
         <tr>
             <th>Date</th>
             <td>
-                <select name="tourDateId" id="result_tourDates">
-                    <option>02-17-2022 3/10 remaining</option>
-                    <option>02-19-2022 10/10 remaining</option>
+                <select name="tourDateId" id="result_tourDates" onchange="dateOnChange()">
                 </select>
             </td>
         </tr>
@@ -166,15 +224,12 @@
             <th>No. of people</th>
             <td>
                 <select name="quantity" id="quantity">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
                 </select>
             </td>
         </tr>
         <tr>
             <td colspan="2">
-                <input type="submit" class="btn-long btn"/>
+                <input type="submit" class="btn-long btn" id="formSubmitButton" />
             </td>
         </tr>
     </table>
@@ -208,7 +263,7 @@
             02-12-2022<br>
             &#9734;&#9734;&#9734;&#9734;&#9734;<br>
         </td>
-        <td>The place is so boring! Dont join this!</td>
+        <td>The place is so boring! Don't join this!</td>
     </tr>
 
 </table>

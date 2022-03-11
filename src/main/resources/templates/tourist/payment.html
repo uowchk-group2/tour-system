@@ -16,7 +16,13 @@
 
         function cardOnChange(id) {
             let cardValue = document.getElementById("form_cardNumber" + (id)).value;
-            if (cardValue.length == 4) {
+            let newValue = cardValue.charCodeAt(cardValue.length-1)
+            console.log("newValue "+newValue)
+            if (cardValue.length != 0 && !(newValue >= 48 && newValue <= 57)){
+                cardValue = cardValue.slice(0, -1);
+                document.getElementById("form_cardNumber" + (id)).value = cardValue;
+            }
+            else if (cardValue.length == 4) {
                 if (id != 4) {
                     document.getElementById("form_cardNumber" + (id + 1)).focus();
                 } else {

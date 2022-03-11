@@ -57,6 +57,18 @@ public class TourAPIController {
         }
     }
 
+    @GetMapping("tourParticipant/{tourDateId}")
+    public List<TourParticipant> getTourParticipantList(@PathVariable int tourDateId){
+
+        try {
+            List<TourParticipant> participantList = tourParticipantServices.getParticipantList(tourDateId);
+            return participantList;
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            return new ArrayList<>();
+        }
+    }
+
 
     @GetMapping("/tourDates/{tourId}")
     public List<TourDate> getTourDatesByTourId(@PathVariable int tourId){
