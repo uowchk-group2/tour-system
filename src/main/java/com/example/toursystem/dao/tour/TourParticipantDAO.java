@@ -9,6 +9,8 @@ public interface TourParticipantDAO {
 
     public TourParticipant retrieveUserRecord(int tourId, int tourDateId, String username);
 
+    public List<TourParticipant> retrieveUserRecords(String username);
+
     public List<TourParticipant> getParticipantList(int tourDateId);
 
     public void removeRecord(int tourParticipantId);

@@ -32,10 +32,15 @@
                 user2: selected
             })
 
+            let requestURL = '/api/chat/newChat'
+            if (window.location.host == "tomcat.johnnyip.com") {
+                requestURL = '/tour-system' + requestURL
+            }
+
             console.log(bodyJSON)
 
             var xmlHttpPOST = new XMLHttpRequest();
-            xmlHttpPOST.open("POST", '/api/chat/newChat', false); // false for synchronous request
+            xmlHttpPOST.open("POST", requestURL, false); // false for synchronous request
             xmlHttpPOST.setRequestHeader("Content-Type","application/json")
             xmlHttpPOST.send(bodyJSON);
             console.log(xmlHttpPOST.responseText)

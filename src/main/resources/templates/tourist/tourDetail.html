@@ -87,7 +87,6 @@
         }
 
         function fetchToursParticipants(tourDate) {
-
             let requestURL = '/api/tour/tourParticipant/' + tourDate.id
             if (window.location.host == "tomcat.johnnyip.com") {
                 requestURL = '/tour-system' + requestURL

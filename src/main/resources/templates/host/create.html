@@ -202,11 +202,11 @@
         </tr>
         <tr>
             <td>Duration of tour (day):</td>
-            <td><input type="number" id="form_days" required min="1" value="1"></td>
+            <td><input type="text" id="form_days" onkeypress='return event.charCode >= 48 && event.charCode <= 57'  maxlength="3" required ></td>
         </tr>
         <tr>
             <td>Fee per participant:</td>
-            <td>$<input type="number" id="form_fee" required min="1" value="1"></td>
+            <td>$<input type="text" id="form_fee" onkeypress='return event.charCode >= 48 && event.charCode <= 57' maxlength="5" required></td>
         </tr>
         <tr>
             <td>Description:</td>
@@ -219,7 +219,7 @@
         <tr>
             <td>Maximum participants</td>
             <td>
-                <input type="number" id="form_maxParti" required>
+                <input type="text" id="form_maxParti" maxlength="3" onkeypress='return event.charCode >= 48 && event.charCode <= 57' required>
             </td>
         </tr>
 

@@ -41,6 +41,17 @@ public class TourParticipantDAOService implements TourParticipantDAO{
     }
 
     @Override
+    public List<TourParticipant> retrieveUserRecords(String username){
+        Session currentSession = entityManager.unwrap(Session.class);
+        String hql = "FROM TourParticipant d WHERE d.username = '"+username+"'";
+        Query query = currentSession.createQuery(hql, TourParticipant.class);
+        List<TourParticipant> joinedTours = query.getResultList();
+
+        return joinedTours;
+    }
+
+
+    @Override
     public List<TourParticipant> getParticipantList(int tourDateId) {
         Session currentSession = entityManager.unwrap(Session.class);
         String hql = "FROM TourParticipant d WHERE d.tourDateId = '"+tourDateId+"'";

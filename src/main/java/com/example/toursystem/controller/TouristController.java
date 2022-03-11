@@ -58,7 +58,9 @@ public class TouristController {
     }
 
     @GetMapping("booking")
-    public String booking(Model model) {
+    public String booking(Model model,HttpServletRequest request) {
+        model.addAttribute("username",request.getUserPrincipal().getName());
+
         return "tourist/booking";
     }
 

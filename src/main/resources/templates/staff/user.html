@@ -130,8 +130,13 @@
 
             console.log(bodyJSON)
 
+            let requestURL = '/api/chat/newChat'
+            if (window.location.host == "tomcat.johnnyip.com") {
+                requestURL = '/tour-system' + requestURL
+            }
+
             var xmlHttpPOST = new XMLHttpRequest();
-            xmlHttpPOST.open("POST", '/api/chat/newChat', false); // false for synchronous request
+            xmlHttpPOST.open("POST", requestURL, false); // false for synchronous request
             xmlHttpPOST.setRequestHeader("Content-Type","application/json")
             xmlHttpPOST.send(bodyJSON);
             console.log(xmlHttpPOST.responseText)
@@ -143,7 +148,7 @@
                 document.getElementById("chat_resultText").innerText = "Chat already exist."
             }
 
-            let requestURL = '/user/chat'
+            requestURL = '/user/chat'
             if (window.location.host == "tomcat.johnnyip.com"){
                 requestURL = '/tour-system' + requestURL
             }

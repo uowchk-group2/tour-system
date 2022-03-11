@@ -4,91 +4,285 @@
     <meta charset="UTF-8">
     <title>Booking Record</title>
     <script>
-        function confirmWithdraw(){
-            if (confirm("Are you sure to withdraw from this tour?") == true){
-                alert("You have successfully withdrawn from this tour!")
+        let tours = {}
+        let tourDates = {}
+        let tourParticipants = {}
+
+        function confirmWithdraw(tourPartiId) {
+            if (confirm("Are you sure to withdraw from this tour?") == true) {
+
+                let requestURL = '/api/tour/participant/' + tourPartiId;
+                if (window.location.host == "tomcat.johnnyip.com") {
+                    requestURL = '/tour-system' + requestURL
+                }
+
+                var xmlHttpGet = new XMLHttpRequest();
+                xmlHttpGet.open("DELETE", requestURL, false); // false for synchronous request
+                xmlHttpGet.send(null);
+                if (xmlHttpGet.responseText == "success"){
+                    fetchJoinedDetail()
+                    alert("You have successfully withdrawn from this tour!")
+                }else{
+                    alert("Error: "+xmlHttpGet.responseText)
+                }
+
+
             }
         }
+
+
+        function fetchJoinedDetail() {
+            let username = document.getElementById("username").value
+
+            let requestURL = '/api/tour/userJoined/' + username;
+            if (window.location.host == "tomcat.johnnyip.com") {
+                requestURL = '/tour-system' + requestURL
+            }
+
+            var xmlHttpGet = new XMLHttpRequest();
+            xmlHttpGet.open("GET", requestURL, false); // false for synchronous request
+            xmlHttpGet.send(null);
+            let resultObject = JSON.parse(xmlHttpGet.responseText);
+
+            let tableHTML = `<tr>
+                                <th>Tour code</th>
+                                <th>Tour name</th>
+                                <th>Start day</th>
+                                <th>Quantity</th>
+                                <th>Action</th>
+                            </tr>`
+
+            for (const tour of resultObject) {
+                tourParticipants[tour.id] = tour
+                console.log(tour)
+
+                if (tours[tour.tourId] == undefined) {
+                    fetchTourDetail(tour.tourId)
+                }
+                if (tourDates[tour.tourDateId] == undefined) {
+                    fetchTourDateDetail(tour.tourDateId)
+                }
+
+                //convert time into string
+                const offset = (new Date()).getTimezoneOffset();
+                let tempDate = Date.parse(tourDates[tour.tourDateId].date) - offset;
+                let time = new Date(tempDate);
+                let date = `${time.getFullYear()}-${time.getMonth() + 1}-${time.getDate()} `
+
+                let tourURL = '/tourist/tourDetail/' + tour.tourId;
+                if (window.location.host == "tomcat.johnnyip.com") {
+                    tourURL = '/tour-system' + tourURL
+                }
+
+                tableHTML += `  <tr>
+                                    <td>${tour.tourId}</td>
+                                    <td>
+                                        <a href="${tourURL}">${tours[tour.tourId].name}</a>
+                                    </td>
+                                    <td>${date}</td>
+                                    <td>${tour.quantity}</td>
+                                    <td>
+                                        <button class="btn btn-long" data-bs-toggle="modal" data-bs-target="#modalDetail" onclick="openDetailView(${tour.id})" ">Booking Detail</button>
+                                        <button class="btn btn-long" data-bs-toggle="modal" data-bs-target="#modalChat" onclick="chatButtonClicked('${tours[tour.tourId].hostUsername}')">Chat with Host</button>
+                                        <button class="btn btn-long" style="background-color: red;color: white " onclick="confirmWithdraw(${tour.id})">Withdraw</button>
+                                    </td>
+                                </tr>
+
+                `
+            }
+
+            document.getElementById("resultTable").innerHTML = tableHTML
+        }
+
+        function fetchTourDetail(tourId) {
+            let requestURL = '/api/tour/tourDetail/' + tourId;
+            if (window.location.host == "tomcat.johnnyip.com") {
+                requestURL = '/tour-system' + requestURL
+            }
+
+            var xmlHttpGet = new XMLHttpRequest();
+            xmlHttpGet.open("GET", requestURL, false); // false for synchronous request
+            xmlHttpGet.send(null);
+            let resultObject = JSON.parse(xmlHttpGet.responseText);
+
+            console.log(resultObject)
+            tours[tourId] = resultObject
+        }
+
+        function fetchTourDateDetail(tourDateId) {
+            let requestURL = '/api/tour/tourDateDetail/' + tourDateId;
+            if (window.location.host == "tomcat.johnnyip.com") {
+                requestURL = '/tour-system' + requestURL
+            }
+
+            var xmlHttpGet = new XMLHttpRequest();
+            xmlHttpGet.open("GET", requestURL, false); // false for synchronous request
+            xmlHttpGet.send(null);
+            let resultObject = JSON.parse(xmlHttpGet.responseText);
+
+            console.log(resultObject)
+            tourDates[tourDateId] = resultObject
+        }
+
+        function openDetailView(id) {
+            let tourPartiObject = tourParticipants[id];
+            let tourDetailObject = tours[tourPartiObject.tourId];
+            let tourDateObject = tourDates[tourPartiObject.tourDateId];
+
+            console.log(tourPartiObject.joinedTime)
+
+            //convert time into string
+            const offset = (new Date()).getTimezoneOffset();
+
+            let time = new Date(Date.parse(tourDateObject.date) - offset);
+            let dateString = `${time.getFullYear()}-${time.getMonth() + 1}-${time.getDate()} `
+
+            //Transaction time
+            let tTime = (new Date(Date.parse(tourPartiObject.joinedTime) - offset));
+            let date = `${tTime.getFullYear()}-${tTime.getMonth()+1}-${tTime.getDate()} `
+            tTime = (tTime.toTimeString()).substring(0,8);
+            let transactionTime = date+tTime
+
+
+
+            document.getElementById("detail_tourPartiId").innerText = tourPartiObject.id;
+            document.getElementById("detail_tourName").innerText = tourDetailObject.name;
+            document.getElementById("detail_startDate").innerText = dateString;
+            document.getElementById("detail_quantity").innerText = tourPartiObject.quantity;
+            document.getElementById("detail_cost").innerText = "$"+tourDetailObject.fee;
+            document.getElementById("detail_totalCost").innerText = "$"+(tourDetailObject.fee * tourPartiObject.quantity);
+            document.getElementById("detail_cardNumber").innerText = "**** **** **** " + tourPartiObject.cardNumber.substring(12, 16);
+            document.getElementById("detail_cardName").innerText = tourPartiObject.cardName;
+            document.getElementById("detail_time").innerText = transactionTime;
+        }
+
+        //Chat button
+        function chatButtonClicked(targetUsername){
+            let selfUsername = document.getElementById("username").value;
+
+            let bodyJSON = JSON.stringify({
+                user1: selfUsername,
+                user2: targetUsername
+            })
+
+            let requestURL = '/api/chat/newChat'
+            if (window.location.host == "tomcat.johnnyip.com") {
+                requestURL = '/tour-system' + requestURL
+            }
+
+            var xmlHttpPOST = new XMLHttpRequest();
+            xmlHttpPOST.open("POST", requestURL, false); // false for synchronous request
+            xmlHttpPOST.setRequestHeader("Content-Type","application/json")
+            xmlHttpPOST.send(bodyJSON);
+            console.log(xmlHttpPOST.responseText)
+
+            let result = xmlHttpPOST.responseText
+            if (result == "success"){
+                document.getElementById("chat_resultText").innerText = "Chat created successfully."
+            }else{
+                document.getElementById("chat_resultText").innerText = "Chat already exist."
+            }
+
+            requestURL = '/user/chat'
+            if (window.location.host == "tomcat.johnnyip.com"){
+                requestURL = '/tour-system' + requestURL
+            }
+
+            document.getElementById("chat_button").href = requestURL;
+        }
+
     </script>
 </head>
-<body>
+<body onload="fetchJoinedDetail()">
 <header th:insert="header.html :: header"></header>
 <h1>Booking Record</h1>
-<table class="table center " border="1">
-    <tr>
-        <th>Tour code</th>
-        <th>Tour name</th>
-        <th>Start day</th>
-        <th>End day</th>
-        <th>Action</th>
-    </tr>
-    <tr>
-        <td>HK031</td>
-        <td>Tian Tan Buddha one day trip</td>
-        <td>08-13-2022</td>
-        <td>08-13-2022</td>
-        <td>
-            <button class="btn btn-long">Show Detail</button>
-            <button class="btn btn-long">Chat with Host</button>
-            <button class="btn btn-long" onclick="confirmWithdraw()">Withdraw</button>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="5" style="background-color: #e4e1de">
 
-            <table class="table center" width="100%">
-                <tr>
-                    <td colspan="2" class="alignRight">
-                        <button type="button" class="btn-long">close</button>
-                    </td>
-                </tr>
-                <tr>
-                    <th>Tour Name</th>
-                    <td>Tian Tan Buddha one day trip</td>
-                </tr>
-                <tr>
-                    <th>Tour start date</th>
-                    <td>02-17-2022</td>
-                </tr>
-                <tr>
-                    <th>Number of people</th>
-                    <td>2</td>
-                </tr>
-                <tr>
-                    <th>Cost per person</th>
-                    <td>$100</td>
-                </tr>
-                <tr>
-                    <th>Total Amount</th>
-                    <td>$200</td>
-                </tr>
+<input type="text" id="username" th:value="${username}" hidden>
 
-                <tr>
-                    <td colspan="2">
-                        <h3>Payment Detail</h3>
-                    </td>
-                </tr>
-                <tr>
-                    <th>Card Number</th>
-                    <td>
-                        **** **** **** 1234
-                    </td>
-                </tr>
-                <tr>
-                    <th>Name On Card</th>
-                    <td>
-                        Johnny
-                    </td>
-                </tr>
-                <tr>
-                    <th>Transaction Time</th>
-                    <td>02-20-2022 15:00:00</td>
-                </tr>
+<table id="resultTable" class="table center ">
 
-            </table>
-
-        </td>
-    </tr>
 </table>
+
+<!--Detail Modal-->
+<div class="modal fade" id="modalDetail" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Booking Detail</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="horizontalTrim center morePadding">
+                    <tr>
+                        <th>Transaction ID</th>
+                        <td id="detail_tourPartiId"></td>
+                    </tr>
+                    <tr>
+                        <th>Tour Name</th>
+                        <td id="detail_tourName"></td>
+                    </tr>
+                    <tr>
+                        <th>Tour start date</th>
+                        <td id="detail_startDate"></td>
+                    </tr>
+                    <tr>
+                        <th>Number of people</th>
+                        <td id="detail_quantity"></td>
+                    </tr>
+                    <tr>
+                        <th>Cost per person</th>
+                        <td id="detail_cost"></td>
+                    </tr>
+                    <tr>
+                        <th>Total Amount</th>
+                        <td id="detail_totalCost"></td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="2">
+                            <h3>Payment Detail</h3>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Card Number</th>
+                        <td id="detail_cardNumber"></td>
+                    </tr>
+                    <tr>
+                        <th>Name On Card</th>
+                        <td id="detail_cardName"></td>
+                    </tr>
+                    <tr>
+                        <th>Transaction Time</th>
+                        <td id="detail_time"></td>
+                    </tr>
+                </table>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Chat Modal-->
+<div class="modal fade" id="modalChat" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit User Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="chat_resultText">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a id="chat_button" class="btn btn-primary" >Go To Chat</a>
+            </div>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>

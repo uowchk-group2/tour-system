@@ -57,6 +57,17 @@ public class TourAPIController {
         }
     }
 
+    @GetMapping("/tourDateDetail/{tourDateId}")
+    public TourDate getTourDateDetail(@PathVariable int tourDateId){
+        try {
+            TourDate tourDate = tourDateServices.findWithId(tourDateId);
+            return tourDate;
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            return new TourDate();
+        }
+    }
+
     @GetMapping("tourParticipant/{tourDateId}")
     public List<TourParticipant> getTourParticipantList(@PathVariable int tourDateId){
 
@@ -141,13 +152,25 @@ public class TourAPIController {
         }
     }
 
+    @GetMapping("/userJoined/{username}")
+    public List<TourParticipant> getUserJoinedList(@PathVariable String username){
+        try {
+            List<TourParticipant> joinedTours = tourParticipantServices.retrieveUserRecords(username);
+            return joinedTours;
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            return new ArrayList<>();
+        }
+
+    }
+
     @DeleteMapping("/participant/{id}")
     public String removeParticipant(@PathVariable int id){
-        try {
             tourParticipantServices.removeRecord(id);
+        try {
             return "success";
         }catch (Exception e){
-            return "failed";
+            return e.getMessage();
         }
     }
 }
