@@ -3,164 +3,525 @@
 <head>
     <meta charset="UTF-8">
     <title>Review System</title>
-</head>
-<script>
-    function toggleEdit(editing){
-        if (editing){
-            document.getElementById("editing_no").hidden = true;
-            document.getElementById("editing_yes").hidden = false;
-        }else{
-            document.getElementById("editing_no").hidden = false;
-            document.getElementById("editing_yes").hidden = true;
+    <script>
+        let tours = []
+        let datesOfTourId = {}
+        let participantsOfTourDateId = {}
+        let noOfTouristsOfDateId = {}
+
+        let reviews = {}
+        let noOfReviewsOfTourId = {}
+        let noOfReviewsOfDateId = {}
+        let reviewsOfDateId = {}
+        let tourCount = 0
+        let touristCount = 0
+        let writtenReviews = {}
+        let written = 0
+
+        function onLoadHandler() {
+            fetchReviewsWritten()
+            fetchToursDetail();
+            prepareReviewTable()
         }
-    }
-</script>
-<body>
+
+        function fetchToursDetail() {
+            let username = document.getElementById("username").value
+
+            let requestURL = '/api/tour/tours/' + username;
+            if (window.location.host == "tomcat.johnnyip.com") {
+                requestURL = '/tour-system' + requestURL
+            }
+
+            var xmlHttpGet = new XMLHttpRequest();
+            xmlHttpGet.open("GET", requestURL, false); // false for synchronous request
+            xmlHttpGet.send(null);
+            let resultObject = JSON.parse(xmlHttpGet.responseText);
+
+            let optionsHTML = ""
+
+            if (resultObject.length != 0) {
+
+                for (const tour of resultObject) {
+                    tours.push(tour);
+                    tourCount++;
+
+                    fetchTourDateDetail(tour.id)
+
+                    let haveTarget = false
+
+                    for (const date of datesOfTourId[tour.id]) {
+                        if (participantsOfTourDateId[date.id] != 0) {
+                            let userCounter = 0
+                            for (const participant of participantsOfTourDateId[date.id]) {
+                                userCounter++;
+                            }
+                            if (userCounter != noOfReviewsOfDateId[date.id]) {
+                                haveTarget = true
+                            }
+                        }
+                    }
+                    if (haveTarget) {
+                        optionsHTML += `<option value="${tour.id}">${tour.name}</option>`
+                    }
+                }
+
+                if (optionsHTML == "") {
+                    document.getElementById("newReviewToWriteTable").setAttribute("hidden", "hidden")
+                    document.getElementById("noTourToWrite").removeAttribute("hidden");
+                    document.getElementById("noTourToWrite_text").innerText = "You have written all reviews.";
+                } else {
+                    document.getElementById("new_hostedTours").innerHTML = optionsHTML
+                    tourNameOptionOnChange()
+                    tourDateOptionOnChange()
+                    tourUserOptionOnChange()
+                }
+            }else{
+                document.getElementById("newReviewToWriteTable").setAttribute("hidden", "hidden")
+                document.getElementById("noTourToWrite").removeAttribute("hidden");
+                document.getElementById("noTourToWrite_text").innerText = "No tour is created.";
+
+            }
+        }
+
+        function fetchTourDateDetail(tourId) {
+            let requestURL = '/api/tour/tourDates/' + tourId;
+            if (window.location.host == "tomcat.johnnyip.com") {
+                requestURL = '/tour-system' + requestURL
+            }
+
+            var xmlHttpGet = new XMLHttpRequest();
+            xmlHttpGet.open("GET", requestURL, false); // false for synchronous request
+            xmlHttpGet.send(null);
+            let resultObject = JSON.parse(xmlHttpGet.responseText);
+
+            datesOfTourId[tourId] = resultObject
+
+            for (const date of resultObject) {
+                fetchJoinedUsers(date.id);
+            }
+        }
+
+        function fetchJoinedUsers(tourDateId) {
+            let requestURL = '/api/tour/participants/' + tourDateId;
+            if (window.location.host == "tomcat.johnnyip.com") {
+                requestURL = '/tour-system' + requestURL
+            }
+
+            var xmlHttpGet = new XMLHttpRequest();
+            xmlHttpGet.open("GET", requestURL, false); // false for synchronous request
+            xmlHttpGet.send(null);
+            let resultObject = JSON.parse(xmlHttpGet.responseText);
+
+            // console.log(resultObject)
+            participantsOfTourDateId[tourDateId] = resultObject
+            noOfTouristsOfDateId[tourDateId] = resultObject.length
+
+        }
+
+        function fetchReviewsWritten() {
+            let username = document.getElementById("username").value
+
+            let requestURL = '/api/review/author/' + username;
+            if (window.location.host == "tomcat.johnnyip.com") {
+                requestURL = '/tour-system' + requestURL
+            }
+
+            var xmlHttpGet = new XMLHttpRequest();
+            xmlHttpGet.open("GET", requestURL, false); // false for synchronous request
+            xmlHttpGet.send(null);
+            let resultObject = JSON.parse(xmlHttpGet.responseText);
+
+            reviews = resultObject
+
+            for (const review of resultObject) {
+                writtenReviews[review.id] = review
+                written++;
+
+                if (noOfReviewsOfDateId[review.tourDateId] != undefined) {
+                    noOfReviewsOfDateId[review.tourDateId] += 1;
+                } else {
+                    noOfReviewsOfDateId[review.tourDateId] = 1
+                }
+                if (noOfReviewsOfTourId[review.tourId] != undefined) {
+                    noOfReviewsOfTourId[review.tourId] += 1;
+                } else {
+                    noOfReviewsOfTourId[review.tourId] = 1
+                }
+
+                if (reviewsOfDateId[review.tourDateId] != undefined) {
+                    reviewsOfDateId[review.tourDateId].push(review)
+                } else {
+                    reviewsOfDateId[review.tourDateId] = []
+                    reviewsOfDateId[review.tourDateId].push(review)
+                }
+
+            }
+        }
+
+        function prepareReviewTable() {
+            let tourOptionHTML = ""
+
+            if (written != 0) {
+                for (const tour of tours) {
+
+                    if (noOfReviewsOfTourId[tour.id] != undefined) {
+                        tourOptionHTML += `<option value="${tour.id}">${tour.name}</option>`
+                    }
+                }
+                document.getElementById("old_tours").innerHTML = tourOptionHTML
+                reviewTourOnChange()
+            } else {
+                document.getElementById("writtenReview").setAttribute("hidden", "hidden")
+                document.getElementById("noReviewWritten").removeAttribute("hidden")
+            }
+        }
+
+
+        function tourNameOptionOnChange() {
+            let optionValue = document.getElementById("new_hostedTours").value
+            document.getElementById("form_tourId").value = optionValue
+
+            let optionHTML = ""
+
+            for (const date of datesOfTourId[optionValue]) {
+
+                let haveTarget = false
+                if ((noOfTouristsOfDateId[date.id] != 0) && (noOfTouristsOfDateId[date.id] != noOfReviewsOfDateId[date.id])) {
+                    haveTarget = true
+                }
+
+                if (haveTarget) {
+
+                    //Get time
+                    const offset = (new Date()).getTimezoneOffset();
+                    let tempDate = Date.parse(date.date) - offset;
+                    let time = new Date(tempDate);
+                    let dateString = `${time.getFullYear()}-${time.getMonth() + 1}-${time.getDate()}`
+
+                    optionHTML += `<option value="${date.id}">${dateString}</option>`
+                }
+            }
+
+            document.getElementById("new_tourDate").innerHTML = optionHTML
+            tourDateOptionOnChange()
+        }
+
+        function tourDateOptionOnChange() {
+            let optionValue = document.getElementById("new_tourDate").value
+            document.getElementById("form_tourDateId").value = optionValue
+
+            let optionHTML = ""
+
+
+            for (const participant of participantsOfTourDateId[optionValue]) {
+
+                let haveTarget = false
+                if (reviewsOfDateId[optionValue] != undefined) {
+                    for (const review of reviewsOfDateId[optionValue]) {
+                        if (review.tourParticipantId == participant.id) {
+                            haveTarget = true
+                        }
+                    }
+                }
+
+                if (!haveTarget) {
+                    optionHTML += `<option value="${[participant.id]}">${participant.username}</option>`
+                }
+            }
+
+            document.getElementById("new_touristName").innerHTML = optionHTML
+            tourUserOptionOnChange()
+        }
+
+        function tourUserOptionOnChange() {
+            let optionValue = document.getElementById("new_touristName").value
+            document.getElementById("form_tourPartiId").value = optionValue
+
+            let tourDateId = document.getElementById("new_tourDate").value
+
+            for (const user of participantsOfTourDateId[tourDateId]) {
+                if (user.id == optionValue) {
+                    document.getElementById("form_userUsername").value = user.username
+                }
+            }
+
+        }
+
+
+        function reviewTourOnChange() {
+            let tourId = document.getElementById("old_tours").value
+            let dateOptionHTML = ""
+
+            for (const date of datesOfTourId[tourId]) {
+
+                if (noOfReviewsOfDateId[date.id] != undefined) {
+                    //Get time
+                    const offset = (new Date()).getTimezoneOffset();
+                    let tempDate = Date.parse(date.date) - offset;
+                    let time = new Date(tempDate);
+                    let dateString = `${time.getFullYear()}-${time.getMonth() + 1}-${time.getDate()}`
+
+                    dateOptionHTML += `<option value="${date.id}">${dateString}</option>`
+                }
+            }
+
+            document.getElementById("old_tourDate").innerHTML = dateOptionHTML
+            reviewTourDateOnChange()
+        }
+
+        function reviewTourDateOnChange() {
+            let dateId = document.getElementById("old_tourDate").value
+            let touristOptionHTML = ""
+
+            for (const review of reviewsOfDateId[dateId]) {
+
+                touristOptionHTML += `<option value="${review.id}">${review.userUsername}</option>`
+            }
+
+            document.getElementById("old_touristName").innerHTML = touristOptionHTML
+            reviewTouristOnChange()
+        }
+
+        function reviewTouristOnChange() {
+            let reviewId = document.getElementById("old_touristName").value;
+            let reviewDetail = writtenReviews[reviewId]
+
+            let rating = ""
+            for (let i = 1; i <= 5; i++) {
+                if (reviewDetail.userStars >= i) {
+                    rating += "★"
+                } else {
+                    rating += '☆'
+                }
+            }
+
+            document.getElementById("reviewRating").innerText = rating;
+            document.getElementById("reviewComment").innerText = reviewDetail.userComment;
+            document.getElementById("reviewId").value = reviewId;
+        }
+
+
+        function submitReview() {
+            let bodyJSON = JSON.stringify({
+                id: 0,
+                author: document.getElementById("username").value,
+                tourId: document.getElementById("form_tourId").value,
+                tourDateId: document.getElementById("form_tourDateId").value,
+                tourParticipantId: document.getElementById("form_tourPartiId").value,
+                tourStars: 0,
+                tourComment: "",
+                userUsername: document.getElementById("form_userUsername").value,
+                userStars: document.getElementById("form_hostStars").value,
+                userComment: document.getElementById("form_hostComment").value
+            })
+
+            let requestURL = '/api/review/review'
+            if (window.location.host == "tomcat.johnnyip.com") {
+                requestURL = '/tour-system' + requestURL
+            }
+
+            var xmlHttpPOST = new XMLHttpRequest();
+            xmlHttpPOST.open("POST", requestURL, false); // false for synchronous request
+            xmlHttpPOST.setRequestHeader("Content-Type", "application/json")
+            xmlHttpPOST.send(bodyJSON);
+            console.log(xmlHttpPOST.responseText);
+
+            let url = location.origin + location.pathname
+
+            if (xmlHttpPOST.responseText == "success") {
+                location.href = url + "?success=true"
+            } else {
+                location.href = url + "?success=false"
+            }
+
+        }
+
+        function removeReview() {
+            let reviewId = document.getElementById("reviewId").value;
+
+            let requestURL = '/api/review/review/' + reviewId;
+            if (window.location.host == "tomcat.johnnyip.com") {
+                requestURL = '/tour-system' + requestURL
+            }
+
+            var xmlHttpPOST = new XMLHttpRequest();
+            xmlHttpPOST.open("DELETE", requestURL, false); // false for synchronous request
+            xmlHttpPOST.setRequestHeader("Content-Type", "application/json")
+            xmlHttpPOST.send(null);
+            console.log(xmlHttpPOST.responseText);
+
+            let url = location.origin + location.pathname
+
+            if (xmlHttpPOST.responseText == "success") {
+                location.href = url + "?success=true"
+            } else {
+                location.href = url + "?success=false"
+            }
+
+        }
+
+        function ratingClicked(type, value) {
+            document.getElementById("form_" + type + "Stars").value = value;
+
+            //Reset value
+            for (let i = 1; i <= 5; i++) {
+                document.getElementById(type + "Star" + i).innerText = '☆'
+            }
+
+            for (let i = 1; i <= value; i++) {
+                document.getElementById(type + "Star" + i).innerText = '★'
+            }
+
+        }
+    </script>
+</head>
+
+
+<body onload="onLoadHandler()">
 <header th:insert="header.html :: header"></header>
 <h1>Review System</h1>
-<p>Give a rating and a review for your tourists.</p>
+<p>Give a rating and a review for your finished tours.</p>
 
-
-<div class="center horizontalTrim">
-    <h2 class="borderedWithColor">Review You Have Written (Can be folded in production)</h2>
-    <p>
-        Tour
-        <select>
-            <option>Tian Tan Buddha one day trip (08-13-2022)</option>
-        </select>
-    </p>
+<div class="alert alert-success " role="alert" id="update_success" th:if="${success == true}">
+    Operation Success!
+</div>
+<div class="alert alert-danger" role="alert" id="update_fail" th:if="${success == false}">
+    Operation Failed!
 </div>
 
-<table class="table center horizontalTrim" id="editing_no">
-    <tr>
-        <td colspan="2" class="alignRight">
-            <button type="button" class="btn-long btn">Remove</button>
-            <button type="button" class="btn-long btn" onclick="toggleEdit(true)">Edit</button>
-        </td>
-    </tr>
-    <tr>
-        <th>Tourist</th>
-        <td>
-            <select>
-                <option>Johnny</option>
-                <option>Oscar</option>
-                <option>James</option>
-                <option>Ivan</option>
-                <option>Jacky</option>
-            </select>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2">
-            <h4>Review for the tourist</h4>
-        </td>
-    </tr>
-    <tr>
-        <th>Rating</th>
-        <td>
-            &#9733;&#9733;&#9733;&#9733;&#9733;
-        </td>
-    </tr>
-    <tr>
-        <th>Comment</th>
-        <td>
-            Nice chat.
-        </td>
-    </tr>
+<input type="text" id="username" hidden th:value="${username}">
 
-</table>
+<div class="center horizontalTrim" id="writtenReview">
+    <h2 class="borderedWithColor">Review You Have Written</h2>
+    <table class="table">
+        <tr>
+            <th>Tours</th>
+            <td>
+                <select id="old_tours" onchange="reviewTourOnChange()">
 
-<table class="table center horizontalTrim" hidden="true" id="editing_yes">
-    <tr>
-        <td colspan="2" class="alignRight">
-            <button type="button" class="btn-long btn" onclick="toggleEdit(false)">Cancel</button>
-            <button type="button" class="btn-long btn" onclick="toggleEdit(false)">Save</button>
-        </td>
-    </tr>
-    <tr>
-        <th>Tourist</th>
-        <td>
-            Johnny
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2">
-            <h4>Review for the tourist</h4>
-        </td>
-    </tr>
-    <tr>
-        <th>Rating</th>
-        <td>
-            <button type="button" class="btn rating">&#9733;</button>
-            <button type="button" class="btn rating">&#9733;</button>
-            <button type="button" class="btn rating">&#9733;</button>
-            <button type="button" class="btn rating">&#9733;</button>
-            <button type="button" class="btn rating">&#9733;</button>
-        </td>
-    </tr>
-    <tr>
-        <th>Comment</th>
-        <td>
-            <textarea>Nice chat.</textarea>
-        </td>
-    </tr>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th>Tour dates</th>
+            <td>
+                <select id="old_tourDate" onchange="reviewTourDateOnChange()">
 
-</table>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th>Tourist name</th>
+            <td>
+                <select id="old_touristName" onchange="reviewTouristOnChange()">
 
-<table class="table center horizontalTrim">
+                </select>
+                <input type="text" id="reviewId" hidden>
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="2">
+                <h4>Review for the tourist</h4>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="right">
+                <button class="btn-long btn" onclick="removeReview()">Remove</button>
+            </td>
+        </tr>
+        <tr>
+            <th>Rating</th>
+            <td id="reviewRating"></td>
+        </tr>
+        <tr>
+            <th>Comment</th>
+            <td id="reviewComment"></td>
+        </tr>
+    </table>
+
+</div>
+
+<div class="center horizontalTrim" id="noReviewWritten" hidden="hidden">
+    <h2 class="borderedWithColor">Review You Have Written</h2>
+    <br>
+    <h3>No review is written yet.</h3><br>
+</div>
+
+
+<table id="newReviewToWriteTable" class="table center horizontalTrim">
     <tr>
         <td colspan="2">
             <h2 class="borderedWithColor">Write A Review</h2>
+            <p>
+                Only shows tourists that you have not reviewed.
+            </p>
         </td>
     </tr>
     <tr>
-        <th>Choose a tour</th>
+        <th>Hosted tours</th>
         <td>
-            <select>
-                <option>Tian Tan Buddha one day trip (08-13-2022)</option>
+            <select id="new_hostedTours" onchange="tourNameOptionOnChange()">
+
             </select>
+            <input id="form_tourId" hidden>
         </td>
     </tr>
     <tr>
-        <th>Choose a tourist</th>
+        <th>Tour dates</th>
         <td>
-            <select>
-                <option>Johnny</option>
-                <option>Oscar</option>
-                <option>James</option>
-                <option>Ivan</option>
-                <option>Jacky</option>
+            <select id="new_tourDate" onchange="tourDateOptionOnChange()">
+
             </select>
+            <input id="form_tourDateId" hidden>
         </td>
     </tr>
     <tr>
-        <td colspan="2">
-            <h4>Review for the tourist</h4>
-        </td>
-    </tr>
-    <tr>
-        <th>Rating</th>
+        <th>Tourist name</th>
         <td>
-            <button type="button" class="btn rating">&#9733;</button>
-            <button type="button" class="btn rating">&#9734;</button>
-            <button type="button" class="btn rating">&#9734;</button>
-            <button type="button" class="btn rating">&#9734;</button>
-            <button type="button" class="btn rating">&#9734;</button>
-        </td>
-    </tr>
-    <tr>
-        <th>Comment</th>
-        <td>
-            <textarea></textarea>
+            <select id="new_touristName" onchange="tourUserOptionOnChange()">
+
+            </select>
+            <input id="form_tourPartiId" hidden>
         </td>
     </tr>
 
     <tr>
         <td colspan="2">
-            <button type="button" class="btn btn-long">Submit</button>
+            <h4>Review for the tourist</h4>
+            <input type="text" hidden id="form_userUsername">
+            <input type="text" hidden id="form_hostStars" value="1">
+        </td>
+    </tr>
+    <tr>
+        <th>Rating</th>
+        <td>
+            <button type="button" class="btn rating" id="hostStar1" onclick="ratingClicked('host',1)">&#9733;</button>
+            <button type="button" class="btn rating" id="hostStar2" onclick="ratingClicked('host',2)">&#9734;</button>
+            <button type="button" class="btn rating" id="hostStar3" onclick="ratingClicked('host',3)">&#9734;</button>
+            <button type="button" class="btn rating" id="hostStar4" onclick="ratingClicked('host',4)">&#9734;</button>
+            <button type="button" class="btn rating" id="hostStar5" onclick="ratingClicked('host',5)">&#9734;</button>
+        </td>
+    </tr>
+    <tr>
+        <th>Comment</th>
+        <td>
+            <textarea id="form_hostComment"></textarea>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <button type="button" class="btn btn-long" onclick="submitReview()">Submit</button>
         </td>
     </tr>
 </table>
+
+<div class="center horizontalTrim" id="noTourToWrite" hidden="hidden">
+    <h2 class="borderedWithColor">Write A Review</h2>
+    <br>
+    <h3 id="noTourToWrite_text"></h3><br>
+</div>
+
 
 </body>
 </html>

@@ -46,7 +46,20 @@ public class HostController {
         return "host/tourDetailEdit";
     }
     @GetMapping("review")
-    public String review(Model model){
+    public String review(Model model,HttpServletRequest request){
+        String success = request.getParameter("success");
+        if (success != null){
+            System.out.println(success);
+            if (success.length() == 4) {
+                model.addAttribute("success", true);
+            }else{
+                model.addAttribute("success",false);
+            }
+        }else{
+            model.addAttribute("success",null);
+        }
+
+        model.addAttribute("username",request.getUserPrincipal().getName());
 
         return "host/review";
     }
