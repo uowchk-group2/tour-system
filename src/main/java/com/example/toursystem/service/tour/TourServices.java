@@ -12,7 +12,6 @@ public interface TourServices {
     public List<Tour> findWithHostUsername(String username);
 
     public Tour findWithId(int id);
-    void removetourById(long id);
 
-    void deletetourById(long id);
+    public void deleteById(int id);
 }

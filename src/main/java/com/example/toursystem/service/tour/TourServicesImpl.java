@@ -12,7 +12,6 @@ import java.util.List;
 public class TourServicesImpl implements TourServices{
 
     private TourDAOService tourDAOService;
-    private Object tourRepository;
 
     @Autowired
     public TourServicesImpl(TourDAOService tourDAOService) {
@@ -44,8 +43,9 @@ public class TourServicesImpl implements TourServices{
     }
 
     @Override
-    public void deletetourById(long id) {
-        this.tourRepository.tourById(id);
-
+    @Transactional
+    public void deleteById(int id) {
+        tourDAOService.deleteById(id);
     }
+
 }

@@ -1,5 +1,6 @@
 package com.example.toursystem.controller;
 
+import com.example.toursystem.service.tour.TourServices;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/host")
 public class HostController {
 
-    private Object tourService;
+    private TourServices tourServices;
 
     @GetMapping("")
     public String demopage(Model model, HttpServletRequest request){
@@ -80,9 +81,9 @@ public class HostController {
     }
 
     @GetMapping("/deletetour/{id}")
-    public String deletetour(@PathVariable (value="id") long id) {
+    public String deletetour(@PathVariable int id) {
 
-        this.tourService,deletetById(id);
+        this.tourServices.deleteById(id);
         return "redirect:/";
     }
 }

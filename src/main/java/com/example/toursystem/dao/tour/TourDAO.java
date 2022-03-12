@@ -14,4 +14,6 @@ public interface TourDAO {
 
     public Tour findWithId(int id);
 
+    public void deleteById(int id);
+
 }

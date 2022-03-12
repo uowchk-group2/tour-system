@@ -48,4 +48,13 @@ public class TourDAOService implements TourDAO{
 
         return tour ;
     }
+
+    @Override
+    public void deleteById(int id) {
+        Session currentSession = entityManager.unwrap(Session.class);
+        Query theQuery = currentSession.createQuery("delete from Tour where id=:tourId");
+        theQuery.setParameter("tourId",id);
+        theQuery.executeUpdate();
+
+    }
 }
