@@ -1,6 +1,5 @@
 package com.example.toursystem.service.tour;
 
-import com.example.toursystem.dao.tour.TourDAO;
 import com.example.toursystem.dao.tour.TourDAOService;
 import com.example.toursystem.entity.tour.Tour;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +12,7 @@ import java.util.List;
 public class TourServicesImpl implements TourServices{
 
     private TourDAOService tourDAOService;
+    private Object tourRepository;
 
     @Autowired
     public TourServicesImpl(TourDAOService tourDAOService) {
@@ -41,5 +41,11 @@ public class TourServicesImpl implements TourServices{
     @Transactional
     public Tour findWithId(int id) {
         return tourDAOService.findWithId(id);
+    }
+
+    @Override
+    public void deletetourById(long id) {
+        this.tourRepository.tourById(id);
+
     }
 }
