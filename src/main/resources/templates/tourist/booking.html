@@ -67,7 +67,7 @@
                 const offset = (new Date()).getTimezoneOffset();
                 let tempDate = Date.parse(tourDates[tour.tourDateId].date) - offset;
                 let time = new Date(tempDate);
-                let date = `${time.getFullYear()}-${time.getMonth() + 1}-${time.getDate()} `
+                let date = `${time.getFullYear()}-${time.getMonth() + 1}-${time.getDate()}`
 
                 let tourURL = '/tourist/tourDetail/' + tour.tourId;
                 if (window.location.host == "tomcat.johnnyip.com") {
@@ -135,7 +135,7 @@
             const offset = (new Date()).getTimezoneOffset();
 
             let time = new Date(Date.parse(tourDateObject.date) - offset);
-            let dateString = `${time.getFullYear()}-${time.getMonth() + 1}-${time.getDate()} `
+            let dateString = `${time.getFullYear()}-${time.getMonth() + 1}-${time.getDate()}`
 
             //Transaction time
             let tTime = (new Date(Date.parse(tourPartiObject.joinedTime) - offset));

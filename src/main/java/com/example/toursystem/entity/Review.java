@@ -18,6 +18,9 @@ public class Review {
     @Column(name = "tour_date_id")
     private Integer tourDateId;
     @Basic
+    @Column(name = "tour_participant_id")
+    private Integer tourParticipantId;
+    @Basic
     @Column(name = "tour_stars")
     private Integer tourStars;
     @Basic
@@ -36,10 +39,11 @@ public class Review {
     public Review() {
     }
 
-    public Review(String author, Integer tourId, Integer tourDateId, Integer tourStars, String tourComment, String userUsername, Integer userStars, String userComment) {
+    public Review(String author, Integer tourId, Integer tourDateId, Integer tourParticipantId, Integer tourStars, String tourComment, String userUsername, Integer userStars, String userComment) {
         this.author = author;
         this.tourId = tourId;
         this.tourDateId = tourDateId;
+        this.tourParticipantId = tourParticipantId;
         this.tourStars = tourStars;
         this.tourComment = tourComment;
         this.userUsername = userUsername;
@@ -77,6 +81,14 @@ public class Review {
 
     public void setTourDateId(Integer tourDateId) {
         this.tourDateId = tourDateId;
+    }
+
+    public Integer getTourParticipantId() {
+        return tourParticipantId;
+    }
+
+    public void setTourParticipantId(Integer tourParticipantId) {
+        this.tourParticipantId = tourParticipantId;
     }
 
     public Integer getTourStars() {
