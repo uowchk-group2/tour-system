@@ -76,7 +76,7 @@
                 const offset = (new Date()).getTimezoneOffset();
                 let tempDate = Date.parse(dateDetail.date) - offset;
                 let time = new Date(tempDate);
-                let date = `${time.getFullYear()}-${time.getMonth() + 1}-${time.getDate()} `
+                let date = `${time.getFullYear()}-${time.getMonth() + 1}-${time.getDate()}`
 
                 selectHTML += `<option value="${dateDetail.id}">${date} [${slotsLeft}/${tour.participantLimit} remaining]</option>`
             }
