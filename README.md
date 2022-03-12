@@ -1,6 +1,6 @@
 # tour-system
 
-- Written in **Java**, 
+- Written in **Java**
 
 - **Frontend & Backend**: Spring Boot(Thymeleaf, Hibernates, Spring Security)
 
