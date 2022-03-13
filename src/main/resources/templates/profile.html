@@ -3,16 +3,6 @@
 <script>
     let tours = {}
 
-    function toggleEdit(editing) {
-        if (editing) {
-            document.getElementById("editing_no").hidden = true;
-            document.getElementById("editing_yes").hidden = false;
-        } else {
-            document.getElementById("editing_no").hidden = false;
-            document.getElementById("editing_yes").hidden = true;
-        }
-    }
-
     function fetchReviewsWritten() {
         let username = document.getElementById("username").value
 
@@ -40,7 +30,6 @@
                     userProfileURL = '/tour-system' + userProfileURL
                 }
 
-
                 if (tours[review.tourId] == undefined) {
                     fetchTourDetail(review.tourId);
                 }
@@ -57,7 +46,7 @@
 
                 tableHTML += `<tr>
                                     <td style="width: 25%" class="morePadding">
-                                        <a href="${userProfileURL}">${review.author}</a> <br>
+                                        <a href="${userProfileURL}">${review.author}</a><br>
                                         ${rating}<br>
                                     </td>
                                     <td class="morePadding">
@@ -97,25 +86,22 @@
 <header th:insert="header.html :: header"></header>
 <h1>Profile</h1>
 
-<div th:if="${success != null && success}" class="alert alert-success " role="alert">
-    Update successful!
-</div>
-<div th:if="${success != null && !success}" class="alert alert-danger " role="alert">
-    Upadte failed!
-</div>
 <input type="text" id="username" th:value="${user.username}" hidden>
 
 
 <table class="horizontalTrim center morePadding" id="editing_no">
     <tr>
-        <td colspan="2" class="alignRight">
-            <button type="button" class="btn btn-primary" onclick="toggleEdit(true)">Edit</button>
-        </td>
-    </tr>
-    <tr>
         <td>Username</td>
         <td>
             <span th:text="${user.username}"/>
+        </td>
+    </tr>
+    <tr>
+        <td>Role</td>
+        <td>
+            <span th:if="${user.role == 'ROLE_HOST'}">Host</span>
+            <span th:if="${user.role == 'ROLE_TOURIST'}">Tourist</span>
+            <span th:if="${user.role == 'ROLE_STAFF'}">Staff</span>
         </td>
     </tr>
     <tr>
@@ -138,49 +124,16 @@
     </tr>
 </table>
 
-<form th:action="@{/user/profile}" th:object="${user}" method="POST">
 
-    <table class="horizontalTrim center morePadding" id="editing_yes" hidden>
-        <tr>
-            <td colspan="2" class="alignRight">
-                <button type="button" class="btn btn-primary" onclick="toggleEdit(false)">Cancel</button>
-                <input type="submit" class="btn btn-primary"/>
-            </td>
-        </tr>
-        <tr>
-            <td>Username</td>
-            <td>
-                <span th:text="${user.username}"></span>
-            </td>
-        </tr>
-        <tr>
-            <td>Email</td>
-            <td><input type="text" name="email" th:value="${user.email}"></td>
-        </tr>
-        <tr>
-            <td>Full Name</td>
-            <td><input type="text" name="fullName" th:value="${user.fullName}"></td>
-        </tr>
-        <tr>
-            <td>Nationality</td>
-            <td><input type="text" name="nationality" th:value="${user.nationality}"></td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <input type="text" hidden name="id" th:value="${user.id}">
-            </td>
-        </tr>
-    </table>
+<h2 class="center horizontalTrim borderedWithColor" th:if="${user.role != 'ROLE_STAFF'}">
+    Reviews given by others
+</h2>
 
-</form>
-
-<h2 class="center horizontalTrim borderedWithColor">Reviews given by the hosts/tourists</h2>
-
-<table class=" table horizontalTrim" id="writtenReview">
+<table class=" table horizontalTrim" id="writtenReview" th:if="${user.role != 'ROLE_STAFF'}">
 
 </table>
 
-<div id="noReviewWritten" class="center horizontalTrim" hidden="hidden">
+<div id="noReviewWritten" class="center horizontalTrim" hidden="hidden" th:if="${user.role != 'ROLE_STAFF'}">
     <h3>No reviews received.</h3>
 </div>
 

@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
@@ -49,6 +51,21 @@ public class HomeController {
     @GetMapping("touristSignup")
     public String touristSignup(Model model){
         return "UserController/touristSignup";
+    }
+
+    @GetMapping("/tour/{tourId}")
+    public String tourDetailPage(@PathVariable String tourId, Model model){
+        model.addAttribute("tourId", tourId);
+        return "tourDetail";
+    }
+
+    @GetMapping("/profile/{username}")
+    public String profilePage(@PathVariable String username, Model model){
+        User user = userServices.findByUsername(username);
+        if (user.getUsername() != null) {
+            model.addAttribute("user", user);
+        }
+        return "profile";
     }
 
 }

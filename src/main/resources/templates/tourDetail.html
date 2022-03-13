@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+        let tour = {}
+        let tourDates = {}
+        let tourSlotsLeft = {}
+
+        function onLoadHandler() {
+            fetchTour()
+        }
+
+        function fetchTour() {
+            let tourId = document.getElementById("tourIdChosen").value;
+
+            let requestURL = '/api/tour/tourDetail/' + tourId
+            if (window.location.host == "tomcat.johnnyip.com") {
+                requestURL = '/tour-system' + requestURL
+            }
+
+            var xmlHttpGet = new XMLHttpRequest();
+            xmlHttpGet.open("GET", requestURL, false); // false for synchronous request
+            xmlHttpGet.send(null);
+            let tourDetail = JSON.parse(xmlHttpGet.responseText);
+
+            console.log(tourDetail)
+
+            if (tourDetail.coverPhoto != "") {
+                document.getElementById("result_img").src = "https://uow-project-tour-system.s3.ap-east-1.amazonaws.com/" + tourDetail.coverPhoto
+            } else {
+                document.getElementById("result_img").setAttribute("hidden", "hidden")
+            }
+            document.getElementById("result_name").innerText = tourDetail.name
+            document.getElementById("result_days").innerText = tourDetail.days
+            document.getElementById("result_fee").innerText = "$" + tourDetail.fee
+            document.getElementById("result_description").innerText = tourDetail.description
+            document.getElementById("result_schedule").innerText = tourDetail.schedule
+
+            tour = tourDetail
+
+        }
+
+
+    </script>
+</head>
+<body onload="onLoadHandler()">
+<header th:insert="header.html :: header"></header>
+
+<form method="POST" id="submitForm">
+    <input type="text" name="tourId" id="tourIdChosen" hidden th:value="${tourId}">
+
+    <table class="center table horizontalTrim">
+        <tr>
+            <td colspan="2">
+                <h2 class="center borderedWithColor">Tour Detail</h2>
+            </td>
+        </tr>
+
+        <tr>
+            <!-- Photo -->
+            <td colspan="2">
+                <img id="result_img" class="center" style="height: 400px">
+            </td>
+        </tr>
+        <tr>
+            <th width="20%">Name of tour:</th>
+            <td id="result_name"style="text-align:left" >Error</td>
+        </tr>
+        <tr>
+            <th>Tour's day(s):</th>
+            <td id="result_days" style="text-align:left"></td>
+        </tr>
+        <tr>
+            <th>Cost per tourist:</th>
+            <td id="result_fee" style="text-align:left"></td>
+        </tr>
+        <tr>
+            <th>Description:</th>
+            <td id="result_description" style="text-align:left"></td>
+        </tr>
+        <tr>
+            <th>Tour Schedule</th>
+            <td id="result_schedule" style="text-align:left"></td>
+        </tr>
+
+    </table>
+</form>
+
+<table class=" table horizontalTrim">
+    <tr>
+        <td colspan="2">
+            <h2 class="center borderedWithColor">Reviews</h2>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" class="horizontalTrim center">
+            <div class="btn-group">
+                <button type="button" class="btn btn-primary">Review for this Tour</button>
+                <button type="button" class="btn btn-secondary">Review for the Host</button>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Username<br>
+            02-11-2022<br>
+            &#9733;&#9733;&#9733;&#9733;&#9733;<br>
+        </td>
+        <td>This trip is brilliant!</td>
+    </tr>
+    <tr>
+        <td>
+            Username<br>
+            02-12-2022<br>
+            &#9734;&#9734;&#9734;&#9734;&#9734;<br>
+        </td>
+        <td>The place is so boring! Don't join this!</td>
+    </tr>
+
+</table>
+</body>
+</html>

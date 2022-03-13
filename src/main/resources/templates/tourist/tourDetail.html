@@ -40,6 +40,7 @@
                 document.getElementById("result_img").setAttribute("hidden", "hidden")
             }
             document.getElementById("result_name").innerText = tourDetail.name
+            document.getElementById("result_hostUsername").innerText = tourDetail.hostUsername
             document.getElementById("result_days").innerText = tourDetail.days
             document.getElementById("result_fee").innerText = "$" + tourDetail.fee
             document.getElementById("result_description").innerText = tourDetail.description
@@ -189,6 +190,10 @@
         <tr>
             <th width="20%">Name of tour:</th>
             <td id="result_name"style="text-align:left" >Error</td>
+        </tr>
+        <tr>
+            <th width="20%">Hosted By:</th>
+            <td id="result_hostUsername"style="text-align:left" >Error</td>
         </tr>
         <tr>
             <th>Tour's day(s):</th>
