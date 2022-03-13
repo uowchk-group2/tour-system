@@ -10,6 +10,8 @@
 
         function onLoadHandler() {
             fetchTour()
+            fetchReviewsOfTour()
+            fetchReviewsOfHost()
         }
 
         function fetchTour() {
@@ -32,13 +34,139 @@
             } else {
                 document.getElementById("result_img").setAttribute("hidden", "hidden")
             }
+
+            let profileURL = '/profile/' + tourDetail.hostUsername
+            if (window.location.host == "tomcat.johnnyip.com") {
+                profileURL = '/tour-system' + profileURL
+            }
+
             document.getElementById("result_name").innerText = tourDetail.name
+            document.getElementById("result_hostUsername").innerHTML = `<a href="${profileURL}">${tourDetail.hostUsername}</a>`
+
+            document.getElementById("tourHost").value = tourDetail.hostUsername
             document.getElementById("result_days").innerText = tourDetail.days
             document.getElementById("result_fee").innerText = "$" + tourDetail.fee
             document.getElementById("result_description").innerText = tourDetail.description
             document.getElementById("result_schedule").innerText = tourDetail.schedule
 
             tour = tourDetail
+
+        }
+
+        function onChangeOfTabs(type){
+            if (type == "tour"){
+                document.getElementById("table_hostReview").setAttribute("hidden","hidden");
+                document.getElementById("table_tourReview").removeAttribute("hidden")
+                document.getElementById("btn_hostReview").classList = "btn btn-secondary"
+                document.getElementById("btn_tourReview").classList = "btn btn-primary"
+
+            }else{
+                document.getElementById("table_tourReview").setAttribute("hidden","hidden");
+                document.getElementById("table_hostReview").removeAttribute("hidden")
+                document.getElementById("btn_tourReview").classList = "btn btn-secondary"
+                document.getElementById("btn_hostReview").classList = "btn btn-primary"
+            }
+        }
+
+        function fetchReviewsOfTour(){
+            let tourId = document.getElementById("tourIdChosen").value;
+
+            let requestURL = '/api/review/tour/' + tourId
+            if (window.location.host == "tomcat.johnnyip.com") {
+                requestURL = '/tour-system' + requestURL
+            }
+
+            var xmlHttpGet = new XMLHttpRequest();
+            xmlHttpGet.open("GET", requestURL, false); // false for synchronous request
+            xmlHttpGet.send(null);
+            let resultObject = JSON.parse(xmlHttpGet.responseText);
+
+            console.log("Review")
+            console.log(resultObject)
+
+            let tableHTML = ""
+
+            for (const review of resultObject){
+                if (review.tourStars != 0){
+                    let userProfileURL = '/profile/'+review.author
+                    if (window.location.host == "tomcat.johnnyip.com") {
+                        userProfileURL = '/tour-system' + userProfileURL
+                    }
+
+
+                    let rating = ""
+                    for (let i = 1; i <= 5; i++) {
+                        if (review.tourStars >= i) {
+                            rating += "★"
+                        } else {
+                            rating += '☆'
+                        }
+                    }
+
+                    tableHTML += `<tr>
+                                    <td style="width: 25%" class="morePadding">
+                                        <a href="${userProfileURL}">${review.author}</a><br>
+                                        ${rating}<br>
+                                    </td>
+                                    <td class="morePadding">
+                                        ${review.tourComment}
+                                    </td>
+                                </tr>`
+                }
+            }
+
+            document.getElementById("table_hostReview").innerHTML = tableHTML
+        }
+
+        function fetchReviewsOfHost(){
+            let hostUsername = document.getElementById("tourHost").value;
+            let tourId = document.getElementById("tourIdChosen").value;
+
+            let requestURL = '/api/review/user/' + hostUsername
+            if (window.location.host == "tomcat.johnnyip.com") {
+                requestURL = '/tour-system' + requestURL
+            }
+
+            var xmlHttpGet = new XMLHttpRequest();
+            xmlHttpGet.open("GET", requestURL, false); // false for synchronous request
+            xmlHttpGet.send(null);
+            let resultObject = JSON.parse(xmlHttpGet.responseText);
+
+            console.log("Review")
+            console.log(resultObject)
+
+            let tableHTML = ""
+
+            for (const review of resultObject){
+                if (review.tourId == tourId){
+                    let userProfileURL = '/profile/'+review.author
+                    if (window.location.host == "tomcat.johnnyip.com") {
+                        userProfileURL = '/tour-system' + userProfileURL
+                    }
+
+
+                    let rating = ""
+                    for (let i = 1; i <= 5; i++) {
+                        if (review.userStars >= i) {
+                            rating += "★"
+                        } else {
+                            rating += '☆'
+                        }
+                    }
+
+                    tableHTML += `<tr>
+                                    <td style="width: 25%" class="morePadding">
+                                        <a href="${userProfileURL}">${review.author}</a><br>
+                                        ${rating}<br>
+                                    </td>
+                                    <td class="morePadding">
+                                        ${review.userComment}
+                                    </td>
+                                </tr>`
+                }
+            }
+
+            document.getElementById("table_tourReview").innerHTML = tableHTML
 
         }
 
@@ -50,6 +178,7 @@
 
 <form method="POST" id="submitForm">
     <input type="text" name="tourId" id="tourIdChosen" hidden th:value="${tourId}">
+    <input type="text" name="tourId" id="tourHost" hidden >
 
     <table class="center table horizontalTrim">
         <tr>
@@ -67,6 +196,12 @@
         <tr>
             <th width="20%">Name of tour:</th>
             <td id="result_name"style="text-align:left" >Error</td>
+        </tr>
+        <tr>
+            <th width="20%">Hosted By:</th>
+            <td id="result_hostUsername" style="text-align:left" >
+                Error
+            </td>
         </tr>
         <tr>
             <th>Tour's day(s):</th>
@@ -88,7 +223,7 @@
     </table>
 </form>
 
-<table class=" table horizontalTrim">
+<table class="table horizontalTrim">
     <tr>
         <td colspan="2">
             <h2 class="center borderedWithColor">Reviews</h2>
@@ -97,28 +232,19 @@
     <tr>
         <td colspan="2" class="horizontalTrim center">
             <div class="btn-group">
-                <button type="button" class="btn btn-primary">Review for this Tour</button>
-                <button type="button" class="btn btn-secondary">Review for the Host</button>
+                <button type="button" id="btn_tourReview" class="btn btn-primary" onclick="onChangeOfTabs('tour')">Reviews of Tour</button>
+                <button type="button" id="btn_hostReview" class="btn btn-secondary" onclick="onChangeOfTabs('host')">Reviews of Host</button>
             </div>
         </td>
     </tr>
-    <tr>
-        <td>
-            Username<br>
-            02-11-2022<br>
-            &#9733;&#9733;&#9733;&#9733;&#9733;<br>
-        </td>
-        <td>This trip is brilliant!</td>
-    </tr>
-    <tr>
-        <td>
-            Username<br>
-            02-12-2022<br>
-            &#9734;&#9734;&#9734;&#9734;&#9734;<br>
-        </td>
-        <td>The place is so boring! Don't join this!</td>
-    </tr>
-
 </table>
+
+
+<table class="table horizontalTrim" id="table_tourReview">
+</table>
+
+<table class="table horizontalTrim" id="table_hostReview" hidden="hidden">
+</table>
+
 </body>
 </html>
