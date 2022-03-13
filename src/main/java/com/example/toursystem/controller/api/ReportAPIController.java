@@ -32,9 +32,9 @@ public class ReportAPIController {
     public String saveReport(@RequestBody Report report) {
         try {
             reportService.saveReport(report);
-            return "success";
+            return String.valueOf(report.getId());
         } catch (Exception e) {
-            return e.getMessage();
+            return "error";
         }
     }
 

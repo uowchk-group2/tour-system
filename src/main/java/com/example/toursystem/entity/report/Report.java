@@ -1,7 +1,7 @@
 package com.example.toursystem.entity.report;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.sql.Date;
 
 @Entity
 public class Report {
@@ -11,7 +11,7 @@ public class Report {
     private int id;
     @Basic
     @Column(name = "date")
-    private Timestamp date;
+    private Date date;
     @Basic
     @Column(name = "report_nature")
     private String reportNature;
@@ -36,11 +36,11 @@ public class Report {
         this.id = id;
     }
 
-    public Timestamp getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(Timestamp date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 

@@ -35,6 +35,7 @@
                                 <th>Report Date</th>
                                 <th>Report Nature</th>
                                 <th>Related Tour</th>
+                                <th>Related Host</th>
                                 <th>Report Status</th>
                                 <th>Actions</th>
                             </tr>`
@@ -56,6 +57,7 @@
                                     <td>${date}</td>
                                     <td>${report.reportNature}</td>
                                     <td>${tours[report.tourId].name}</td>
+                                    <td>${report.hostUsername}</td>
                                     <td>${report.reportStatus ? "Solved" : "Under Investigation"}</td>
                                     <td>
                                     <button type="button" class="btn btn-long" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="showDetail(${report.id})">
@@ -136,7 +138,10 @@
             let roleString = users[reportDetail.username].role
             let docButtonHTML = ""
             if (reportDetail.document != null) {
-
+                docButtonHTML = `<a target="_blank" id="resultNewTab"
+                        href="https://uow-project-tour-system.s3.ap-east-1.amazonaws.com/${reportDetail.document}">
+                        <button type="button" class="btn-long">Open In New Tab</button>
+                    </a>`
             }
 
             tableHTML += `<tr>
@@ -204,13 +209,13 @@
 
     }
 
-    function uploadFile() {
-        let filename = document.getElementById("fileUpload").files[0].name;
+    function uploadFile(newReport) {
+        let filename = document.getElementById(newReport ? "fileUpload":"fileUpload2").files[0].name;
         let randomFileName = makeid() + "." + filename.split(".")[filename.split(".").length - 1]
         console.log(randomFileName)
 
-        let file = document.getElementById("fileUpload").files[0];
-        console.log(document.getElementById("fileUpload").files[0])
+        let file = document.getElementById(newReport ? "fileUpload":"fileUpload2").files[0];
+        console.log(document.getElementById(newReport ? "fileUpload":"fileUpload2").files[0])
 
         if (file != undefined) {
 
@@ -242,20 +247,20 @@
             console.log("FinalURL: " + finalURL)
 
             setTimeout(function () {
-                document.getElementById("resultNewTab").href = finalURL;
-                document.getElementById("upload_no").setAttribute("hidden", "hidden")
-                document.getElementById("upload_yes").removeAttribute("hidden")
-                document.getElementById("form_document").value = randomFileName;
-                document.getElementById("fileUpload").value = "";
+                document.getElementById(newReport ? "resultNewTab":"resultNewTab2").href = finalURL;
+                document.getElementById(newReport ? "upload_no":"upload_no2").setAttribute("hidden", "hidden")
+                document.getElementById(newReport ? "upload_yes":"upload_yes2").removeAttribute("hidden")
+                document.getElementById(newReport ? "form_document":"form_document2").value = randomFileName;
+                document.getElementById(newReport ? "fileUpload":"fileUpload2").value = "";
             }, 500);
         }
     }
 
-    function removePhoto() {
-        document.getElementById("resultNewTab").href = "";
-        document.getElementById("upload_yes").setAttribute("hidden", "hidden")
-        document.getElementById("upload_no").removeAttribute("hidden")
-        document.getElementById("form_document").value = "";
+    function removePhoto(newReport) {
+        document.getElementById(newReport ? "resultNewTab":"resultNewTab2").href = "";
+        document.getElementById(newReport ? "upload_yes":"upload_yes2").setAttribute("hidden", "hidden")
+        document.getElementById(newReport ? "upload_no":"upload_no2").removeAttribute("hidden")
+        document.getElementById(newReport ? "form_document":"form_document2").value = "";
     }
 
     function makeid() {
@@ -266,19 +271,16 @@
         return text;
     }
 
-    function newReportHandler(){
-        newReport()
-    }
-
     function newReport(){
         let username = document.getElementById("username").value
+
         //Save result of creation of tour
         let bodyJSON = JSON.stringify({
             id: 0,
             date: Date.now(),
             reportNature: document.getElementById("form_reportNature").value,
             tourId: document.getElementById("form_tourId").value,
-            reportStatus: false,
+            reportStatus: 0,
             touristUsername: username,
             hostUsername: document.getElementById("form_hostId").value
         })
@@ -294,12 +296,66 @@
         xmlHttpPOST.open("POST", requestURL, false); // false for synchronous request
         xmlHttpPOST.setRequestHeader("Content-Type", "application/json")
         xmlHttpPOST.send(bodyJSON);
-        let createTourResult = JSON.parse(xmlHttpPOST.responseText)
-        console.log(createTourResult)
+        let result = xmlHttpPOST.responseText
+        console.log("Result: "+result)
 
+        if (result != "error"){
+            document.getElementById("update_success").removeAttribute("hidden")
+            document.getElementById("form_reportId").value = result
+            newReply("form_reportId","form_message","form_document")
+            fetchReportOfUser()
+            fetchJoinedTours()
+        }else{
+            document.getElementById("update_fail").removeAttribute("hidden")
+        }
+    }
+
+    function newReply(report_id, messageId, fileURLId){
+        let username = document.getElementById("username").value
+        let reportId = document.getElementById(report_id).value
+        let message = document.getElementById(messageId).value
+        let fileURL = document.getElementById(fileURLId).value
+        console.log("fileURL "+fileURL)
+
+        //Save result of creation of tour
+        let bodyJSON = JSON.stringify({
+            id: 0,
+            date: Date.now(),
+            reportId: reportId,
+            username: username,
+            message: message,
+            document: fileURL
+        })
+
+        console.log(bodyJSON)
+
+        let requestURL = '/api/report/reportDetail'
+        if (window.location.host == "tomcat.johnnyip.com") {
+            requestURL = '/tour-system' + requestURL
+        }
+
+        var xmlHttpPOST = new XMLHttpRequest();
+        xmlHttpPOST.open("POST", requestURL, false); // false for synchronous request
+        xmlHttpPOST.setRequestHeader("Content-Type", "application/json")
+        xmlHttpPOST.send(bodyJSON);
+        let result = xmlHttpPOST.responseText
+        console.log(result)
+
+        document.getElementById("form_message").value = ""
+        document.getElementById("form_document").value = ""
+        document.getElementById("form_message2").value = ""
+        document.getElementById("form_document2").value = ""
+
+        if (report_id == "form_reportId2"){
+            showDetail(reportId)
+            removePhoto(false)
+        }else{
+            removePhoto(true)
+        }
     }
 
     function showDetail(reportId) {
+        document.getElementById("form_reportId2").value = reportId
         fetchReportDetail(reportId)
     }
 </script>
@@ -310,10 +366,17 @@
 <h1>Report System</h1>
 <p>Report problems you have faced.</p>
 
+<div class="alert alert-success " role="alert" id="update_success" hidden="hidden">
+    Operation Success!
+</div>
+<div class="alert alert-danger" role="alert" id="update_fail" hidden="hidden">
+    Operation Failed!
+</div>
+
+<h2 class="center borderedWithColor horizontalTrim">Report History</h2>
 <table class="table center" id="result_table">
     <tr>
         <td colspan="6">
-            <h2 class="borderedWithColor horizontalTrim">Report History (Can be folded in production)</h2>
         </td>
     </tr>
     <tr>
@@ -410,7 +473,7 @@
     </tr>
 </table>
 
-<form onsubmit="newReportHandler(); return false;">
+<form action="#" onsubmit="newReport();">
     <table class="table center horizontalTrim">
         <tr>
             <td colspan="2">
@@ -429,17 +492,18 @@
         </tr>
         <tr>
             <th>Related Tour</th>
-            <td style="text-align: left">
+            <td>
                 <select id="form_tourOptions" onchange="tourNameOnChange()">
                     <option></option>
                 </select><br>
-                <input type="text" id="form_hostId">
-                <input type="text" id="form_tourId">
+                <input type="text" id="form_hostId" hidden>
+                <input type="text" id="form_tourId" hidden>
             </td>
         </tr>
         <tr>
             <th>Describe your problem as detail as possible</th>
             <td>
+                <input type="text" id="form_reportId" hidden>
                 <textarea id="form_message" required></textarea>
             </td>
         </tr>
@@ -447,15 +511,15 @@
             <td>Upload photos(optional):</td>
             <td>
                 <div id="upload_no">
-                    <input type="file" id="fileUpload" accept="image/*,.pdf" onchange="uploadFile()">
+                    <input type="file" id="fileUpload" accept="image/*,.pdf" onchange="uploadFile(true)">
                 </div>
                 <div id="upload_yes" hidden="hidden">
-                    <button type="button" class="btn-long" onclick="removePhoto()">Remove</button>
+                    <button type="button" class="btn-long" onclick="removePhoto(true)">Remove</button>
                     <a target="_blank" id="resultNewTab">
                         <button type="button" class="btn-long">Open In New Tab</button>
                     </a>
                 </div>
-                <input type="text" id="form_document">
+                <input type="text" id="form_document" hidden>
             </td>
         </tr>
         <tr>
@@ -474,7 +538,7 @@
                 <h5 class="modal-title" id="exampleModalLabel">Detail</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="background-color: #F0FAEF;">
                 <table class="center morePadding " id="detailTable">
                     <tr>
                         <th>Date</th>
@@ -510,10 +574,11 @@
                 <table class="center morePadding">
                     <tr>
                         <td colspan="3" class="alignRight">
+                            <input type="text" id="form_reportId2" hidden>
                             Your reply:
                         </td>
                         <td colspan="2" class="alignLeft">
-                            <textarea rows="3" cols="50"></textarea>
+                            <textarea rows="3" cols="50" id="form_message2"></textarea>
                         </td>
                     </tr>
                     <tr>
@@ -521,12 +586,21 @@
                             Upload photos(optional):
                         </td>
                         <td colspan="2" class="alignLeft">
-                            <input type="file" multiple>
+                            <div id="upload_no2">
+                                <input type="file" id="fileUpload2" accept="image/*,.pdf" onchange="uploadFile(false)">
+                            </div>
+                            <div id="upload_yes2" hidden="hidden">
+                                <button type="button" class="btn-long" onclick="removePhoto(false)">Remove</button>
+                                <a target="_blank" id="resultNewTab2">
+                                    <button type="button" class="btn-long">Open In New Tab</button>
+                                </a>
+                            </div>
+                            <input type="text" id="form_document2" hidden>
                         </td>
                     </tr>
                     <tr>
                         <td colspan="5">
-                            <button type="button" class="btn btn-long">Submit</button>
+                            <button type="button" class="btn btn-long" onclick="newReply('form_reportId2','form_message2','form_document2') ">Submit</button>
                         </td>
                     </tr>
 

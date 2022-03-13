@@ -26,7 +26,7 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public void saveReport(Report report) {
-
+        reportDAOService.saveReport(report);
     }
 
     @Override

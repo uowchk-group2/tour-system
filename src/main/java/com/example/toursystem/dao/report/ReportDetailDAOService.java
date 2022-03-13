@@ -29,7 +29,7 @@ public class ReportDetailDAOService implements ReportDetailDAO{
     @Override
     public List<ReportDetail> getReportDetailByReportId(int id) {
         Session currentSession = entityManager.unwrap(Session.class);
-        String hql = "FROM ReportDetail r WHERE r.reportId = '"+id+"'";
+        String hql = "FROM ReportDetail r WHERE r.reportId = '"+id+"' ORDER BY r.id DESC";
         Query query = currentSession.createQuery(hql, ReportDetail.class);
         List<ReportDetail> resultList = query.getResultList();
         return resultList;
