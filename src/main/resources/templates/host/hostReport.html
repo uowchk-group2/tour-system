@@ -4,7 +4,17 @@
     <meta charset="UTF-8">
     <title>Review System</title>
 </head>
-<body>
+
+<script>
+    function showTable(){
+        document.getElementById('editing_no1').style.visibility = "visible";
+    }
+
+    function hideTable(){
+        document.getElementById('editing_no1').style.visibility = "hidden";
+    }
+</script>
+<body onload="javascript:hideTable()">
 <header th:insert="header.html :: header"></header>
 <h1>Report System</h1>
 <p>Report problems you have faced.</p>
@@ -32,13 +42,13 @@
         <td>Tourist</td>
         <td>Under Investigation</td>
         <td>
-            <button type="button" class="btn btn-long">Details</button>
+            <button type="button" onclick='javascript:showTable();' value='show' class="btn-long">Details</button>
         </td>
     </tr>
     <tr>
         <td colspan="7" style="background-color: #e4e1de">
             <div class="alignRight">
-                <button type="button" class="btn-long">close</button>
+                <button type="button" onclick='javascript:hideTable();' value='hide' class="btn-long">Close</button>
             </div>
             <h3>Report Detail</h3>
 
