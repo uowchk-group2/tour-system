@@ -3,9 +3,11 @@ package com.example.toursystem.service.report;
 import com.example.toursystem.dao.report.ReportDAOService;
 import com.example.toursystem.entity.report.Report;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class ReportServiceImpl implements ReportService {
 
     private ReportDAOService reportDAOService;

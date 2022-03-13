@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <title>Apply System</title>
     <script>
-        function fetchTours(){
+        function fetchTours() {
             let requestURL = '/api/tour/tours'
-            if (window.location.host == "tomcat.johnnyip.com"){
+            if (window.location.host == "tomcat.johnnyip.com") {
                 requestURL = '/tour-system' + requestURL
             }
 
@@ -17,23 +17,23 @@
 
             let resultHTML = "";
 
-            for(const [index, tour] of resultObject.entries()){
+            for (const [index, tour] of resultObject.entries()) {
                 console.log(tour)
-                let detailURL = '/tourist/tourDetail/'+tour.id
-                if (window.location.host == "tomcat.johnnyip.com"){
+                let detailURL = '/tourist/tourDetail/' + tour.id
+                if (window.location.host == "tomcat.johnnyip.com") {
                     detailURL = '/tour-system' + detailURL
                 }
 
-                let imgURL = "https://uow-project-tour-system.s3.ap-east-1.amazonaws.com/"+tour.coverPhoto
+                let imgURL = "https://uow-project-tour-system.s3.ap-east-1.amazonaws.com/" + tour.coverPhoto
 
-                if (index % 2 == 0){
+                if (index % 2 == 0) {
                     resultHTML += `<tr>`
                 }
 
                 resultHTML += `<td>
                                     <div class="card ">
                                         <a href="${detailURL}" ">
-                                            <img width="400" src="${(tour.coverPhoto != "" ? imgURL:"" )}"><br>
+                                            <img width="400" src="${(tour.coverPhoto != "" ? imgURL : "")}"><br>
                                             <p>
                                                 ${tour.name}<br>
                                                 Tour host: ${tour.hostUsername}<br>
@@ -44,7 +44,7 @@
                                     </div>
                                 </td>`
 
-                if ((index % 2 == 1) || (resultObject.length -1 == index) ){
+                if ((index % 2 == 1) || (resultObject.length - 1 == index)) {
                     resultHTML += `</tr>`
                 }
 
@@ -58,90 +58,8 @@
 <header th:insert="header.html :: header"></header>
 <h1>Search Tour</h1>
 
-<div class="table center horizontalTrim">
-    <select>
-        <option>Tour id</option>
-        <option>Tour name</option>
-        <option>Host id</option>
-        <option>Host Username</option>
-    </select>
-    <input type="text" name="keyword" placeholder="keyword"/>
-    <button type="button" class="btn btn-long" name="search">Search</button>
-</div>
-
 <table class="table center" valign="center" id="result_table">
 </table>
 
-<!--<table class="table center">-->
-<!--    <tr>-->
-<!--        <td>-->
-<!--            <div class="card ">-->
-<!--                <a th:href="@{/tourist/tourDetail}">-->
-<!--                    <img width="400" th:src="@{/img/buddha.jpg}"><br>-->
-<!--                    <p>-->
-<!--                        Tian Tan Buddha one day trip<br>-->
-<!--                        Fee per tourist: $100<br>-->
-<!--                        Country: Hong Kong-->
-<!--                    </p>-->
-<!--                </a>-->
-<!--            </div>-->
-<!--        </td>-->
-<!--        <td>-->
-<!--            <div class="card">-->
-<!--                <a th:href="@{/tourist/tourDetail}">-->
-<!--                    <img width="400" th:src="@{/img/ocean-park.jpg}"><br>-->
-<!--                    <p>-->
-<!--                        Ocean Park two day trip<br>-->
-<!--                        Fee per tourist: $100<br>-->
-<!--                        Country: Hong Kong-->
-<!--                    </p>-->
-<!--                </a>-->
-<!--            </div>-->
-<!--        </td>-->
-<!--    </tr>-->
-<!--    <tr>-->
-<!--        <td>-->
-<!--            <div class="card">-->
-<!--                <a th:href="@{/tourist/tourDetail}">-->
-<!--                    <img width="400" th:src="@{/img/peak.jpg}"/><br>-->
-<!--                    <p>-->
-<!--                        The Peak one day trip<br>-->
-<!--                        Fee per tourist: $100<br>-->
-<!--                        Country: Hong Kong-->
-<!--                    </p>-->
-<!--                </a>-->
-<!--            </div>-->
-<!--        </td>-->
-<!--        <td>-->
-<!--            <div class="card">-->
-<!--                <a th:href="@{/tourist/tourDetail}">-->
-<!--                    <img width="400" th:src="@{/img/TaiO.jpg}"><br>-->
-<!--                    <p>-->
-<!--                        Tai-O one day trip<br>-->
-<!--                        Fee per tourist: $100<br>-->
-<!--                        Country: Hong Kong-->
-<!--                    </p>-->
-<!--                </a>-->
-<!--            </div>-->
-<!--        </td>-->
-<!--    </tr>-->
-<!--</table>-->
-<nav id="pagination">
-    <nav aria-label="Page" navigation="" example="">
-        <ul class="pagination justify-content-center">
-            <li class="page-item disabled"><a class="page-link" href="javascript:setCurrentPage(1)">First</a></li>
-            <li class="page-item disabled"><a class="page-link" href="javascript:previous()">Previous</a></li>
-            <li class="page-item "><a class="page-link" href="javascript:setCurrentPage(1)">1</a></li>
-            <li class="page-item"><a class="page-link" href="javascript:setCurrentPage(2)">2</a></li>
-            <li class="page-item"><a class="page-link" href="javascript:setCurrentPage(3)">3</a></li>
-            <li class="page-item"><a class="page-link" href="javascript:setCurrentPage(4)">4</a></li>
-            <li class="page-item"><a class="page-link" href="javascript:setCurrentPage(5)">5</a></li>
-            <li class="page-item"><a class="page-link" href="javascript:next()">Next</a></li>
-            <li class="page-item"><a class="page-link"
-                                     href="javascript:setCurrentPage(Math.ceil(videos.length/VIDEOS_PER_PAGE))">Last</a>
-            </li>
-        </ul>
-    </nav>
-</nav>
 </body>
 </html>

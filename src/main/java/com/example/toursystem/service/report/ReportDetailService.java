@@ -6,11 +6,7 @@ import java.util.List;
 
 public interface ReportDetailService {
 
-    public static void saveReportDetail(ReportDetail reportDetail) {
-
-    }
-
-    void savereportDetail(ReportDetail reportDetail);
+    void saveReportDetail(ReportDetail reportDetail);
 
     public List<ReportDetail> getReportDetailByReportId(int id);
 
