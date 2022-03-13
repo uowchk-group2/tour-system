@@ -14,11 +14,13 @@ public class TourDateServicesImpl implements TourDateServices{
 
     @Autowired
     public TourDateServicesImpl(TourDateDAOService tourDateDAOService) {
+
         this.tourDateDAOService = tourDateDAOService;
     }
 
     @Override
     public void createTourDate(TourDate tourDate) {
+
         tourDateDAOService.createTourDate(tourDate);
     }
 
@@ -29,11 +31,13 @@ public class TourDateServicesImpl implements TourDateServices{
 
     @Override
     public List<TourDate> findWithTourId(int tourId) {
+
         return tourDateDAOService.findWithTourId(tourId);
     }
 
     @Override
     public void removeWithDateId(int dateId) {
+
         tourDateDAOService.removeWithDateId(dateId);
     }
 }
