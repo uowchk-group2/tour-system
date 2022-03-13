@@ -6,7 +6,9 @@ import java.util.List;
 
 public interface ReportDetailService {
 
-    public static void saveReportDetail(ReportDetail reportDetail);
+    public static void saveReportDetail(ReportDetail reportDetail) {
+
+    }
 
     void savereportDetail(ReportDetail reportDetail);
 
