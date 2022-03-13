@@ -20,6 +20,11 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
+    public List<Report> getAllReports() {
+        return reportDAOService.getAllReports();
+    }
+
+    @Override
     public void saveReport(Report report) {
 
     }

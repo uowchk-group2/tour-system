@@ -5,20 +5,312 @@
     <title>Review System</title>
 </head>
 <script>
-function showTable(){
-document.getElementById('editing_no1').style.visibility = "visible";
-}
 
-function hideTable(){
-document.getElementById('editing_no1').style.visibility = "hidden";
-}
+    let tours = {}
+    let users = {}
+    let joinedTours = []
+    let reports = {}
+
+    function onLoadHandler() {
+        fetchReportOfUser()
+        fetchJoinedTours()
+    }
+
+    function fetchReportOfUser() {
+        let username = document.getElementById("username").value
+
+        let requestURL = '/api/report/reportOfTourist/' + username;
+        if (window.location.host == "tomcat.johnnyip.com") {
+            requestURL = '/tour-system' + requestURL
+        }
+
+        var xmlHttpGet = new XMLHttpRequest();
+        xmlHttpGet.open("GET", requestURL, false); // false for synchronous request
+        xmlHttpGet.send(null);
+        let resultObject = JSON.parse(xmlHttpGet.responseText);
+
+        console.log(resultObject)
+
+        resultTableHTML = `<tr>
+                                <th>Report Date</th>
+                                <th>Report Nature</th>
+                                <th>Related Tour</th>
+                                <th>Report Status</th>
+                                <th>Actions</th>
+                            </tr>`
+
+        for (const report of resultObject) {
+            reports[report.id] = report
+
+            //set time
+            const offset = (new Date()).getTimezoneOffset();
+            let time = (new Date(Date.parse(report.date) - offset));
+            let date = `${time.getFullYear()}-${time.getMonth() + 1}-${time.getDate()}`
+
+            if (tours[report.tourId] == undefined) {
+                fetchTourDetail(report.tourId)
+            }
+
+
+            resultTableHTML += `<tr>
+                                    <td>${date}</td>
+                                    <td>${report.reportNature}</td>
+                                    <td>${tours[report.tourId].name}</td>
+                                    <td>${report.reportStatus ? "Solved" : "Under Investigation"}</td>
+                                    <td>
+                                    <button type="button" class="btn btn-long" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="showDetail(${report.id})">
+                                        Details
+                                    </button>
+                                    </td>
+                                </tr>`
+        }
+
+        document.getElementById("result_table").innerHTML = resultTableHTML
+    }
+
+    function fetchTourDetail(tourId) {
+        let requestURL = '/api/tour/tourDetail/' + tourId;
+        if (window.location.host == "tomcat.johnnyip.com") {
+            requestURL = '/tour-system' + requestURL
+        }
+
+        var xmlHttpGet = new XMLHttpRequest();
+        xmlHttpGet.open("GET", requestURL, false); // false for synchronous request
+        xmlHttpGet.send(null);
+        console.log(requestURL)
+        let resultObject = JSON.parse(xmlHttpGet.responseText);
+
+        console.log(resultObject)
+        tours[tourId] = resultObject
+    }
+
+    function fetchUserDetail(username) {
+
+        let requestURL = '/api/user/find/' + username;
+        if (window.location.host == "tomcat.johnnyip.com") {
+            requestURL = '/tour-system' + requestURL
+        }
+
+        var xmlHttpGet = new XMLHttpRequest();
+        xmlHttpGet.open("GET", requestURL, false); // false for synchronous request
+        xmlHttpGet.send(null);
+        let resultObject = JSON.parse(xmlHttpGet.responseText);
+
+        console.log(resultObject)
+        users[username] = resultObject
+    }
+
+    function fetchReportDetail(reportId) {
+        let requestURL = '/api/report/reportDetail/' + reportId;
+        if (window.location.host == "tomcat.johnnyip.com") {
+            requestURL = '/tour-system' + requestURL
+        }
+
+        var xmlHttpGet = new XMLHttpRequest();
+        xmlHttpGet.open("GET", requestURL, false); // false for synchronous request
+        xmlHttpGet.send(null);
+        let resultObject = JSON.parse(xmlHttpGet.responseText);
+
+        console.log(resultObject)
+
+        let tableHTML = `<tr>
+                            <th>Date</th>
+                            <th>Role</th>
+                            <th>Username</th>
+                            <th>Message</th>
+                            <th>Documents</th>
+                        </tr>`
+
+        for (const reportDetail of resultObject) {
+            //set time
+            const offset = (new Date()).getTimezoneOffset();
+            let time = (new Date(Date.parse(reportDetail.date) - offset));
+            let date = `${time.getFullYear()}-${time.getMonth() + 1}-${time.getDate()}`
+            time = (time.toTimeString()).substring(0, 8);
+            let timeString = date + " " + time
+
+            if (users[reportDetail.username] == undefined) {
+                fetchUserDetail(reportDetail.username)
+            }
+
+            let roleString = users[reportDetail.username].role
+            let docButtonHTML = ""
+            if (reportDetail.document != null) {
+
+            }
+
+            tableHTML += `<tr>
+                                <td>${timeString}</td>
+                                <td>${roleToString(roleString)}</td>
+                                <td>${reportDetail.username}</td>
+                                <td>${reportDetail.message}</td>
+                                <td>${docButtonHTML}</td>
+                           </tr>`
+        }
+
+        document.getElementById("detailTable").innerHTML = tableHTML
+
+    }
+
+    function fetchJoinedTours() {
+        let username = document.getElementById("username").value
+
+        let requestURL = '/api/tour/userJoined/' + username;
+        if (window.location.host == "tomcat.johnnyip.com") {
+            requestURL = '/tour-system' + requestURL
+        }
+
+        var xmlHttpGet = new XMLHttpRequest();
+        xmlHttpGet.open("GET", requestURL, false); // false for synchronous request
+        xmlHttpGet.send(null);
+        let resultObject = JSON.parse(xmlHttpGet.responseText);
+
+        console.log(resultObject)
+
+        for (const tour of resultObject) {
+            if (tours[tour.tourId] == undefined) {
+                fetchTourDetail(tour.tourId);
+            }
+
+            if (!joinedTours.includes(tours[tour.tourId])) {
+                joinedTours.push(tours[tour.tourId]);
+            }
+        }
+        console.log(joinedTours)
+
+        let optionHTML = ""
+        for (const tour of joinedTours) {
+
+            optionHTML += `<option value="${tour.id}">${tour.name}</option>`
+        }
+        document.getElementById("form_tourOptions").innerHTML = optionHTML
+        tourNameOnChange()
+    }
+
+    function tourNameOnChange() {
+        let tourId = document.getElementById("form_tourOptions").value;
+        document.getElementById("form_hostId").value = tours[tourId].hostUsername;
+        document.getElementById("form_tourId").value = tourId
+    }
+
+    function roleToString(roleString) {
+        if (roleString == "ROLE_TOURIST") {
+            return "Tourist"
+        } else if (roleString == "ROLE_HOST") {
+            return "Host"
+        } else if (roleString == "ROLE_STAFF") {
+            return "Staff"
+        }
+
+    }
+
+    function uploadFile() {
+        let filename = document.getElementById("fileUpload").files[0].name;
+        let randomFileName = makeid() + "." + filename.split(".")[filename.split(".").length - 1]
+        console.log(randomFileName)
+
+        let file = document.getElementById("fileUpload").files[0];
+        console.log(document.getElementById("fileUpload").files[0])
+
+        if (file != undefined) {
+
+            var requestURL = "https://api.johnnyip.com/s3?filename=" + randomFileName + "&filetype=" + file.type;
+            console.log("RequestURL: " + requestURL)
+
+            //Get upload URL
+            var xmlHttpGet = new XMLHttpRequest();
+            xmlHttpGet.open("GET", requestURL, false); // false for synchronous request
+            xmlHttpGet.send(null);
+            var uploadURL = xmlHttpGet.responseText;
+            console.log("UploadURL: " + uploadURL)
+
+            //convert file to blob
+            let objectURL = URL.createObjectURL(file);
+            console.log(objectURL)
+            console.log(file.type)
+            let blob = new Blob([file], {type: file.type})
+
+            var formData = new FormData();
+            formData.append(filename, file);
+            fetch(uploadURL,
+                {
+                    method: "PUT",
+                    body: blob
+                }
+            );
+            var finalURL = "https://uow-project-tour-system.s3.ap-east-1.amazonaws.com/" + randomFileName
+            console.log("FinalURL: " + finalURL)
+
+            setTimeout(function () {
+                document.getElementById("resultNewTab").href = finalURL;
+                document.getElementById("upload_no").setAttribute("hidden", "hidden")
+                document.getElementById("upload_yes").removeAttribute("hidden")
+                document.getElementById("form_document").value = randomFileName;
+                document.getElementById("fileUpload").value = "";
+            }, 500);
+        }
+    }
+
+    function removePhoto() {
+        document.getElementById("resultNewTab").href = "";
+        document.getElementById("upload_yes").setAttribute("hidden", "hidden")
+        document.getElementById("upload_no").removeAttribute("hidden")
+        document.getElementById("form_document").value = "";
+    }
+
+    function makeid() {
+        var text = "";
+        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        for (var i = 0; i < 20; i++)
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+        return text;
+    }
+
+    function newReportHandler(){
+        newReport()
+    }
+
+    function newReport(){
+        let username = document.getElementById("username").value
+        //Save result of creation of tour
+        let bodyJSON = JSON.stringify({
+            id: 0,
+            date: Date.now(),
+            reportNature: document.getElementById("form_reportNature").value,
+            tourId: document.getElementById("form_tourId").value,
+            reportStatus: false,
+            touristUsername: username,
+            hostUsername: document.getElementById("form_hostId").value
+        })
+
+        console.log(bodyJSON)
+
+        let requestURL = '/api/report/report'
+        if (window.location.host == "tomcat.johnnyip.com") {
+            requestURL = '/tour-system' + requestURL
+        }
+
+        var xmlHttpPOST = new XMLHttpRequest();
+        xmlHttpPOST.open("POST", requestURL, false); // false for synchronous request
+        xmlHttpPOST.setRequestHeader("Content-Type", "application/json")
+        xmlHttpPOST.send(bodyJSON);
+        let createTourResult = JSON.parse(xmlHttpPOST.responseText)
+        console.log(createTourResult)
+
+    }
+
+    function showDetail(reportId) {
+        fetchReportDetail(reportId)
+    }
 </script>
-<body onload="javascript:hideTable()">
+<body onload="onLoadHandler()">
 <header th:insert="header.html :: header"></header>
+<input type="text" id="username" th:value="${username}" hidden>
+
 <h1>Report System</h1>
 <p>Report problems you have faced.</p>
 
-<table class="table center ">
+<table class="table center" id="result_table">
     <tr>
         <td colspan="6">
             <h2 class="borderedWithColor horizontalTrim">Report History (Can be folded in production)</h2>
@@ -39,7 +331,8 @@ document.getElementById('editing_no1').style.visibility = "hidden";
         <td>Tourist(You)</td>
         <td>Under Investigation</td>
         <td>
-            <button type="button" class="btn btn-long">Details</button>
+            <button type="button" class="btn btn-long" data-bs-toggle="modal" data-bs-target="#exampleModal">Details
+            </button>
         </td>
     </tr>
     <tr>
@@ -112,53 +405,140 @@ document.getElementById('editing_no1').style.visibility = "hidden";
         <td>Host</td>
         <td>Solved</td>
         <td>
-            <button type="button" onclick='javascript:showTable()'; value='show' class="btn-long">Details</button>
+            <button type="button" onclick='javascript:showTable()' ; value='show' class="btn-long">Details</button>
         </td>
     </tr>
 </table>
 
-<table class="table center horizontalTrim">
-    <tr>
-        <td colspan="2">
-            <h2 class="borderedWithColor">Report A New Problem</h2>
-        </td>
-    </tr>
-    <tr>
-        <th>Nature of the report</th>
-        <td>
-            <select>
-                <option>Content of the tour is not the same as stated.</option>
-                <option>Booking problem</option>
-                <option>Others</option>
-            </select>
-        </td>
-    </tr>
-    <tr>
-        <th>Related Tour</th>
-        <td style="text-align: left">
-            <input type="radio" name="relatedTour" value="yes">
-            <select>
-                <option>Tian Tan Buddha one day trip (08-13-2022)</option>
-            </select><br>
-            <input type="radio" name="relatedTour" value="no">The problem is not related to a tour
-        </td>
-    </tr>
-    <tr>
-        <th>Describe your problem as detail as possible</th>
-        <td>
-            <textarea></textarea>
-        </td>
-    </tr>
-    <tr>
-        <td>Upload photos(optional):</td>
-        <td><input type="file" multiple></td>
-    </tr>
-    <tr>
-        <td colspan="2">
-            <button type="button" class="btn btn-long">Submit</button>
-        </td>
-    </tr>
-</table>
+<form onsubmit="newReportHandler(); return false;">
+    <table class="table center horizontalTrim">
+        <tr>
+            <td colspan="2">
+                <h2 class="borderedWithColor">Report A New Problem</h2>
+            </td>
+        </tr>
+        <tr>
+            <th>Nature of the report</th>
+            <td>
+                <select id="form_reportNature">
+                    <option value="Booking problem">Booking problem</option>
+                    <option value="Host problem">Host problem</option>
+                    <option value="Others">Others</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th>Related Tour</th>
+            <td style="text-align: left">
+                <select id="form_tourOptions" onchange="tourNameOnChange()">
+                    <option></option>
+                </select><br>
+                <input type="text" id="form_hostId">
+                <input type="text" id="form_tourId">
+            </td>
+        </tr>
+        <tr>
+            <th>Describe your problem as detail as possible</th>
+            <td>
+                <textarea id="form_message" required></textarea>
+            </td>
+        </tr>
+        <tr>
+            <td>Upload photos(optional):</td>
+            <td>
+                <div id="upload_no">
+                    <input type="file" id="fileUpload" accept="image/*,.pdf" onchange="uploadFile()">
+                </div>
+                <div id="upload_yes" hidden="hidden">
+                    <button type="button" class="btn-long" onclick="removePhoto()">Remove</button>
+                    <a target="_blank" id="resultNewTab">
+                        <button type="button" class="btn-long">Open In New Tab</button>
+                    </a>
+                </div>
+                <input type="text" id="form_document">
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="submit" class="btn btn-long">
+            </td>
+        </tr>
+    </table>
+</form>
+
+<!--Detail Modal-->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Detail</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="center morePadding " id="detailTable">
+                    <tr>
+                        <th>Date</th>
+                        <th>Role</th>
+                        <th>Username</th>
+                        <th>Message</th>
+                        <th>Documents</th>
+                    </tr>
+                    <tr>
+                        <td>02-11-2022</td>
+                        <td>Staff</td>
+                        <td>staff1</td>
+                        <td>Ok. The dispute is solved.</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>02-5-2022</td>
+                        <td>Host</td>
+                        <td>oscar</td>
+                        <td>Body wash is not included in the package.</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>02-01-2022</td>
+                        <td>Tourist</td>
+                        <td>johnny</td>
+                        <td>The host does not supply the body wash.</td>
+                        <td>
+                            <button class="btn-long btn">Show Document</button>
+                        </td>
+                    </tr>
+                </table>
+                <table class="center morePadding">
+                    <tr>
+                        <td colspan="3" class="alignRight">
+                            Your reply:
+                        </td>
+                        <td colspan="2" class="alignLeft">
+                            <textarea rows="3" cols="50"></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="alignRight">
+                            Upload photos(optional):
+                        </td>
+                        <td colspan="2" class="alignLeft">
+                            <input type="file" multiple>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="5">
+                            <button type="button" class="btn btn-long">Submit</button>
+                        </td>
+                    </tr>
+
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 </body>
 </html>

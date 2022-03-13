@@ -8,6 +8,8 @@ public interface ReportService {
 
     public void saveReport(Report report);
 
+    public List<Report> getAllReports();
+
     public List<Report> getReportsByTouristUsername(String username);
 
     public List<Report> getReportsByHostUsername(String username);

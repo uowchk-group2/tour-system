@@ -3,6 +3,7 @@ package com.example.toursystem.dao.report;
 import com.example.toursystem.entity.Review;
 import com.example.toursystem.entity.User;
 import com.example.toursystem.entity.report.Report;
+import com.example.toursystem.entity.tour.Tour;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -19,6 +20,14 @@ public class ReportDAOService implements ReportDAO{
     @Autowired
     public ReportDAOService(EntityManager entityManager) {
         this.entityManager = entityManager;
+    }
+
+    @Override
+    public List<Report> getAllReports() {
+        Session currentSession = entityManager.unwrap(Session.class);
+        Query theQuery = currentSession.createQuery("FROM Report", Report.class);
+        List<Report> reports = theQuery.getResultList();
+        return reports;
     }
 
     @Override
