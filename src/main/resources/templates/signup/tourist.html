@@ -34,7 +34,13 @@
         </tr>
         <tr>
             <td>Nationality</td>
-            <td><input type="text" th:field="*{nationality}"></td>
+            <td>
+                <select id="form_country" th:field="*{nationality}">
+                    <option value="Hong Kong">Hong Kong</option>
+                    <option value="China">China</option>
+                    <option value="Australia">Australia</option>
+                </select>
+            </td>
         </tr>
         <tr>
             <td class="right">

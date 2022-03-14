@@ -11,29 +11,29 @@
             return text;
         }
 
-        function changeType(type){
-            document.getElementById("form_id").setAttribute("hidden","hidden");
-            document.getElementById("form_home").setAttribute("hidden","hidden");
-            document.getElementById("form_bank").setAttribute("hidden","hidden");
+        function changeType(type) {
+            document.getElementById("form_id").setAttribute("hidden", "hidden");
+            document.getElementById("form_home").setAttribute("hidden", "hidden");
+            document.getElementById("form_bank").setAttribute("hidden", "hidden");
 
             let navLink = document.getElementsByClassName("nav-link");
 
-            for(let link of navLink){
+            for (let link of navLink) {
 
-                if (link.classList.contains("active")){
+                if (link.classList.contains("active")) {
                     link.classList.remove("active")
                 }
 
-                if (("tab_"+type) == link.id){
+                if (("tab_" + type) == link.id) {
                     link.classList.add("active");
-                    document.getElementById("form_"+type).removeAttribute("hidden");
+                    document.getElementById("form_" + type).removeAttribute("hidden");
 
-                    let fileURL = document.getElementById("doc_"+type).value;
+                    let fileURL = document.getElementById("doc_" + type).value;
                     let URLHead = "https://uow-project-tour-system.s3.ap-east-1.amazonaws.com/"
-                    console.log("Fileurl: "+fileURL)
-                    if (fileURL != ""){
-                        document.getElementById("form_"+type+"_notUploaded").setAttribute("hidden","hidden")
-                        document.getElementById("form_"+type+"_uploaded").removeAttribute("hidden")
+                    console.log("Fileurl: " + fileURL)
+                    if (fileURL != "") {
+                        document.getElementById("form_" + type + "_notUploaded").setAttribute("hidden", "hidden")
+                        document.getElementById("form_" + type + "_uploaded").removeAttribute("hidden")
                     }
                 }
             }
@@ -41,50 +41,50 @@
 
         }
 
-        function uploadFile(type){
-            console.log("Type: "+type )
-            let filename = document.getElementById("fileUpload_"+type).files[0].name;
-            let randomFileName = makeid()+"."+filename.split(".")[filename.split(".").length-1]
+        function uploadFile(type) {
+            console.log("Type: " + type)
+            let filename = document.getElementById("fileUpload_" + type).files[0].name;
+            let randomFileName = makeid() + "." + filename.split(".")[filename.split(".").length - 1]
             console.log(randomFileName)
 
             let file = document.getElementById("fileUpload_" + type).files[0];
             console.log(document.getElementById("fileUpload_" + type).files[0])
 
 
-            var requestURL = "https://api.johnnyip.com/s3?filename="+randomFileName+"&filetype="+file.type;
-            console.log("RequestURL: "+ requestURL)
+            var requestURL = "https://api.johnnyip.com/s3?filename=" + randomFileName + "&filetype=" + file.type;
+            console.log("RequestURL: " + requestURL)
 
             //Get upload URL
             var xmlHttpGet = new XMLHttpRequest();
-            xmlHttpGet.open( "GET",requestURL , false ); // false for synchronous request
+            xmlHttpGet.open("GET", requestURL, false); // false for synchronous request
             xmlHttpGet.send(null);
             var uploadURL = xmlHttpGet.responseText;
-            console.log("UploadURL: "+uploadURL)
+            console.log("UploadURL: " + uploadURL)
 
             //convert file to blob
             let objectURL = URL.createObjectURL(file);
             console.log(objectURL)
             console.log(file.type)
-            let blob = new Blob([file],{type: file.type})
+            let blob = new Blob([file], {type: file.type})
 
             var formData = new FormData();
-            formData.append(filename,file);
+            formData.append(filename, file);
             fetch(uploadURL,
                 {
-                    method:"PUT",
-                    body:blob
+                    method: "PUT",
+                    body: blob
                 }
             );
-            var finalURL =  "https://uow-project-tour-system.s3.ap-east-1.amazonaws.com/"+randomFileName
-            console.log("FinalURL: "+finalURL)
+            var finalURL = "https://uow-project-tour-system.s3.ap-east-1.amazonaws.com/" + randomFileName
+            console.log("FinalURL: " + finalURL)
 
             setTimeout(function () {
-                document.getElementById("result_"+type).src=finalURL;
-                document.getElementById("resultNewTab_"+type).href=finalURL;
-                document.getElementById("form_"+type+"_notUploaded").setAttribute("hidden","hidden")
-                document.getElementById("form_"+type+"_uploaded").removeAttribute("hidden")
-                document.getElementById("doc_"+type).value = randomFileName;
-                document.getElementById("resultText_"+type).textContent = "✅"
+                document.getElementById("result_" + type).src = finalURL;
+                document.getElementById("resultNewTab_" + type).href = finalURL;
+                document.getElementById("form_" + type + "_notUploaded").setAttribute("hidden", "hidden")
+                document.getElementById("form_" + type + "_uploaded").removeAttribute("hidden")
+                document.getElementById("doc_" + type).value = randomFileName;
+                document.getElementById("resultText_" + type).textContent = "✅"
             }, 500);
 
         }
@@ -122,7 +122,13 @@
         </tr>
         <tr>
             <td>Nationality</td>
-            <td><input type="text" th:field="*{nationality}"></td>
+            <td>
+                <select th:field="*{nationality}">
+                    <option value="Hong Kong">Hong Kong</option>
+                    <option value="China">China</option>
+                    <option value="Australia">Australia</option>
+                </select>
+            </td>
         </tr>
         <tr>
             <td>Home Address</td>
@@ -147,7 +153,8 @@
             <td colspan="2">
                 <h3>Document Proof Upload</h3>
                 <p>
-                    All host users must submit their application with all document proofs, and must be approved by us before starting to host tours.
+                    All host users must submit their application with all document proofs, and must be approved by us
+                    before starting to host tours.
                 </p>
                 <p>Accept Images or PDF files</p>
 
@@ -174,16 +181,16 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="card-body" id="card-body" >
+                    <div class="card-body" id="card-body">
 
                         <!--                        ID Card-->
-                        <div id="form_id" >
+                        <div id="form_id">
 
                             <h5 class="card-title">Identity Card/Passport</h5>
 
                             <div id="form_id_notUploaded">
-                                <input type="file" id="fileUpload_id" accept="image/*,.pdf" >
-                                <button type="button"  class="btn-long btn" onclick="uploadFile('id')">Upload</button>
+                                <input type="file" id="fileUpload_id" accept="image/*,.pdf">
+                                <button type="button" class="btn-long btn" onclick="uploadFile('id')">Upload</button>
                             </div>
 
                             <div id="form_id_uploaded" hidden="hidden">
@@ -196,33 +203,33 @@
                             </div>
                         </div>
 
-<!--                        Home address-->
+                        <!--                        Home address-->
                         <div id="form_home" hidden="hidden">
 
                             <h5 class="card-title">Home Address Proof</h5>
 
                             <div id="form_home_notUploaded">
-                                <input type="file" id="fileUpload_home" accept="image/*,.pdf" >
-                                <button type="button"  class="btn-long btn" onclick="uploadFile('home')">Upload</button>
+                                <input type="file" id="fileUpload_home" accept="image/*,.pdf">
+                                <button type="button" class="btn-long btn" onclick="uploadFile('home')">Upload</button>
                             </div>
 
                             <div id="form_home_uploaded" hidden="hidden">
                                 <br>
                                 <h5 class="card-title greenText">Document Uploaded</h5>
                                 <p>
-                                   <a id="resultNewTab_home" target="_blank" class="btn-long btn">Open in new tab</a>
+                                    <a id="resultNewTab_home" target="_blank" class="btn-long btn">Open in new tab</a>
                                 </p>
                                 <iframe id="result_home" width="100%" height="500"></iframe>
                             </div>
                         </div>
 
-<!--                        Bank-->
+                        <!--                        Bank-->
                         <div id="form_bank" hidden="hidden">
 
                             <h5 class="card-title">Bank Account Proof</h5>
 
                             <div id="form_bank_notUploaded">
-                                <input type="file" id="fileUpload_bank" accept="image/*,.pdf" >
+                                <input type="file" id="fileUpload_bank" accept="image/*,.pdf">
                                 <button type="button" class="btn-long btn" onclick="uploadFile('bank')">Upload</button>
                             </div>
 
@@ -236,9 +243,9 @@
                             </div>
                         </div>
 
-                        <input type="text"  name="docId" id="doc_id">
-                        <input type="text"  name="docHome" id="doc_home">
-                        <input type="text"  name="docBank" id="doc_bank">
+                        <input type="text" name="docId" id="doc_id">
+                        <input type="text" name="docHome" id="doc_home">
+                        <input type="text" name="docBank" id="doc_bank">
 
                     </div>
                 </div>

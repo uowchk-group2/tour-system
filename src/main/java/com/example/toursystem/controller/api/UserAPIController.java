@@ -64,6 +64,21 @@ public class UserAPIController {
         return "Done";
     }
 
+    @PostMapping("/newUserList")
+    public String saveUserList(@RequestBody List<User> users){
+        for (User user:users){
+            user.setId(0);
+            String password = user.getPassword();
+            String encodedPassword = passwordEncoder.encode(password);
+            user.setPassword(encodedPassword);
+
+            userServices.save(user);
+        }
+
+        return "Done";
+    }
+
+
     @PostMapping("/hostApprove/{id}")
     public String changeHostStatus(@PathVariable int id, @RequestParam String newStatus){
         try {
