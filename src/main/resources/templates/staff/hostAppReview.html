@@ -46,11 +46,15 @@
                     else if (user.hostApproveStatus == "REJECTED"){ color = "red" }
                     else{ color = "yellow" }
 
+                    let userFullName = user.fullName
+                    if (userFullName == null || userFullName == ""){
+                        userFullName = "-"
+                    }
                     resultTableHTML += `
                 <tr>
                     <td>${user.id}</td>
                     <td>${user.username}</td>
-                    <td>${user.fullName}</td>
+                    <td>${userFullName}</td>
                     <td id="status_${user.id}"
                         class="${color}">
                         ${statusString}
@@ -162,24 +166,6 @@
     Operation Failed!
 </div>
 
-<table class="table center ">
-    <tr>
-        <td colspan="6">
-            <select>
-                <option>Host id</option>
-                <option>Username</option>
-                <option>Full Name</option>
-            </select>
-            <input type="text" name="keyword" placeholder="keyword"/>
-            <button type="button" class="btn btn-long" name="search">Search</button>
-            <br><br>
-            <button type="button" class="btn btn-primary">All</button>
-            <button type="button" class="btn btn-secondary">Approved</button>
-            <button type="button" class="btn btn-secondary">Ask For Resubmission</button>
-            <button type="button" class="btn btn-secondary">Rejected</button>
-        </td>
-    </tr>
-</table>
 <table class="table center " id="resultTable">
 </table>
 
