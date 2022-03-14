@@ -9,6 +9,10 @@ public class TourSystemApplication extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
         SpringApplication.run(TourSystemApplication.class, args);
+
+//        for(int i=1;i<=300;i++){
+//            System.out.println("");
+//        }
     }
 
 }

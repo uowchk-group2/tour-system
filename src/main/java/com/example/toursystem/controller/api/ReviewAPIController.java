@@ -27,6 +27,17 @@ public class ReviewAPIController {
             return e.getMessage();
         }
     }
+    @PostMapping("/reviewList")
+    public String newReviewList(@RequestBody List<Review> reviews){
+        try {
+            for (Review newReview : reviews){
+                reviewServices.saveReview(newReview);
+            }
+            return "success";
+        }catch (Exception e){
+            return e.getMessage();
+        }
+    }
 
     @GetMapping("/author/{authorUsername}")
     public List<Review> getReviewByAuthorUsername(@PathVariable String authorUsername){

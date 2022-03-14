@@ -103,6 +103,18 @@ public class TourAPIController {
         return tour;
     }
 
+    @PostMapping("/saveTourList")
+    public String saveTour(@RequestBody List<Tour> tours){
+        for (Tour tour:tours) {
+            try {
+                tourServices.updateOrCreateTour(tour);
+            } catch (Exception e) {
+                return "failed";
+            }
+        }
+        return "success";
+    }
+
     @PostMapping("/saveTourDates")
     public String saveTourDates(@RequestBody List<TourDate> tourDates){
         try {
@@ -121,6 +133,18 @@ public class TourAPIController {
     public String saveTourParticipant(@RequestBody TourParticipant tourParticipant){
         try {
             tourParticipantServices.createRecord(tourParticipant);
+            return "success";
+        }catch (Exception e){
+            return e.getMessage();
+        }
+    }
+
+    @PostMapping("/saveParticipantList")
+    public String saveTourParticipantList(@RequestBody List<TourParticipant> tourParticipants){
+        try {
+            for(TourParticipant user : tourParticipants) {
+                tourParticipantServices.createRecord(user);
+            }
             return "success";
         }catch (Exception e){
             return e.getMessage();
