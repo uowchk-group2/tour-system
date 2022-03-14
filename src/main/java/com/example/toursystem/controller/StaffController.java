@@ -34,7 +34,9 @@ public class StaffController {
     }
 
     @GetMapping("report")
-    public String report(Model model){
+    public String report(Model model,HttpServletRequest request){
+        model.addAttribute("username",request.getUserPrincipal().getName());
+
         return "staff/report";
     }
 

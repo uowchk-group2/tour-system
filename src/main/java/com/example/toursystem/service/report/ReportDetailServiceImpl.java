@@ -5,6 +5,7 @@ import com.example.toursystem.entity.report.ReportDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -18,11 +19,13 @@ public class ReportDetailServiceImpl implements ReportDetailService {
     }
 
     @Override
+    @Transactional
     public void saveReportDetail(ReportDetail reportDetail) {
         reportDetailDAOService.saveReportDetail(reportDetail);
     }
 
     @Override
+    @Transactional
     public List<ReportDetail> getReportDetailByReportId(int id) {
 
         return reportDetailDAOService.getReportDetailByReportId(id);

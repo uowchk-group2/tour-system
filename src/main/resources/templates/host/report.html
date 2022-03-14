@@ -209,7 +209,7 @@
 
             let roleString = users[reportDetail.username].role
             let docButtonHTML = ""
-            if (reportDetail.document != null) {
+            if (reportDetail.document != null && reportDetail.document != "") {
                 docButtonHTML = `<a target="_blank" id="resultNewTab"
                         href="https://uow-project-tour-system.s3.ap-east-1.amazonaws.com/${reportDetail.document}">
                         <button type="button" class="btn-long">Open In New Tab</button>

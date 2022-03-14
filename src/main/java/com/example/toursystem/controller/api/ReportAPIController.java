@@ -53,6 +53,20 @@ public class ReportAPIController {
         return reportService.getReportById(id);
     }
 
+    @PostMapping("/updateStatus/{id}/{status}")
+    public String updateReportStatus(@PathVariable int id, @PathVariable byte status) {
+        try {
+            Report report = reportService.getReportById(id);
+            report.setReportStatus(status);
+            System.out.println(report.getReportStatus());
+            reportService.saveReport(report);
+
+            return "success";
+        } catch (Exception e) {
+            return e.getMessage();
+        }
+    }
+
 
     //    For Detail
     @PostMapping("/reportDetail")
@@ -66,11 +80,11 @@ public class ReportAPIController {
     }
 
     @GetMapping("reportDetail/{id}")
-    public List<ReportDetail> getReportDetailOfReportId(@PathVariable int id){
+    public List<ReportDetail> getReportDetailOfReportId(@PathVariable int id) {
         try {
             List<ReportDetail> reportDetails = reportDetailService.getReportDetailByReportId(id);
             return reportDetails;
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
         }

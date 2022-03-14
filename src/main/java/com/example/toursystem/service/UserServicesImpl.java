@@ -20,6 +20,7 @@ public class UserServicesImpl implements UserServices{
 
 
     @Override
+    @Transactional
     public List<User> findAll() {
         return userDAOService.findAll();
     }
