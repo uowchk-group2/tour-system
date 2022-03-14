@@ -64,10 +64,11 @@ public class HostController {
 
         return "host/review";
     }
-    @GetMapping("hostReport")
-    public String hostReport(Model model){
+    @GetMapping("report")
+    public String hostReport(Model model,HttpServletRequest request){
+        model.addAttribute("username",request.getUserPrincipal().getName());
 
-        return "host/hostReport";
+        return "host/report";
     }
     @GetMapping("receive")
     public String receive(Model model){

@@ -6,20 +6,23 @@
 </head>
 <script>
 
+    let toursHosted = []
     let tours = {}
+    let datesOfTourId = {}
+    let participantsOfTourDateId = {}
     let users = {}
-    let joinedTours = []
     let reports = {}
 
     function onLoadHandler() {
         fetchReportOfUser()
-        fetchJoinedTours()
+        fetchToursDetail()
+        tourNameOptionOnChange()
     }
 
     function fetchReportOfUser() {
         let username = document.getElementById("username").value
 
-        let requestURL = '/api/report/reportOfTourist/' + username;
+        let requestURL = '/api/report/reportOfHost/' + username;
         if (window.location.host == "tomcat.johnnyip.com") {
             requestURL = '/tour-system' + requestURL
         }
@@ -37,7 +40,7 @@
                                 <th>Report Date</th>
                                 <th>Report Nature</th>
                                 <th>Related Tour</th>
-                                <th>Related Host</th>
+                                <th>Related Tourist</th>
                                 <th>Report Status</th>
                                 <th>Actions</th>
                             </tr>`
@@ -59,7 +62,7 @@
                                     <td>${date}</td>
                                     <td>${report.reportNature}</td>
                                     <td>${tours[report.tourId].name}</td>
-                                    <td>${report.hostUsername}</td>
+                                    <td>${report.touristUsername}</td>
                                     <td class="${report.reportStatus ? "green" : "yellow"}">${report.reportStatus ? "Solved" : "Under Investigation"}</td>
                                     <td>
                                     <button type="button" class="btn btn-long" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="showDetail(${report.id})">
@@ -72,6 +75,38 @@
             document.getElementById("result_table").innerHTML = resultTableHTML
         } else {
             document.getElementById("result_table").innerHTML = `<tr><td><h3>You have not submit any report.</h3></td></tr>`
+        }
+    }
+
+
+    function fetchToursDetail() {
+        let username = document.getElementById("username").value
+
+        let requestURL = '/api/tour/tours/' + username;
+        if (window.location.host == "tomcat.johnnyip.com") {
+            requestURL = '/tour-system' + requestURL
+        }
+
+        var xmlHttpGet = new XMLHttpRequest();
+        xmlHttpGet.open("GET", requestURL, false); // false for synchronous request
+        xmlHttpGet.send(null);
+        let resultObject = JSON.parse(xmlHttpGet.responseText);
+
+        console.log(resultObject)
+        let optionsHTML = ""
+
+        if (resultObject.length != 0) {
+
+            for (const tour of resultObject) {
+                toursHosted.push(tour);
+
+                fetchTourDateDetail(tour.id)
+                optionsHTML += `<option value="${tour.id}">${tour.name}</option>`
+            }
+            document.getElementById("new_hostedTours").innerHTML = optionsHTML
+        } else {
+            document.getElementById("newReportForm").innerHTML = `<tr><td><h3>No tourist is available to report.</h3></td></tr>`
+
         }
     }
 
@@ -89,6 +124,39 @@
 
         console.log(resultObject)
         tours[tourId] = resultObject
+    }
+
+    function fetchTourDateDetail(tourId) {
+        let requestURL = '/api/tour/tourDates/' + tourId;
+        if (window.location.host == "tomcat.johnnyip.com") {
+            requestURL = '/tour-system' + requestURL
+        }
+
+        var xmlHttpGet = new XMLHttpRequest();
+        xmlHttpGet.open("GET", requestURL, false); // false for synchronous request
+        xmlHttpGet.send(null);
+        let resultObject = JSON.parse(xmlHttpGet.responseText);
+
+        datesOfTourId[tourId] = resultObject
+
+        for (const date of resultObject) {
+            fetchJoinedUsers(date.id);
+        }
+    }
+
+    function fetchJoinedUsers(tourDateId) {
+        let requestURL = '/api/tour/participants/' + tourDateId;
+        if (window.location.host == "tomcat.johnnyip.com") {
+            requestURL = '/tour-system' + requestURL
+        }
+
+        var xmlHttpGet = new XMLHttpRequest();
+        xmlHttpGet.open("GET", requestURL, false); // false for synchronous request
+        xmlHttpGet.send(null);
+        let resultObject = JSON.parse(xmlHttpGet.responseText);
+
+        participantsOfTourDateId[tourDateId] = resultObject
+
     }
 
     function fetchUserDetail(username) {
@@ -127,7 +195,6 @@
                             <th>Message</th>
                             <th>Documents</th>
                         </tr>`
-
         for (const reportDetail of resultObject) {
             //set time
             const offset = (new Date()).getTimezoneOffset();
@@ -162,51 +229,50 @@
 
     }
 
-    function fetchJoinedTours() {
-        let username = document.getElementById("username").value
-
-        let requestURL = '/api/tour/userJoined/' + username;
-        if (window.location.host == "tomcat.johnnyip.com") {
-            requestURL = '/tour-system' + requestURL
-        }
-
-        var xmlHttpGet = new XMLHttpRequest();
-        xmlHttpGet.open("GET", requestURL, false); // false for synchronous request
-        xmlHttpGet.send(null);
-        let resultObject = JSON.parse(xmlHttpGet.responseText);
-
-        console.log(resultObject)
-
-        for (const tour of resultObject) {
-            if (tours[tour.tourId] == undefined) {
-                fetchTourDetail(tour.tourId);
-            }
-
-            if (!joinedTours.includes(tours[tour.tourId])) {
-                joinedTours.push(tours[tour.tourId]);
-            }
-        }
-        console.log(joinedTours)
+    function tourNameOptionOnChange() {
+        let optionValue = document.getElementById("new_hostedTours").value
+        document.getElementById("form_tourId").value = optionValue
 
         let optionHTML = ""
-        for (const tour of joinedTours) {
 
-            optionHTML += `<option value="${tour.id}">${tour.name}</option>`
+        for (const date of datesOfTourId[optionValue]) {
+
+            //Get time
+            const offset = (new Date()).getTimezoneOffset();
+            let tempDate = Date.parse(date.date) - offset;
+            let time = new Date(tempDate);
+            let dateString = `${time.getFullYear()}-${time.getMonth() + 1}-${time.getDate()}`
+
+            optionHTML += `<option value="${date.id}">${dateString}</option>`
         }
-        document.getElementById("form_tourOptions").innerHTML = optionHTML
-        tourNameOnChange()
+
+        document.getElementById("new_tourDate").innerHTML = optionHTML
+        tourDateOptionOnChange()
     }
 
-    function tourNameOnChange() {
-        let tourId = document.getElementById("form_tourOptions").value;
-        if (tourId != "") {
-            document.getElementById("form_hostId").value = tours[tourId].hostUsername;
-            document.getElementById("form_tourId").value = tourId
-        }else{
-            document.getElementById("newReportForm").innerHTML = `<tr><td><h3>You have not joined any tours.</h3></td></tr>`
+    function tourDateOptionOnChange() {
+        let optionValue = document.getElementById("new_tourDate").value
+        document.getElementById("form_tourDateId").value = optionValue
 
+        let optionHTML = ""
+
+
+        for (const participant of participantsOfTourDateId[optionValue]) {
+
+            optionHTML += `<option value="${[participant.username]}">${participant.username}</option>`
         }
+
+        document.getElementById("new_touristName").innerHTML = optionHTML
+        tourUserOptionOnChange()
     }
+
+    function tourUserOptionOnChange() {
+        let optionValue = document.getElementById("new_touristName").value
+
+        document.getElementById("form_touristUsername").value = optionValue
+
+    }
+
 
     function roleToString(roleString) {
         if (roleString == "ROLE_TOURIST") {
@@ -291,8 +357,8 @@
             reportNature: document.getElementById("form_reportNature").value,
             tourId: document.getElementById("form_tourId").value,
             reportStatus: 0,
-            touristUsername: username,
-            hostUsername: document.getElementById("form_hostId").value
+            touristUsername: document.getElementById("form_touristUsername").value,
+            hostUsername: username
         })
 
         console.log(bodyJSON)
@@ -490,22 +556,39 @@
             <th>Nature of the report</th>
             <td>
                 <select id="form_reportNature">
-                    <option value="Booking problem">Booking problem</option>
-                    <option value="Host problem">Host problem</option>
+                    <option value="Tourist problem">Tourist problem</option>
                     <option value="Others">Others</option>
                 </select>
             </td>
         </tr>
         <tr>
-            <th>Related Tour</th>
+            <th>Hosted tours</th>
             <td>
-                <select id="form_tourOptions" onchange="tourNameOnChange()">
-                    <option></option>
-                </select><br>
-                <input type="text" id="form_hostId" hidden>
-                <input type="text" id="form_tourId" hidden>
+                <select id="new_hostedTours" onchange="tourNameOptionOnChange()">
+
+                </select>
+                <input id="form_tourId" required  >
             </td>
         </tr>
+        <tr>
+            <th>Tour dates</th>
+            <td>
+                <select id="new_tourDate" onchange="tourDateOptionOnChange()">
+
+                </select>
+                <input id="form_tourDateId" hidden>
+            </td>
+        </tr>
+        <tr>
+            <th>Tourist name</th>
+            <td>
+                <select id="new_touristName" onchange="tourUserOptionOnChange()">
+
+                </select>
+                <input id="form_touristUsername" required>
+            </td>
+        </tr>
+
         <tr>
             <th>Describe your problem as detail as possible</th>
             <td>
