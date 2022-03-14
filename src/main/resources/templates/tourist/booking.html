@@ -141,7 +141,7 @@
             let tTime = (new Date(Date.parse(tourPartiObject.joinedTime) - offset));
             let date = `${tTime.getFullYear()}-${tTime.getMonth()+1}-${tTime.getDate()} `
             tTime = (tTime.toTimeString()).substring(0,8);
-            let transactionTime = date+tTime
+            let transactionTime = date+" "+time
 
 
 
@@ -270,7 +270,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Edit User Details</h5>
+                <h5 class="modal-title">Chat with host</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" id="chat_resultText">

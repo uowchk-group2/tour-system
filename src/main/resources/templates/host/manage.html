@@ -23,20 +23,157 @@
                                 <th>Action</th>
                                </tr>`
             for(let tour of resultObject){
+
+                let tourURL = '/tour/' + tour.id;
+                if (window.location.host == "tomcat.johnnyip.com") {
+                    tourURL = '/tour-system' + tourURL
+                }
+
                 resultHTML += `<tr>
                                     <td>${tour.id}</td>
-                                    <td>${tour.name}</td>
                                     <td>
-                                        <button type="button" class="btn btn-small">Edit Detail</button>
-                                        <button type="button" class="btn btn-small">Joined Users</button>
-                                        <button type="button" class="btn btn-small">Ratings</button>
-                                        <button type="button" class="btn btn-small">Remove</button>
+                                        <a href="${tourURL}">${tour.name}</a>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-small" data-bs-toggle="modal" data-bs-target="#modalEdit" onclick="fetchTourDetail(${tour.id})" ">Edit Detail</button>
+                                        <button type="button" class="btn btn-small" data-bs-toggle="modal" data-bs-target="#modalUsers" onclick="fetchJoinedUser(${tour.id})">Joined Users</button>
                                     </td>
                                </tr>`
             }
             document.getElementById("result_table").innerHTML = resultHTML;
         }
 
+        function fetchTourDetail(tourId) {
+
+            let requestURL = '/api/tour/tourDetail/' + tourId
+            if (window.location.host == "tomcat.johnnyip.com") {
+                requestURL = '/tour-system' + requestURL
+            }
+
+            var xmlHttpGet = new XMLHttpRequest();
+            xmlHttpGet.open("GET", requestURL, false); // false for synchronous request
+            xmlHttpGet.send(null);
+            let tourDetail = JSON.parse(xmlHttpGet.responseText);
+
+            console.log(tourDetail)
+
+            document.getElementById("form_tourId").value = tourDetail.id
+            document.getElementById("form_hostUsername").value = tourDetail.hostUsername
+            document.getElementById("form_name").value = tourDetail.name
+
+            document.getElementById("form_country").value = tourDetail.country
+            document.getElementById("form_days").value = tourDetail.days
+            document.getElementById("form_fee").value = tourDetail.fee
+            document.getElementById("form_description").value = tourDetail.description
+            document.getElementById("form_tourSchedule").value = tourDetail.schedule
+            document.getElementById("form_maxParti").value = tourDetail.participantLimit
+            document.getElementById("form_imgURL").value = tourDetail.coverPhoto
+
+        }
+
+        function fetchJoinedUser(tourId){
+            let requestURL = '/api/tour/tourDates/' + tourId
+            if (window.location.host == "tomcat.johnnyip.com") {
+                requestURL = '/tour-system' + requestURL
+            }
+
+            var xmlHttpGet = new XMLHttpRequest();
+            xmlHttpGet.open("GET", requestURL, false); // false for synchronous request
+            xmlHttpGet.send(null);
+            let tourDetail = JSON.parse(xmlHttpGet.responseText);
+
+            console.log(tourDetail)
+
+            let optionHTML = ""
+            for (const date of tourDetail){
+
+                //set option detail
+                const offset = (new Date()).getTimezoneOffset();
+                let tempDate = Date.parse(date.date) - offset;
+                let time = new Date(tempDate);
+                let dateString = `${time.getFullYear()}-${time.getMonth() + 1}-${time.getDate()}`
+
+                optionHTML += `<option value="${date.id}">${dateString}</option>`
+
+            }
+            document.getElementById("dateList").innerHTML = optionHTML
+            loadUserList()
+        }
+
+        function loadUserList(){
+            let dateId = document.getElementById("dateList").value
+
+            let requestURL = '/api/tour/tourParticipant/' + dateId
+            if (window.location.host == "tomcat.johnnyip.com") {
+                requestURL = '/tour-system' + requestURL
+            }
+
+            var xmlHttpGet = new XMLHttpRequest();
+            xmlHttpGet.open("GET", requestURL, false); // false for synchronous request
+            xmlHttpGet.send(null);
+            let tourDetail = JSON.parse(xmlHttpGet.responseText);
+
+            let tableHTML = `<tr>
+                                <th>Username</th>
+                                <th>No. of people</th>
+                                <th>Joined Time</th>
+                              </tr>`
+            for (const user of tourDetail){
+                //set time
+                const offset = (new Date()).getTimezoneOffset();
+                let time = (new Date(Date.parse(user.joinedTime) - offset));
+                let date = `${time.getFullYear()}-${time.getMonth()+1}-${time.getDate()}`
+                time = (time.toTimeString()).substring(0,8);
+                let timeString = date+" "+time
+
+                let userProfileURL = '/profile/'+user.username
+                if (window.location.host == "tomcat.johnnyip.com") {
+                    userProfileURL = '/tour-system' + userProfileURL
+                }
+
+
+                tableHTML += `<tr>
+                                <td><a href="${userProfileURL}">${user.username}</a> </td>
+                                <td>${user.quantity}</td>
+                                <td>${timeString}</td>
+                              </tr>`
+            }
+
+            document.getElementById("userListTable").innerHTML = tableHTML
+        }
+
+        function uploadTourDetailChanges(){
+            //Save result of creation of tour
+            let bodyJSON = JSON.stringify({
+                id: document.getElementById("form_tourId").value,
+                name: document.getElementById("form_name").value,
+                hostUsername: document.getElementById("form_hostUsername").value,
+                country: document.getElementById("form_country").value,
+                days: document.getElementById("form_days").value,
+                description: document.getElementById("form_description").value,
+                schedule: document.getElementById("form_tourSchedule").value,
+                coverPhoto: document.getElementById("form_imgURL").value,
+                fee: document.getElementById("form_fee").value,
+                participantLimit: document.getElementById("form_maxParti").value
+            })
+
+            console.log(bodyJSON)
+
+            let requestURL = '/api/tour/saveTour'
+            if (window.location.host == "tomcat.johnnyip.com") {
+                requestURL = '/tour-system' + requestURL
+            }
+
+            var xmlHttpPOST = new XMLHttpRequest();
+            xmlHttpPOST.open("POST", requestURL, false); // false for synchronous request
+            xmlHttpPOST.setRequestHeader("Content-Type", "application/json")
+            xmlHttpPOST.send(bodyJSON);
+            let createTourResult = JSON.parse(xmlHttpPOST.responseText)
+            console.log(createTourResult)
+
+            document.getElementById("update_success").removeAttribute("hidden")
+
+        }
     </script>
 </head>
 
@@ -61,75 +198,100 @@
 <table class="table center" valign="center" id="result_table">
 </table>
 
+<!--edit Modal-->
+<div class="modal fade" id="modalEdit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Tour Detail</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="center morePadding" >
+                    <tr id="tourIdRow" hidden>
+                        <td>Tour ID</td>
+                        <td>
+                            <input type="number" id="form_tourId" value="0" >
+                            <input type="text" id="form_hostUsername" >
+                        </td>
+                    </tr>
 
-<table class="table center" valign="center">
-    <tr>
-        <th>Tour id</th>
-        <th>Tour name</th>
-        <th>Action</th>
-    </tr>
-    <tr>
-        <td>1</td>
-        <td>Tian Tan Buddha one day trip</td>
-        <td>
-            <a class="btn btn-small" th:href="@{/host/tourDetailEdit}">Edit Detail</a>
-            <button type="button" class="btn btn-small">Joined Users</button>
-            <button type="button" class="btn btn-small">Ratings</button>
-            <button type="button" class="btn btn-small">Remove</button>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="3" style="background-color: #e4e1de">
+                    <tr>
+                        <td width="20%">Name of tour:</td>
+                        <td><input type="text" id="form_name" required></td>
+                    </tr>
+                    <tr>
+                        <td>Country of tour:</td>
+                        <td>
+                            <select id="form_country">
+                                <option>Hong Kong</option>
+                                <option>China</option>
+                                <option>Australia</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Duration of tour (day):</td>
+                        <td>$
+                            <input type="text" id="form_days" onkeypress='return event.charCode >= 48 && event.charCode <= 57'  maxlength="3" required >
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Fee per participant:</td>
+                        <td>$<input type="text" id="form_fee" onkeypress='return event.charCode >= 48 && event.charCode <= 57' maxlength="5" required></td>
+                    </tr>
+                    <tr>
+                        <td>Description:</td>
+                        <td><textarea id="form_description"></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>Tour Schedule:</td>
+                        <td><textarea id="form_tourSchedule"></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>Maximum participants</td>
+                        <td>
+                            <input type="text" id="form_maxParti" maxlength="3" onkeypress='return event.charCode >= 48 && event.charCode <= 57' required>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <input type="text" id="form_imgURL" hidden>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a class="btn btn-primary" data-bs-dismiss="modal" onclick="uploadTourDetailChanges()">Save</a>
+            </div>
+        </div>
+    </div>
+</div>
 
-            <table class="table center" width="100%">
-                <tr>
-                    <td colspan="3">
-                        <div class="alignRight">
-                            <button type="button" class="btn-long">close</button>
-                        </div>
-                        <h3>Joined Users</h3>
-                        <select>
-                            <option>Tian Tan Buddha one day trip (08-13-2022)</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <th>User id</th>
-                    <th>User name</th>
-                    <th>Action</th>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>johnny</td>
-                    <td>
-                        <a class="btn btn-small" th:href="@{/host/chat}">Chat</a>
-                        <button type="button" class="btn btn-small">Remove</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>oscar</td>
-                    <td>
-                        <a class="btn btn-small" th:href="@{/host/chat}">Chat</a>
-                        <button type="button" class="btn btn-small">Remove</button>
-                    </td>
-                </tr>
+<!--User List Modal-->
+<div class="modal fade" id="modalUsers" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Joined Users</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="table center horizontalTrim">
+                    Tour Date:<select id="dateList" onchange="loadUserList()">
+                    </select>
+                </div>
+                <table class="table center horizontalTrim" id="userListTable">
 
-            </table>
-
-        </td>
-    </tr>
-    <tr>
-        <td>2</td>
-        <td>Ocean Park two day trip</td>
-        <td>
-            <a class="btn btn-small" th:href="@{/host/tourDetailEdit}">Edit Detail</a>
-            <button type="button" class="btn btn-small">Ratings</button>
-            <button type="button" class="btn btn-small">Remove</button>
-        </td>
-    </tr>
-</table>
-
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 </body>
 
