@@ -22,7 +22,7 @@ public class UserAPIController {
     }
 
     @GetMapping("/find")
-    public List<User> findUser(){
+    public List<User> getAllUsers(){
         return userServices.findAll();
     }
 
