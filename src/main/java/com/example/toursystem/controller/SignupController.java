@@ -61,15 +61,20 @@ public class SignupController {
         user.setHostApproveStatus(ApproveStatus.WAITFORREVIEW);
         userServices.save(user);
 
+        String path = "";
+        if (request.getLocalName() != "localhost"){
+            path = "/tour-system";
+        }
+
         //Auto-login
         try {
             request.login(user.getUsername(), password);
         } catch (ServletException e) {
             System.out.println("Error: " + e.getMessage());
-            return new RedirectView("/signup/host?error=true");
+            return new RedirectView(path+"/signup/host?error=true");
         }
 
-        return new RedirectView("/");
+        return new RedirectView(path+"/");
     }
 
     @PostMapping("tourist")
@@ -81,15 +86,20 @@ public class SignupController {
         user.setRole("ROLE_TOURIST");
         userServices.save(user);
 
+        String path = "";
+        if (request.getLocalName() != "localhost"){
+            path = "/tour-system";
+        }
+
         //Auto-login
         try {
             request.login(user.getUsername(), password);
         } catch (ServletException e) {
             System.out.println("Error: " + e.getMessage());
-            return new RedirectView("/signup/tourist?error=true");
+            return new RedirectView(path + "/signup/tourist?error=true");
         }
 
-        return new RedirectView("/tourist?signup=true");
+        return new RedirectView(path + "/tourist?signup=true");
     }
 
     @GetMapping("result")
@@ -114,6 +124,11 @@ public class SignupController {
             model.addAttribute("loginError", true);
         }
         User userFromQuery = new User();
+        String path = "";
+        if (request.getLocalName() != "localhost"){
+            path = "/tour-system";
+        }
+
         try {
             userFromQuery = userServices.findByUsername(user.getUsername());
             userFromQuery.setDocId(user.getDocId());
@@ -124,11 +139,11 @@ public class SignupController {
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
             model.addAttribute("loginError", true);
-            return new RedirectView("/signup/result?error=true");
+            return new RedirectView(path + "/signup/result?error=true");
         }
 
         model.addAttribute("user", userFromQuery);
-        return new RedirectView("/signup/result");
+        return new RedirectView(path + "/signup/result");
 
 
     }

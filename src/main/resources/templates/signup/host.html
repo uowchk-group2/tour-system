@@ -88,15 +88,6 @@
             }, 500);
 
         }
-
-        function bodyOnLoad(){
-            let requestURL = '/signup/host/'
-            if (window.location.host == "tomcat.johnnyip.com") {
-                requestURL = '/tour-system' + requestURL
-            }
-
-            document.getElementById("signupForm").action = requestURL
-        }
     </script>
 </head>
 <body>
@@ -107,7 +98,7 @@
     Problem occurs when trying to submit.
 </div>
 
-<form action="#" th:object="${user}" id="signupForm" method="POST">
+<form action="#" th:action="@{/signup/host}" th:object="${user}" method="POST">
     <table class=" center morePadding">
         <tr>
             <td><b>*Username</b></td>

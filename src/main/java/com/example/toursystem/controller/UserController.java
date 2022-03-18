@@ -40,6 +40,7 @@ public class UserController {
 
     @PostMapping("profile")
     public RedirectView profileSubmit(@ModelAttribute User user, HttpServletRequest request) {
+        System.out.println(request.getRequestURL());
         try {
             User userFromQuery = userServices.findByID(user.getId());
             userFromQuery.setEmail(user.getEmail());
@@ -49,10 +50,10 @@ public class UserController {
             userServices.save(userFromQuery);
         }catch (Exception e){
             System.out.println("Error: "+ e.getMessage());
-            return new RedirectView("/UserController/profile?success=false");
+            return new RedirectView(request.getRequestURL() + "?success=false");
         }
 
-        return new RedirectView("/UserController/profile?success=true");
+        return new RedirectView(request.getRequestURL() + "?success=true");
     }
 
     @GetMapping("chat")
