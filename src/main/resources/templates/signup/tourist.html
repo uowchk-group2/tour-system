@@ -1,6 +1,17 @@
 <html xmlns:th="https://www.thymeleaf.org">
 
-<body>
+<script>
+    function bodyOnLoad(){
+        let requestURL = '/signup/tourist/'
+        if (window.location.host == "tomcat.johnnyip.com") {
+            requestURL = '/tour-system' + requestURL
+        }
+
+        document.getElementById("signupForm").action = requestURL
+    }
+</script>
+
+<body onload="bodyOnLoad()">
 
 <header th:insert="header.html :: header"></header>
 <h1>Signup as Tourist</h1>
@@ -8,8 +19,7 @@
     Problem occurs when trying to submit.
 </div>
 
-
-<form action="#" th:action="@{/signup/tourist}" th:object="${user}" method="POST">
+<form action="#" th:object="${user}" id="signupForm" method="POST">
     <table class="horizontalTrim center morePadding">
         <tr>
             <td><b>*Username</b></td>
