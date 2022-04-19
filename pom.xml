@@ -19,19 +19,6 @@
         <java.version>11</java.version>
     </properties>
 
-<!--    AWS-->
-<!--    <dependencyManagement>-->
-<!--        <dependencies>-->
-<!--            <dependency>-->
-<!--                <groupId>software.amazon.awssdk</groupId>-->
-<!--                <artifactId>bom</artifactId>-->
-<!--                <version>2.17.143</version>-->
-<!--                <type>pom</type>-->
-<!--                <scope>import</scope>-->
-<!--            </dependency>-->
-<!--        </dependencies>-->
-<!--    </dependencyManagement>-->
-
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -82,14 +69,7 @@
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
 
-<!--        AWS-->
-<!--        <dependency>-->
-<!--            <groupId>software.amazon.awssdk</groupId>-->
-<!--            <artifactId>s3</artifactId>-->
-<!--        </dependency>-->
-
 <!--        JSON-->
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
